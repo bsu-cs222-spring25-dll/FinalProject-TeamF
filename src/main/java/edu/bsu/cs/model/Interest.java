@@ -1,58 +1,39 @@
 package edu.bsu.cs.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.Objects;
 import java.util.UUID;
 
-
- //Represents an interest or hobby that can be associated with users and groups.
- //This class follows the Single Responsibility Principle by only managing interest data.
-
+@Entity
+@Table(name = "interests")
 public class Interest {
-    private final UUID id;
+
+    @Id
+    private UUID id;
+
+    @Column(nullable = false, unique = true)
     private String name;
-    private String category;
 
-    public Interest(String name, String category) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Interest name cannot be null or empty");
-        }
-        if (category == null || category.trim().isEmpty()) {
-            throw new IllegalArgumentException("Category cannot be null or empty");
-        }
+    // Required by Hibernate
+    public Interest() {
+        this.id = UUID.randomUUID();
+    }
 
+    public Interest(String name) {
         this.id = UUID.randomUUID();
         this.name = name;
-        this.category = category;
     }
 
-    public UUID getId() {
-        return id;
-    }
+    // Getters and setters
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 
-
-    public String getName() {
-        return name;
-    }
-
-
-    public void setName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Interest name cannot be null or empty");
-        }
-        this.name = name;
-    }
-
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        if (category == null || category.trim().isEmpty()) {
-            throw new IllegalArgumentException("Category cannot be null or empty");
-        }
-        this.category = category;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     @Override
     public boolean equals(Object o) {
@@ -65,10 +46,5 @@ public class Interest {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + category + ")";
     }
 }

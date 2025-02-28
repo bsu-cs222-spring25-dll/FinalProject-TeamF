@@ -11,127 +11,106 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Abstract implementation of the GenericDAO interface.
- * Provides common CRUD operations using Hibernate.
- *
- * @param <T> The entity type
- * @param <ID> The type of the entity's ID
- */
 public abstract class AbstractDAO<T, ID extends Serializable> implements GenericDAO<T, ID> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractDAO.class);
     protected final Class<T> entityClass;
 
-    /**
-     * Constructor that determines the entity class from the generic parameter.
-     */
     @SuppressWarnings("unchecked")
     public AbstractDAO() {
         this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
 
-    /**
-     * Executes a transaction with a return value.
-     *
-     * @param <R> Return type
-     * @param daoFunction Function to execute within the transaction
-     * @return Result of the function
-     */
-    protected <R> R executeWithResult(TransactionFunction<R> daoFunction) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            R result = daoFunction.apply(session);
-            transaction.commit();
-            return result;
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            logger.error("Transaction failed", e);
-            throw new RuntimeException("Failed to execute transaction", e);
-        }
-    }
-
-    /**
-     * Executes a transaction without a return value.
-     *
-     * @param daoAction Action to execute within the transaction
-     */
-    protected void executeWithoutResult(TransactionAction daoAction) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            daoAction.accept(session);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            logger.error("Transaction failed", e);
-            throw new RuntimeException("Failed to execute transaction", e);
-        }
-    }
-
     @Override
     public T save(T entity) {
-        return executeWithResult(session -> {
-            session.persist(entity);
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(entity);
+            transaction.commit();
             return entity;
-        });
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Error saving entity", e);
+            throw new RuntimeException("Error saving entity", e);
+        }
     }
 
     @Override
     public T update(T entity) {
-        return executeWithResult(session -> session.merge(entity));
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            T updatedEntity = (T) session.merge(entity);
+            transaction.commit();
+            return updatedEntity;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Error updating entity", e);
+            throw new RuntimeException("Error updating entity", e);
+        }
     }
 
     @Override
     public Optional<T> findById(ID id) {
-        return executeWithResult(session ->
-                Optional.ofNullable(session.get(entityClass, id))
-        );
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            T entity = session.get(entityClass, id);
+            return Optional.ofNullable(entity);
+        } catch (Exception e) {
+            logger.error("Error finding entity by ID", e);
+            throw new RuntimeException("Error finding entity by ID", e);
+        }
     }
 
     @Override
     public List<T> findAll() {
-        return executeWithResult(session ->
-                session.createQuery("FROM " + entityClass.getSimpleName(), entityClass).getResultList()
-        );
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM " + entityClass.getName(), entityClass).getResultList();
+        } catch (Exception e) {
+            logger.error("Error finding all entities", e);
+            throw new RuntimeException("Error finding all entities", e);
+        }
     }
 
     @Override
     public void delete(T entity) {
-        executeWithoutResult(session -> session.remove(entity));
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.delete(entity);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Error deleting entity", e);
+            throw new RuntimeException("Error deleting entity", e);
+        }
     }
 
     @Override
     public boolean deleteById(ID id) {
-        return executeWithResult(session -> {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             T entity = session.get(entityClass, id);
-            if (entity != null) {
-                session.remove(entity);
-                return true;
+            if (entity == null) {
+                return false;
             }
-            return false;
-        });
-    }
-
-    /**
-     * Functional interface for operations with Session that return a result.
-     */
-    @FunctionalInterface
-    protected interface TransactionFunction<R> {
-        R apply(Session session);
-    }
-
-    /**
-     * Functional interface for operations with Session that don't return a result.
-     */
-    @FunctionalInterface
-    protected interface TransactionAction {
-        void accept(Session session);
+            session.delete(entity);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Error deleting entity by ID", e);
+            throw new RuntimeException("Error deleting entity by ID", e);
+        }
     }
 }

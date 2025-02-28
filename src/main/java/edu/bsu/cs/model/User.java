@@ -1,107 +1,70 @@
 package edu.bsu.cs.model;
 
+import jakarta.persistence.*;
+//import org.hibernate.annotations.Table;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+@Entity
+@Table(name = "users")
 public class User {
-    private final UUID id;//unique user id
+
+    @Id
+    private UUID id;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false, unique = true)
     private String email;
-    private String passwordHash;
-    private String name;
-    private Integer age;
-    private String profilePictureUrl;//for later iteration
-    private Set<Interest> interests;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_interests",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id")
+    )
+    private Set<Interest> interests = new HashSet<>();
 
-    public User(String email, String passwordHash, String name) {
+    // Required by Hibernate
+    public User() {
         this.id = UUID.randomUUID();
+    }
+
+    public User(String username, String email, String password) {
+        this.id = UUID.randomUUID();
+        this.username = username;
         this.email = email;
-        this.passwordHash = passwordHash;
-        this.name = name;
-        this.interests = new HashSet<>();
+        this.password = password;
     }
 
-    public UUID getId() {
-        return id;
-    }
+    // Getters and setters
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
 
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be null or empty");
-        }
-        this.email = email;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        if (passwordHash == null || passwordHash.trim().isEmpty()) {
-            throw new IllegalArgumentException("Password hash cannot be null or empty");
-        }
-        this.passwordHash = passwordHash;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-    public void setName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Name cannot be null or empty");
-        }
-        this.name = name;
-    }
-
-
-    public Integer getAge() {
-        return age;
-    }
-
-
-    public void setAge(Integer age) {
-        if (age != null && age < 0) {
-            throw new IllegalArgumentException("Age cannot be negative");
-        }
-        this.age = age;
-    }
-
-
-    public String getProfilePictureUrl() {
-        return profilePictureUrl;
-    }
-
-
-    public void setProfilePictureUrl(String profilePictureUrl) {
-        this.profilePictureUrl = profilePictureUrl;
-    }
-
-    public Set<Interest> getInterests() {
-        return new HashSet<>(interests); // Return a copy to prevent direct modification
-    }
-
+    public Set<Interest> getInterests() { return interests; }
+    public void setInterests(Set<Interest> interests) { this.interests = interests; }
 
     public boolean addInterest(Interest interest) {
-        if (interest == null) {
-            throw new IllegalArgumentException("Interest cannot be null");
-        }
         return interests.add(interest);
     }
 
-
     public boolean removeInterest(Interest interest) {
-        if (interest == null) {
-            throw new IllegalArgumentException("Interest cannot be null");
-        }
         return interests.remove(interest);
     }
 
@@ -116,15 +79,5 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", interests=" + interests.size() +
-                '}';
     }
 }

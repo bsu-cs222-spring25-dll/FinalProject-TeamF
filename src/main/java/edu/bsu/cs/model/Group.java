@@ -1,85 +1,97 @@
 package edu.bsu.cs.model;
 
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Represents a group in the social networking application.
- */
+@Entity
+@Table(name = "groups") // "group" is a reserved SQL keyword
 public class Group {
-    private final UUID id;
+
+    @Id
+    private UUID id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(length = 1000)
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "creator_id", nullable = false)
     private User creator;
-    private Set<User> members;
-    private Set<Interest> interests;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "group_members",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> members = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "group_interests",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id")
+    )
+    private Set<Interest> interests = new HashSet<>();
+
+    @Column(name = "is_public")
     private boolean isPublic;
 
-    /**
-     * Creates a new group.
-     */
-    public Group(String name, String description, User creator, boolean isPublic) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Group name cannot be null or empty");
-        }
-        if (creator == null) {
-            throw new IllegalArgumentException("Creator cannot be null");
-        }
+    // Required by Hibernate
+    public Group() {
+        this.id = UUID.randomUUID();
+    }
 
+    public Group(String name, String description, User creator, boolean isPublic) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
         this.creator = creator;
         this.isPublic = isPublic;
-        this.members = new HashSet<>();
         this.members.add(creator); // Creator is automatically a member
-        this.interests = new HashSet<>();
     }
 
-    // Basic getters
+    // Getters and setters
     public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+
     public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
     public String getDescription() { return description; }
-    public User getCreator() { return creator; }
-    public boolean isPublic() { return isPublic; }
-
-    // Basic setters
-    public void setName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("Group name cannot be null or empty");
-        }
-        this.name = name;
-    }
     public void setDescription(String description) { this.description = description; }
-    public void setPublic(boolean isPublic) { this.isPublic = isPublic; }
 
-    // Member management
-    public Set<User> getMembers() { return new HashSet<>(members); }
-    public int getMemberCount() { return members.size(); }
+    public User getCreator() { return creator; }
+    public void setCreator(User creator) { this.creator = creator; }
+
+    public boolean isPublic() { return isPublic; }
+    public void setIsPublic(boolean isPublic) { this.isPublic = isPublic; }
+
+    public Set<User> getMembers() { return members; }
+    public void setMembers(Set<User> members) { this.members = members; }
+
+    public Set<Interest> getInterests() { return interests; }
+    public void setInterests(Set<Interest> interests) { this.interests = interests; }
 
     public boolean addMember(User user) {
-        if (user == null) throw new IllegalArgumentException("User cannot be null");
         return members.add(user);
     }
 
     public boolean removeMember(User user) {
-        if (user == null) throw new IllegalArgumentException("User cannot be null");
         if (user.equals(creator)) return false;
         return members.remove(user);
     }
 
-    // Interest management
-    public Set<Interest> getInterests() { return new HashSet<>(interests); }
-
     public boolean addInterest(Interest interest) {
-        if (interest == null) throw new IllegalArgumentException("Interest cannot be null");
         return interests.add(interest);
     }
 
     public boolean removeInterest(Interest interest) {
-        if (interest == null) throw new IllegalArgumentException("Interest cannot be null");
         return interests.remove(interest);
     }
 
@@ -94,10 +106,5 @@ public class Group {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Group{id=" + id + ", name='" + name + "', members=" + members.size() + "}";
     }
 }
