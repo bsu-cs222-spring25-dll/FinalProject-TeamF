@@ -2,6 +2,7 @@ package edu.bsu.cs;
 
 import edu.bsu.cs.util.DatabaseInitializer;
 import edu.bsu.cs.util.HibernateUtil;
+import edu.bsu.cs.view.LoginView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -22,6 +23,9 @@ public class SocialApp extends Application {
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        LoginView loginView = new LoginView();
+        loginView.showLogin(primaryStage);
     }
 
     @Override
