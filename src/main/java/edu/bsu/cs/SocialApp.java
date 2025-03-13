@@ -13,6 +13,7 @@ import java.sql.SQLException;
 public class SocialApp extends Application {
 
     //Hi
+    //hi
     @Override
     public void start(Stage primaryStage) {
         // Initialize database
