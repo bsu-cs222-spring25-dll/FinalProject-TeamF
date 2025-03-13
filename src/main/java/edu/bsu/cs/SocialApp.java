@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import java.sql.SQLException;
 
 public class SocialApp extends Application {
 
@@ -15,6 +16,15 @@ public class SocialApp extends Application {
     public void start(Stage primaryStage) {
         // Initialize database
         new DatabaseInitializer().initialize();
+
+        // Start H2 Console server
+        try {
+            org.h2.tools.Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
+            System.out.println("H2 Console started, available at http://localhost:8082");
+        } catch (SQLException e) {
+            System.err.println("Failed to start H2 Console: " + e.getMessage());
+            e.printStackTrace();
+        }
 
         // Set up JavaFX UI
         primaryStage.setTitle("Social Network App");

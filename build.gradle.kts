@@ -17,6 +17,8 @@ repositories {
 }
 
 dependencies {
+    // Add this to your dependencies section
+    implementation("com.h2database:h2:2.2.224")
     // JavaFX dependencies
     implementation("org.openjfx:javafx-controls:22")
     implementation("org.openjfx:javafx-fxml:22")
