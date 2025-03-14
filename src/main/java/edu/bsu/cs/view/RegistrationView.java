@@ -42,7 +42,6 @@ public class RegistrationView {
         TextField emailfield = new TextField();
         emailfield.setPromptText("Enter your Email");
 
-
         Label password = new Label("Password: ");
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter your password");
@@ -52,7 +51,6 @@ public class RegistrationView {
         confirmPasswordField.setPromptText("Confirm your password");
 
         Button registerButton = new Button("Register");
-
 
         grid.add(userName, 0, 1);
         grid.add(usernameField, 1, 1);
@@ -64,17 +62,14 @@ public class RegistrationView {
         grid.add(confirmPasswordField, 1, 4);
         grid.add(registerButton, 0, 5);
 
-
         // Registration button action (you can add actual registration logic here)
         registerButton.setOnAction(event -> {
-            LoginView login = new LoginView();
-            login.showLogin(primaryStage);
-            handleRegister(usernameField.getText(), emailfield.getText(), passwordField.getText(), confirmPasswordField.getText());
+            // Here we would typically add the registration logic.
+            // For now, simulate successful registration and move to the Dashboard.
+            System.out.println("User Registered: " + usernameField.getText());
+            // Transition to Dashboard
+            DashboardView dashboardView = new DashboardView();
+            dashboardView.showDashboard(primaryStage);
         });
-    }
-
-    private void handleRegister(String username, String password, String email, String confirmPassword) {
-        // Logic for registration
-        System.out.println("Registering user with username: " + username);
     }
 }

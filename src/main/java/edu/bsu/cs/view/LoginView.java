@@ -13,8 +13,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Objects;
-
 public class LoginView {
 
     public void showLogin(Stage primaryStage) {
@@ -25,13 +23,12 @@ public class LoginView {
         grid.setHgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        //Shows the stage
+        // Shows the stage
         Scene scene = new Scene(grid, 800, 600);
         primaryStage.setTitle("GroupSync");
         primaryStage.setScene(scene);
         scene.getStylesheets().add(LoginView.class.getResource("/Login.css").toExternalForm());
         primaryStage.show();
-
 
         Text scenetitle = new Text("Welcome to GroupSync");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
@@ -41,7 +38,7 @@ public class LoginView {
         TextField usernameField = new TextField();
         usernameField.setPromptText("Enter your username");
 
-        Label password = new Label ("Password: ");
+        Label password = new Label("Password: ");
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Enter your password");
 
@@ -56,16 +53,24 @@ public class LoginView {
         grid.add(registerButton, 1, 3);
 
         // login button
-        loginButton.setOnAction(event -> handleLogin(usernameField.getText(), passwordField.getText()));
+        loginButton.setOnAction(event -> handleLogin(primaryStage, usernameField.getText(), passwordField.getText()));
         // register button
-        registerButton.setOnAction(event ->{
+        registerButton.setOnAction(event -> {
             RegistrationView register = new RegistrationView();
-            register.showRegister(primaryStage);});
+            register.showRegister(primaryStage);
+        });
     }
 
-    private void handleLogin(String username, String password) {
-        // Your login logic
-        System.out.println("Login attempted with username: " + username + " and password: " + password);
+    private void handleLogin(Stage primaryStage, String username, String password) {
+        // Your login logic goes here
+        if (username.equals("admin") && password.equals("admin")) { // You can replace this with actual validation
+            System.out.println("Login successful for: " + username);
+            // Transition to Dashboard
+            DashboardView dashboardView = new DashboardView();
+            dashboardView.showDashboard(primaryStage);
+        } else {
+            System.out.println("Login failed");
+            // Display an error or handle login failure
+        }
     }
-
 }
