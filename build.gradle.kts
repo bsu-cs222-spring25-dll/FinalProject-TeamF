@@ -17,8 +17,10 @@ repositories {
 }
 
 dependencies {
-    // Add this to your dependencies section
+
+    // Hibernate dependencies
     implementation("com.h2database:h2:2.2.224")
+
     // JavaFX dependencies
     implementation("org.openjfx:javafx-controls:22")
     implementation("org.openjfx:javafx-fxml:22")
@@ -55,7 +57,7 @@ javafx {
 }
 
 application {
-    mainClass.set("edu.bsu.cs.SocialApp") // Update this to your main class
+    mainClass.set("edu.bsu.cs.SocialApp")
 }
 
 tasks.test {

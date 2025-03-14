@@ -1,0 +1,36 @@
+2025-03-13 13:41:04.938345-04:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "GROUPS""GROUPS" not found; SQL statement:
+SELECT * FROM "GROUPS""GROUPS" [42102-224]
+2025-03-13 14:06:30.381550-04:00 jdbc[24]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM [*]"" GROUP_MEMBERS"; SQL statement:
+SELECT * FROM " GROUP_MEMBERS [42000-224]
+2025-03-13 14:06:46.989940-04:00 jdbc[24]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table " GROUP_MEMBERS " not found; SQL statement:
+SELECT * FROM " GROUP_MEMBERS " [42102-224]
+2025-03-13 14:06:47.944101-04:00 jdbc[24]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table " GROUP_MEMBERS " not found; SQL statement:
+SELECT * FROM " GROUP_MEMBERS " [42102-224]
+2025-03-13 14:06:57.258114-04:00 jdbc[24]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "GROUPS""GROUPS" not found; SQL statement:
+SELECT * FROM "GROUPS""GROUPS" [42102-224]
+2025-03-13 14:10:26.900213-04:00 jdbc[26]: null
+org.h2.message.DbException: The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.jdbc.JdbcConnection.closeOld(JdbcConnection.java:218)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:135)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.mchange.v2.c3p0.DriverManagerDataSource.getConnection(DriverManagerDataSource.java:175)
+	at com.mchange.v2.c3p0.WrapperConnectionPoolDataSource.getPooledConnection(WrapperConnectionPoolDataSource.java:220)
+	at com.mchange.v2.c3p0.WrapperConnectionPoolDataSource.getPooledConnection(WrapperConnectionPoolDataSource.java:206)
+	at com.mchange.v2.c3p0.impl.C3P0PooledConnectionPool$1PooledConnectionResourcePoolManager.acquireResource(C3P0PooledConnectionPool.java:203)
+	at com.mchange.v2.resourcepool.BasicResourcePool.doAcquire(BasicResourcePool.java:1176)
+	at com.mchange.v2.resourcepool.BasicResourcePool.doAcquireAndDecrementPendingAcquiresWithinLockOnSuccess(BasicResourcePool.java:1163)
+	at com.mchange.v2.resourcepool.BasicResourcePool.access$700(BasicResourcePool.java:44)
+	at com.mchange.v2.resourcepool.BasicResourcePool$ScatteredAcquireTask.run(BasicResourcePool.java:1908)
+	at com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread.run(ThreadPoolAsynchronousRunner.java:696)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 15 more

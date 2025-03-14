@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 @Entity
 @Table(name = "messages")
 public class Message {

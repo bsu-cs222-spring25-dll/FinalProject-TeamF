@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "groups") // "group" is a reserved SQL keyword
+@Table(name = "groups")
 public class Group {
 
     @Id

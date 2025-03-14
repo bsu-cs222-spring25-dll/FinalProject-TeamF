@@ -1,11 +1,6 @@
 package edu.bsu.cs.util;
 
-import edu.bsu.cs.dao.InterestDAO;
-import edu.bsu.cs.dao.InterestDAOImpl;
-import edu.bsu.cs.dao.UserDAO;
-import edu.bsu.cs.dao.UserDAOImpl;
-import edu.bsu.cs.dao.GroupDAO;
-import edu.bsu.cs.dao.GroupDAOImpl;
+import edu.bsu.cs.dao.*;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import org.slf4j.Logger;
@@ -21,11 +16,13 @@ public class DatabaseInitializer {
     private final UserDAO userDAO;
     private final InterestDAO interestDAO;
     private final GroupDAO groupDAO;
+    private final MessageDAO messageDAO;
 
     public DatabaseInitializer() {
         this.userDAO = new UserDAOImpl();
         this.interestDAO = new InterestDAOImpl();
         this.groupDAO = new GroupDAOImpl();
+        this.messageDAO = new MessageDAOImpl();
     }
 
     public void initialize() {

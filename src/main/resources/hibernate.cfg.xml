@@ -31,5 +31,6 @@
         <mapping class="edu.bsu.cs.model.User"/>
         <mapping class="edu.bsu.cs.model.Group"/>
         <mapping class="edu.bsu.cs.model.Interest"/>
+        <mapping class="edu.bsu.cs.model.Message"/>
     </session-factory>
 </hibernate-configuration>
