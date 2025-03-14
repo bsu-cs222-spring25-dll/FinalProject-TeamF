@@ -66,11 +66,15 @@ public class RegistrationView {
 
 
         // Registration button action (you can add actual registration logic here)
-        registerButton.setOnAction(event -> handleRegister(usernameField.getText(), passwordField.getText(), confirmPasswordField.getText()));
+        registerButton.setOnAction(event -> {
+            LoginView login = new LoginView();
+            login.showLogin(primaryStage);
+            handleRegister(usernameField.getText(), emailfield.getText(), passwordField.getText(), confirmPasswordField.getText());
+        });
     }
 
-    private void handleRegister(String username, String password, String confirmPassword) {
-        // Logic for registration (validate inputs, save data, etc.)
+    private void handleRegister(String username, String password, String email, String confirmPassword) {
+        // Logic for registration
         System.out.println("Registering user with username: " + username);
     }
 }
