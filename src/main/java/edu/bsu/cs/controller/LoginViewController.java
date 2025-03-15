@@ -5,14 +5,11 @@ import edu.bsu.cs.service.GroupService;
 import edu.bsu.cs.service.InterestService;
 import edu.bsu.cs.service.MessageService;
 import edu.bsu.cs.service.UserService;
-//import edu.bsu.cs.view.MainView;
 import edu.bsu.cs.view.MainView;
 import edu.bsu.cs.view.RegistrationView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.util.Optional;
-
 
 public class LoginViewController {
     private final UserService userService;

@@ -132,7 +132,7 @@ public class RegistrationView {
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setTitle("Register - GroupSync");
 
-        // Apply CSS before setting the scene
+        // Important: Apply CSS before setting the scene
         try {
             scene.getStylesheets().add(getClass().getResource("/register.css").toExternalForm());
         } catch (Exception e) {
@@ -172,16 +172,15 @@ public class RegistrationView {
         }
 
         try {
+            // Register the user
             User user = userService.registerUser(username, email, password);
+
+            // Show success message
             showAlert("Success", "Account created successfully!");
 
-            // Navigate directly to MainView if we have all the required services
-            if (groupService != null && interestService != null && messageService != null) {
-                showMainView(user);
-            } else {
-                // Otherwise, go back to the login screen
-                showLoginForm();
-            }
+            // Simply return to login screen without automatic login
+            showLoginForm();
+
         } catch (IllegalArgumentException e) {
             showAlert("Error", e.getMessage());
         }
@@ -210,37 +209,6 @@ public class RegistrationView {
         stage.setScene(scene);
     }
 
-    protected void showMainView(User user) {
-        try {
-            // Get the current stage
-            Stage stage = (Stage) root.getScene().getWindow();
-
-            // Create main view with all required services
-            MainView mainView = new MainView(user, userService, groupService, interestService, messageService);
-
-            // Create a new scene with the main view
-            Scene scene = new Scene(mainView.getRoot(), 1024, 768);
-
-            // Try to apply a CSS for the main view if available
-            try {
-                scene.getStylesheets().add(getClass().getResource("/main.css").toExternalForm());
-            } catch (Exception e) {
-                // Fallback to login CSS if main CSS is not available
-                try {
-                    scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
-                } catch (Exception ex) {
-                    System.err.println("CSS not found: " + ex.getMessage());
-                }
-            }
-
-            stage.setScene(scene);
-        } catch (Exception e) {
-            System.err.println("Error navigating to MainView: " + e.getMessage());
-            e.printStackTrace();
-            showAlert("Error", "Could not load main view: " + e.getMessage());
-        }
-    }
-
     protected void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -249,4 +217,3 @@ public class RegistrationView {
         alert.showAndWait();
     }
 }
-

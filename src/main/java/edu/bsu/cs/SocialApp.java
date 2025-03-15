@@ -9,6 +9,7 @@ import edu.bsu.cs.util.DatabaseInitializer;
 import edu.bsu.cs.util.HibernateUtil;
 import edu.bsu.cs.view.LoginView;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import java.sql.SQLException;
 
@@ -49,6 +50,8 @@ public class SocialApp extends Application {
     public void stop() {
         // Clean up resources
         HibernateUtil.shutdown();
+        Platform.exit();
+        System.exit(0);
     }
 
     public static void main(String[] args) {

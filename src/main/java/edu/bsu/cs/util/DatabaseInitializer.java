@@ -1,6 +1,7 @@
 package edu.bsu.cs.util;
 
 import edu.bsu.cs.dao.*;
+import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import org.slf4j.Logger;
@@ -28,8 +29,12 @@ public class DatabaseInitializer {
     public void initialize() {
         logger.info("Starting database initialization");
 
-        // Create system user
+        // Create system user and other test users
         User systemUser = createSystemUser();
+        createTestUser("beyonce", "beyonce@gmail.com", "b123");
+        createTestUser("nicki", "nicki@gmail.com", "n123");
+        createTestUser("gracie", "gracie@gmail.com", "g123");
+        createTestUser("zayn", "zayn@gmail.com", "z123");
 
         // Create predefined interests
         createPredefinedInterests();
@@ -51,6 +56,19 @@ public class DatabaseInitializer {
         logger.info("Creating system user");
         User systemUser = new User("system", "system@app.com", "systempassword");
         return userDAO.save(systemUser);
+    }
+
+    private User createTestUser(String username, String email, String password) {
+        Optional<User> existingUser = userDAO.findByUsername(username);
+
+        if (existingUser.isPresent()) {
+            logger.info("User {} already exists", username);
+            return existingUser.get();
+        }
+
+        logger.info("Creating test user: {}", username);
+        User user = new User(username, email, password);
+        return userDAO.save(user);
     }
 
     private void createPredefinedInterests() {
