@@ -1,129 +1,205 @@
 package edu.bsu.cs.view;
 
+import edu.bsu.cs.controller.GroupController;
+import edu.bsu.cs.controller.LoginViewController;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
 import edu.bsu.cs.service.InterestService;
 import edu.bsu.cs.service.MessageService;
 import edu.bsu.cs.service.UserService;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-/**
- * Temporary MainView implementation for testing LoginView and RegistrationView
- */
 public class MainView {
-    private final User user;
+    private User currentUser;
     private final UserService userService;
     private final GroupService groupService;
     private final InterestService interestService;
     private final MessageService messageService;
+
+    // Controllers
+    private GroupController groupController;
+
     private final BorderPane root;
 
-    public MainView(User user, UserService userService, GroupService groupService,
+    public MainView(User currentUser, UserService userService, GroupService groupService,
                     InterestService interestService, MessageService messageService) {
-        this.user = user;
+        this.currentUser = currentUser;
         this.userService = userService;
         this.groupService = groupService;
         this.interestService = interestService;
         this.messageService = messageService;
+
+        // Initialize controllers
+        this.groupController = new GroupController(groupService);
+
         this.root = createMainView();
     }
 
-    public Parent getRoot() {
+    public BorderPane getRoot() {
         return root;
     }
 
     private BorderPane createMainView() {
-        BorderPane mainLayout = new BorderPane();
-        mainLayout.setPadding(new Insets(20));
+        BorderPane borderPane = new BorderPane();
 
-        // Header with welcome message
-        Label welcomeLabel = new Label("Welcome, " + user.getUsername() + "!");
-        welcomeLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
+        // Create the top menu bar
+        MenuBar menuBar = createMenuBar();
+        borderPane.setTop(menuBar);
 
-        // User information section
-        VBox userInfo = new VBox(10);
-        userInfo.setPadding(new Insets(20));
-        userInfo.getChildren().addAll(
-                new Label("User ID: " + user.getId()),
-                new Label("Username: " + user.getUsername()),
-                new Label("Email: " + user.getEmail())
-        );
+        // Create the left sidebar (groups list)
+        VBox sidebar = createSidebar();
+        borderPane.setLeft(sidebar);
 
-        // Sidebar with navigation buttons
+        // Default center view (group list)
+        GroupListView groupListView = new GroupListView(currentUser, groupController);
+        borderPane.setCenter(groupListView.getRoot());
+
+        return borderPane;
+    }
+
+    private MenuBar createMenuBar() {
+        MenuBar menuBar = new MenuBar();
+
+        // File menu
+        Menu fileMenu = new Menu("File");
+        MenuItem settingsItem = new MenuItem("Settings");
+        MenuItem logoutItem = new MenuItem("Logout");
+        logoutItem.setOnAction(e -> handleLogout());
+        fileMenu.getItems().addAll(settingsItem, new SeparatorMenuItem(), logoutItem);
+
+        // View menu
+        Menu viewMenu = new Menu("View");
+        MenuItem groupsItem = new MenuItem("Groups");
+        groupsItem.setOnAction(e -> showGroupList());
+        MenuItem profileItem = new MenuItem("My Profile");
+        profileItem.setOnAction(e -> showProfile());
+        viewMenu.getItems().addAll(groupsItem, profileItem);
+
+        menuBar.getMenus().addAll(fileMenu, viewMenu);
+
+        return menuBar;
+    }
+
+    private VBox createSidebar() {
         VBox sidebar = new VBox(10);
-        sidebar.setPadding(new Insets(20));
+        sidebar.setPadding(new Insets(10));
         sidebar.setPrefWidth(200);
 
-        Button profileButton = new Button("View Profile");
-        Button groupsButton = new Button("My Groups");
-        Button findGroupsButton = new Button("Find Groups");
-        Button logoutButton = new Button("Logout");
+        Label welcomeLabel = new Label("Welcome, " + currentUser.getUsername() + "!");
+
+        Button groupsButton = new Button("All Groups");
+        groupsButton.setMaxWidth(Double.MAX_VALUE);
+        groupsButton.setOnAction(e -> showGroupList());
+
+        Button myGroupsButton = new Button("My Groups");
+        myGroupsButton.setMaxWidth(Double.MAX_VALUE);
+        myGroupsButton.setOnAction(e -> showMyGroups());
+
+        Button createGroupButton = new Button("Create Group");
+        createGroupButton.setMaxWidth(Double.MAX_VALUE);
+        createGroupButton.setOnAction(e -> showCreateGroupForm());
+
+        Button messagesButton = new Button("Messages");
+        messagesButton.setMaxWidth(Double.MAX_VALUE);
+        messagesButton.setOnAction(e -> showMessages());
+
+        Button profileButton = new Button("My Profile");
+        profileButton.setMaxWidth(Double.MAX_VALUE);
+        profileButton.setOnAction(e -> showProfile());
 
         sidebar.getChildren().addAll(
-                profileButton,
+                welcomeLabel,
+                new Separator(),
                 groupsButton,
-                findGroupsButton,
-                logoutButton
+                myGroupsButton,
+                createGroupButton,
+                messagesButton,
+                new Separator(),
+                profileButton
         );
 
-        // Add logout functionality
-        logoutButton.setOnAction(event -> {
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
-            LoginView loginView = new LoginView(userService);
-            stage.setScene(loginView.getRoot().getScene());
-        });
+        return sidebar;
+    }
 
-        // Main content area with placeholder
-        VBox mainContent = new VBox(10);
-        mainContent.setPadding(new Insets(20));
-        Label contentLabel = new Label("Temporary Main View for Testing");
-        contentLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 16));
-        Label instructionLabel = new Label("This is a placeholder main view to verify navigation from login/register screens.");
+    private void handleLogout() {
+        // Get the current stage
+        Stage stage = (Stage) root.getScene().getWindow();
 
-        // Status bar
-        HBox statusBar = new HBox(10);
-        statusBar.setPadding(new Insets(5, 10, 5, 10));
-        statusBar.getChildren().add(new Label("Application is running normally."));
+        // Clear any cached data or state
+        currentUser = null;  // Reset the current user
 
-        // Add a message about interests
-        VBox interestsSection = new VBox(10);
-        Label interestsLabel = new Label("Your Interests:");
-        interestsLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        // Create login controller
+        LoginViewController loginController = new LoginViewController(
+                userService, groupService, interestService, messageService);
 
-        StringBuilder interestsText = new StringBuilder();
-        if (user.getInterests().isEmpty()) {
-            interestsText.append("You haven't added any interests yet.");
-        } else {
-            user.getInterests().forEach(interest ->
-                    interestsText.append("• ").append(interest.getName()).append("\n")
-            );
+        // Create a completely new login view
+        LoginView loginView = new LoginView(loginController);
+
+        // Create a new scene with the login view
+        Scene scene = new Scene(loginView.getRoot(), 800, 600);
+
+        // Apply CSS
+        try {
+            scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
+        } catch (Exception e) {
+            System.err.println("CSS not found: " + e.getMessage());
         }
 
-        Label interestsContent = new Label(interestsText.toString());
-        interestsSection.getChildren().addAll(interestsLabel, interestsContent);
+        // Set the new scene to the stage
+        stage.setScene(scene);
+        stage.setTitle("GroupSync");
 
-        mainContent.getChildren().addAll(
-                contentLabel,
-                instructionLabel,
-                interestsSection
-        );
+        // Optional: Force garbage collection
+        System.gc();
+    }
 
-        // Arrange components in the BorderPane
-        mainLayout.setTop(welcomeLabel);
-        mainLayout.setLeft(sidebar);
-        mainLayout.setCenter(mainContent);
-        mainLayout.setRight(userInfo);
-        mainLayout.setBottom(statusBar);
+    private void showGroupList() {
+        GroupListView groupListView = new GroupListView(currentUser, groupController);
+        root.setCenter(groupListView.getRoot());
+    }
 
-        return mainLayout;
+    private void showMyGroups() {
+        // Placeholder - Create a simple "Coming Soon" view
+        Label label = new Label("My Groups - Coming Soon");
+        label.setStyle("-fx-font-size: 24px;");
+        VBox placeholder = new VBox(label);
+        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
+        placeholder.setPadding(new Insets(20));
+        root.setCenter(placeholder);
+    }
+
+    private void showCreateGroupForm() {
+        // Placeholder - Create a simple "Coming Soon" view
+        Label label = new Label("Create Group - Coming Soon");
+        label.setStyle("-fx-font-size: 24px;");
+        VBox placeholder = new VBox(label);
+        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
+        placeholder.setPadding(new Insets(20));
+        root.setCenter(placeholder);
+    }
+
+    private void showMessages() {
+        // Placeholder - Create a simple "Coming Soon" view
+        Label label = new Label("Messages - Coming Soon");
+        label.setStyle("-fx-font-size: 24px;");
+        VBox placeholder = new VBox(label);
+        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
+        placeholder.setPadding(new Insets(20));
+        root.setCenter(placeholder);
+    }
+
+    private void showProfile() {
+        // Placeholder - Create a simple "Coming Soon" view
+        Label label = new Label("User Profile - Coming Soon");
+        label.setStyle("-fx-font-size: 24px;");
+        VBox placeholder = new VBox(label);
+        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
+        placeholder.setPadding(new Insets(20));
+        root.setCenter(placeholder);
     }
 }

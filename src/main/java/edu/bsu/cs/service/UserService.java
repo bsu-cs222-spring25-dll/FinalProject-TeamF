@@ -2,10 +2,9 @@ package edu.bsu.cs.service;
 import edu.bsu.cs.dao.UserDAO;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
-
+import edu.bsu.cs.util.HibernateSessionManager;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 public class UserService {
@@ -15,21 +14,26 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public User registerUser(String username,String email,String password) {
-        //check if username already exits
-        if(userDAO.findByUsername(username).isPresent()) {
-            throw new IllegalArgumentException("Username is already in use");
-        }
-        if(userDAO.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email is already in use");
-        }
-        //create and save a user
-        User user=new User(username,email,password);
-        return userDAO.save(user);
+    public User registerUser(String username, String email, String password) {
+        // Make sure to use a transaction for database consistency
+        return HibernateSessionManager.executeWithTransaction(session -> {
+            //check if username already exits
+            if(userDAO.findByUsername(username).isPresent()) {
+                throw new IllegalArgumentException("Username is already in use");
+            }
+            if(userDAO.findByEmail(email).isPresent()) {
+                throw new IllegalArgumentException("Email is already in use");
+            }
+            //create and save a user
+            User user = new User(username, email, password);
+            return userDAO.save(user);
+        });
     }
 
-    public Optional<User> login(String username,String password) {
-        Optional<User> userOpt=userDAO.findByUsername(username);
+    public Optional<User> login(String username, String password) {
+        // Always fetch fresh data from the database
+        Optional<User> userOpt = userDAO.findByUsername(username);
+
         if(userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
             return userOpt;
         }

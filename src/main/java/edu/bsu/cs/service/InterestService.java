@@ -1,4 +1,45 @@
 package edu.bsu.cs.service;
 
-public class InterestService {
+import edu.bsu.cs.dao.InterestDAO;
+import edu.bsu.cs.model.Interest;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public class InterestService
+{
+    private final InterestDAO interestDAO;
+
+    public InterestService(InterestDAO interestDAO){
+        this.interestDAO = interestDAO;
+    }
+
+    //create interest
+    public Interest createInterest(String name){
+        //check if interest already exists
+        Optional<Interest> existingInterest=interestDAO.findByName(name);
+        if(existingInterest.isPresent()){
+            return existingInterest.get();
+        }
+        //else create new interest
+        Interest interest=new Interest(name);
+        return interestDAO.save(interest);
+    }
+
+    public List<Interest> findInterestByNameContaining(String nameContains){
+        return interestDAO.findByNameContaining(nameContains);
+    }
+
+    public Optional<Interest>findInterestByName(String name){
+        return interestDAO.findByName(name);
+    }
+    public Optional<Interest> findById(UUID id) {
+        return interestDAO.findById(id);
+    }
+
+    public List<Interest> getAllInterests(){
+        return interestDAO.findAll();
+    }
+
 }

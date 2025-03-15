@@ -1,5 +1,9 @@
 package edu.bsu.cs.view;
 
+import edu.bsu.cs.controller.LoginViewController;
+import edu.bsu.cs.dao.GroupDAOImpl;
+import edu.bsu.cs.dao.InterestDAOImpl;
+import edu.bsu.cs.dao.MessageDAOImpl;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
 import edu.bsu.cs.service.InterestService;
@@ -30,23 +34,9 @@ public class RegistrationView {
     protected InterestService interestService;
     protected MessageService messageService;
 
-    public RegistrationView() {
-        // Default constructor for empty initialization
-        this.userService = null;
-        this.root = createRegistrationView();
-    }
 
     public RegistrationView(UserService userService) {
         this.userService = userService;
-        this.root = createRegistrationView();
-    }
-
-    public RegistrationView(UserService userService, GroupService groupService,
-                            InterestService interestService, MessageService messageService) {
-        this.userService = userService;
-        this.groupService = groupService;
-        this.interestService = interestService;
-        this.messageService = messageService;
         this.root = createRegistrationView();
     }
 
@@ -54,22 +44,6 @@ public class RegistrationView {
         return root;
     }
 
-    // Getter methods for fields to make them accessible to subclasses
-    protected TextField getUsernameField() {
-        return usernameField;
-    }
-
-    protected TextField getEmailField() {
-        return emailField;
-    }
-
-    protected PasswordField getPasswordField() {
-        return passwordField;
-    }
-
-    protected PasswordField getConfirmPasswordField() {
-        return confirmPasswordField;
-    }
 
     private VBox createRegistrationView() {
         // Layout for the register
@@ -120,7 +94,7 @@ public class RegistrationView {
         registerButton.setOnAction(event -> handleRegistration());
 
         // Back button action
-        backButton.setOnAction(event -> showLoginForm());
+        backButton.setOnAction(event -> navigateToLogin());
 
         VBox vbox = new VBox(grid);
         vbox.setAlignment(Pos.CENTER);
@@ -128,26 +102,6 @@ public class RegistrationView {
         return vbox;
     }
 
-    public void showRegister(Stage primaryStage) {
-        Scene scene = new Scene(root, 800, 600);
-        primaryStage.setTitle("Register - GroupSync");
-
-        // Important: Apply CSS before setting the scene
-        try {
-            scene.getStylesheets().add(getClass().getResource("/register.css").toExternalForm());
-        } catch (Exception e) {
-            System.err.println("Register CSS not found: " + e.getMessage());
-            // Fallback to login CSS if register CSS is not available
-            try {
-                scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
-            } catch (Exception ex) {
-                System.err.println("Login CSS not found: " + ex.getMessage());
-            }
-        }
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
 
     protected void handleRegistration() {
         String username = usernameField.getText().trim();
@@ -172,34 +126,51 @@ public class RegistrationView {
         }
 
         try {
-            // Register the user
+            // Register the user with simple approach
             User user = userService.registerUser(username, email, password);
+
+            // Force the database to complete the transaction
+            userService.findByUsername(username);
 
             // Show success message
             showAlert("Success", "Account created successfully!");
 
-            // Simply return to login screen without automatic login
-            showLoginForm();
+            // Return to login screen
+            navigateToLogin();
 
         } catch (IllegalArgumentException e) {
             showAlert("Error", e.getMessage());
         }
     }
 
-    /**
-     * Shows the login form with proper styling.
-     */
-    protected void showLoginForm() {
+    protected void navigateToLogin() {
         // Get the current stage
         Stage stage = (Stage) root.getScene().getWindow();
 
-        // Create login view
-        LoginView loginView = new LoginView(userService);
+        // Create a LoginViewController with all necessary services
+        LoginViewController loginController;
 
-        // Important: Create a new scene with preserved styling
+        if (groupService != null && interestService != null && messageService != null) {
+            loginController = new LoginViewController(userService, groupService, interestService, messageService);
+        } else {
+            // Create proper services with DAOs if they're not provided
+            try {
+                GroupService gs = groupService != null ? groupService : new GroupService(new GroupDAOImpl());
+                InterestService is = interestService != null ? interestService : new InterestService(new InterestDAOImpl());
+                MessageService ms = messageService != null ? messageService : new MessageService(new MessageDAOImpl());
+
+                loginController = new LoginViewController(userService, gs, is, ms);
+            } catch (Exception e) {
+                showAlert("Error", "Could not initialize login view: " + e.getMessage());
+                return;
+            }
+        }
+
+        // Create login view with controller
+        LoginView loginView = new LoginView(loginController);
+
+        // Create a scene with styling
         Scene scene = new Scene(loginView.getRoot(), 800, 600);
-
-        // Apply CSS to maintain styling
         try {
             scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
         } catch (Exception e) {

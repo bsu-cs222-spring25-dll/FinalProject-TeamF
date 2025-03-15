@@ -1,7 +1,6 @@
 package edu.bsu.cs.model;
 
 import jakarta.persistence.*;
-//import org.hibernate.annotations.Table;
 
 import java.util.HashSet;
 import java.util.Objects;

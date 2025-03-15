@@ -1,15 +1,12 @@
 package edu.bsu.cs;
 
+import edu.bsu.cs.controller.LoginViewController;
 import edu.bsu.cs.dao.*;
-import edu.bsu.cs.service.GroupService;
-import edu.bsu.cs.service.InterestService;
-import edu.bsu.cs.service.MessageService;
-import edu.bsu.cs.service.UserService;
+import edu.bsu.cs.service.*;
 import edu.bsu.cs.util.DatabaseInitializer;
 import edu.bsu.cs.util.HibernateUtil;
 import edu.bsu.cs.view.LoginView;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import java.sql.SQLException;
 
@@ -37,12 +34,16 @@ public class SocialApp extends Application {
 
         // Initialize Services
         UserService userService = new UserService(userDAO);
-        GroupService groupService = new GroupService(); // Implement actual constructor when needed
-        InterestService interestService = new InterestService(); // Implement actual constructor when needed
-        MessageService messageService = new MessageService(); // Implement actual constructor when needed
+        GroupService groupService = new GroupService(groupDAO);
+        InterestService interestService = new InterestService(interestDAO);
+        MessageService messageService = new MessageService(messageDAO);
 
-        // Set up JavaFX UI with service dependencies
-        LoginView loginView = new LoginView(userService);
+        // Initialize Controller
+        LoginViewController loginController = new LoginViewController(
+                userService, groupService, interestService, messageService);
+
+        // Create and show LoginView with controller
+        LoginView loginView = new LoginView(loginController);
         loginView.showLogin(primaryStage);
     }
 
@@ -50,7 +51,6 @@ public class SocialApp extends Application {
     public void stop() {
         // Clean up resources
         HibernateUtil.shutdown();
-        Platform.exit();
         System.exit(0);
     }
 

@@ -2,7 +2,6 @@ package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.LoginViewController;
 import edu.bsu.cs.model.User;
-import edu.bsu.cs.service.UserService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,29 +16,14 @@ import javafx.stage.Stage;
 import java.util.Optional;
 
 public class LoginView {
-    protected final UserService userService;
     protected final LoginViewController controller;
     protected final VBox root;
 
     protected TextField usernameField;
     protected PasswordField passwordField;
 
-    public LoginView() {
-        // Default constructor for SocialApp
-        this.userService = null;
-        this.controller = null;
-        this.root = createLoginView();
-    }
-
-    public LoginView(UserService userService) {
-        this.userService = userService;
-        this.controller = null;
-        this.root = createLoginView();
-    }
-
     public LoginView(LoginViewController controller) {
         this.controller = controller;
-        this.userService = null;
         this.root = createLoginView();
     }
 
@@ -85,34 +69,7 @@ public class LoginView {
         // register button
         registerButton.setOnAction(event -> {
             Stage stage = (Stage) registerButton.getScene().getWindow();
-
-            if (controller != null) {
-                controller.showRegistrationView(stage);
-            } else {
-                RegistrationView register;
-                if (userService != null) {
-                    register = new RegistrationView(userService);
-                } else {
-                    register = new RegistrationView();
-                }
-
-                Scene scene = new Scene(register.getRoot(), 800, 600);
-
-                // Important: Apply CSS to maintain styling
-                try {
-                    scene.getStylesheets().add(getClass().getResource("/register.css").toExternalForm());
-                } catch (Exception e) {
-                    System.err.println("CSS not found: " + e.getMessage());
-                    // Fallback to login CSS if register CSS is not available
-                    try {
-                        scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
-                    } catch (Exception ex) {
-                        System.err.println("Login CSS not found: " + ex.getMessage());
-                    }
-                }
-
-                stage.setScene(scene);
-            }
+            controller.showRegistrationView(stage);
         });
 
         VBox vbox = new VBox(grid);
@@ -142,18 +99,7 @@ public class LoginView {
             return;
         }
 
-        Optional<User> userOpt;
-
-        if (controller != null) {
-            // Use controller if available
-            userOpt = controller.login(username, password);
-        } else if (userService != null) {
-            // Fall back to direct service call
-            userOpt = userService.login(username, password);
-        } else {
-            showAlert("Error", "System configuration error");
-            return;
-        }
+        Optional<User> userOpt = controller.login(username, password);
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -161,13 +107,7 @@ public class LoginView {
 
             // Navigate to main app view
             Stage stage = (Stage) root.getScene().getWindow();
-
-            if (controller != null) {
-                controller.showMainView(stage, user);
-            } else if (userService != null) {
-                // Basic navigation with userService only
-                showAlert("Info", "Would navigate to main view");
-            }
+            controller.showMainView(stage, user);
         } else {
             showAlert("Error", "Invalid username or password");
         }
