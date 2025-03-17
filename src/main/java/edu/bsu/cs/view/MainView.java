@@ -45,6 +45,7 @@ public class MainView {
     }
 
     private BorderPane createMainView() {
+
         BorderPane borderPane = new BorderPane();
 
         // Create the top menu bar

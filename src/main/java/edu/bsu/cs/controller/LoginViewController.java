@@ -50,7 +50,7 @@ public class LoginViewController {
 
         // Apply CSS
         try {
-            scene.getStylesheets().add(getClass().getResource("/main.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }
