@@ -2,6 +2,7 @@ package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.GroupController;
 import edu.bsu.cs.controller.LoginViewController;
+import edu.bsu.cs.controller.MessageController;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
@@ -160,7 +161,6 @@ public class MainView {
 
     private void showMyGroups() {
         root.setCenter(myGroupsView.getRoot());
-
         loadUserGroups();
     }
 
@@ -180,13 +180,12 @@ public class MainView {
     }
 
     private void showMessages() {
-        // Placeholder - Create a simple "Coming Soon" view
-        Label label = new Label("Messages - Coming Soon");
-        label.setStyle("-fx-font-size: 24px;");
-        VBox placeholder = new VBox(label);
-        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
-        placeholder.setPadding(new Insets(20));
-        root.setCenter(placeholder);
+        // Create message controller if needed
+        MessageController messageController = new MessageController(messageService);
+
+        // Create and display the message view
+        MessageView messageView = new MessageView(currentUser, messageController, groupService);
+        root.setCenter(messageView.getRoot());
     }
 
     private void showProfile() {

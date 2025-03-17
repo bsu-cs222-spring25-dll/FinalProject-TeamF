@@ -3,11 +3,7 @@ import edu.bsu.cs.dao.MessageDAO;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Message;
 import edu.bsu.cs.model.User;
-
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 public class MessageService
 {
@@ -32,23 +28,9 @@ public class MessageService
         return messageDAO.findByGroup(group);
     }
 
-    //to only get recent messages
-    public List<Message> getRecentGroupMessages(Group group,int limit){
-        return messageDAO.findRecentByGroup(group,limit);
-    }
-
     //gets all messages from a specific user
     public List<Message> getUserMessages(User user){
         return messageDAO.findBySender(user);
     }
 
-    //retrieve messages on time
-    public List<Message>getNewMessages(LocalDateTime since){
-        return messageDAO.findAfterTime(since);
-    }
-
-    //find message by id
-    public Optional<Message> findById(UUID id){
-        return messageDAO.findById(id);
-    }
 }
