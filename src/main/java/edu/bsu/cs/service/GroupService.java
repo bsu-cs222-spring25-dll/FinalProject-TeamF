@@ -35,8 +35,8 @@ public class GroupService {
         return false;
     }
 
-    public boolean addInterest(Group group, Interest interest) {
-        if (group.addInterest(interest)) {
+    public boolean addInterest(Group group, User interest) {
+        if (group.addMember(interest)) {
             groupDAO.update(group);
             return true;
         }

@@ -2,6 +2,7 @@ package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.GroupController;
 import edu.bsu.cs.controller.LoginViewController;
+import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
 import edu.bsu.cs.service.InterestService;
@@ -13,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class MainView {
     private User currentUser;
@@ -26,6 +29,9 @@ public class MainView {
 
     private final BorderPane root;
 
+    // View components
+    private MyGroupsView myGroupsView;
+
     public MainView(User currentUser, UserService userService, GroupService groupService,
                     InterestService interestService, MessageService messageService) {
         this.currentUser = currentUser;
@@ -34,8 +40,9 @@ public class MainView {
         this.interestService = interestService;
         this.messageService = messageService;
 
-        // Initialize controllers
         this.groupController = new GroupController(groupService);
+
+        this.myGroupsView = new MyGroupsView(currentUser, groupController);
 
         this.root = createMainView();
     }
@@ -48,15 +55,12 @@ public class MainView {
 
         BorderPane borderPane = new BorderPane();
 
-        // Create the top menu bar
         MenuBar menuBar = createMenuBar();
         borderPane.setTop(menuBar);
 
-        // Create the left sidebar (groups list)
         VBox sidebar = createSidebar();
         borderPane.setLeft(sidebar);
 
-        // Default center view (group list)
         GroupListView groupListView = new GroupListView(currentUser, groupController);
         borderPane.setCenter(groupListView.getRoot());
 
@@ -66,14 +70,12 @@ public class MainView {
     private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
 
-        // File menu
         Menu fileMenu = new Menu("File");
         MenuItem settingsItem = new MenuItem("Settings");
         MenuItem logoutItem = new MenuItem("Logout");
         logoutItem.setOnAction(e -> handleLogout());
         fileMenu.getItems().addAll(settingsItem, new SeparatorMenuItem(), logoutItem);
 
-        // View menu
         Menu viewMenu = new Menu("View");
         MenuItem groupsItem = new MenuItem("Groups");
         groupsItem.setOnAction(e -> showGroupList());
@@ -128,34 +130,26 @@ public class MainView {
     }
 
     private void handleLogout() {
-        // Get the current stage
         Stage stage = (Stage) root.getScene().getWindow();
 
-        // Clear any cached data or state
-        currentUser = null;  // Reset the current user
+        currentUser = null;
 
-        // Create login controller
         LoginViewController loginController = new LoginViewController(
                 userService, groupService, interestService, messageService);
 
-        // Create a completely new login view
         LoginView loginView = new LoginView(loginController);
 
-        // Create a new scene with the login view
         Scene scene = new Scene(loginView.getRoot(), 800, 600);
 
-        // Apply CSS
         try {
             scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }
 
-        // Set the new scene to the stage
         stage.setScene(scene);
         stage.setTitle("GroupSync");
 
-        // Optional: Force garbage collection
         System.gc();
     }
 
@@ -165,13 +159,14 @@ public class MainView {
     }
 
     private void showMyGroups() {
-        // Placeholder - Create a simple "Coming Soon" view
-        Label label = new Label("My Groups - Coming Soon");
-        label.setStyle("-fx-font-size: 24px;");
-        VBox placeholder = new VBox(label);
-        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
-        placeholder.setPadding(new Insets(20));
-        root.setCenter(placeholder);
+        root.setCenter(myGroupsView.getRoot());
+
+        loadUserGroups();
+    }
+
+    private void loadUserGroups() {
+        List<Group> userGroups = groupController.getUserGroups(currentUser);
+        myGroupsView.loadMyGroups();
     }
 
     private void showCreateGroupForm() {

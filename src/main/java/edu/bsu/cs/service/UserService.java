@@ -15,7 +15,6 @@ public class UserService {
     }
 
     public User registerUser(String username, String email, String password) {
-        // Make sure to use a transaction for database consistency
         return HibernateSessionManager.executeWithTransaction(session -> {
             //check if username already exits
             if(userDAO.findByUsername(username).isPresent()) {
