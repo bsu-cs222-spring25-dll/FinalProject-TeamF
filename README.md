@@ -21,7 +21,7 @@ GroupSync is a Java-based desktop application that allows users to connect with 
 
 - [Shristi Khadka]
 - [Lilly Waterman]
-- [Yayaha Fofana]
+- [Yahaya Fofana]
 - [Kyle Dille]
 
 ## Project Setup
