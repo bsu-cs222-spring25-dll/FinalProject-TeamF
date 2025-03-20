@@ -1,6 +1,4 @@
 package edu.bsu.cs.controller;
-
-
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.InterestService;

@@ -27,12 +27,11 @@ public class MainView {
 
     // Controllers
     private GroupController groupController;
+    private MessageController messageController;
 
     private final BorderPane root;
 
     // View components
-    private MyGroupsView myGroupsView;
-
     public MainView(User currentUser, UserService userService, GroupService groupService,
                     InterestService interestService, MessageService messageService) {
         this.currentUser = currentUser;
@@ -40,10 +39,8 @@ public class MainView {
         this.groupService = groupService;
         this.interestService = interestService;
         this.messageService = messageService;
-
         this.groupController = new GroupController(groupService);
-
-        this.myGroupsView = new MyGroupsView(currentUser, groupController);
+        this.messageController = new MessageController(messageService);
 
         this.root = createMainView();
     }
@@ -160,13 +157,8 @@ public class MainView {
     }
 
     private void showMyGroups() {
+        MyGroupsView myGroupsView = new MyGroupsView(currentUser, groupController);
         root.setCenter(myGroupsView.getRoot());
-        loadUserGroups();
-    }
-
-    private void loadUserGroups() {
-        List<Group> userGroups = groupController.getUserGroups(currentUser);
-        myGroupsView.loadMyGroups();
     }
 
     private void showCreateGroupForm() {
@@ -180,10 +172,6 @@ public class MainView {
     }
 
     private void showMessages() {
-        // Create message controller if needed
-        MessageController messageController = new MessageController(messageService);
-
-        // Create and display the message view
         MessageView messageView = new MessageView(currentUser, messageController, groupService);
         root.setCenter(messageView.getRoot());
     }
