@@ -56,6 +56,9 @@ public class Group {
         this.members.add(creator); // Creator is automatically a member
     }
 
+    public Group(String testGroup, String aGroupForTesting, boolean b) {
+    }
+
     // Getters and setters
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
