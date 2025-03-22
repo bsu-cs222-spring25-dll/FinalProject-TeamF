@@ -32,8 +32,8 @@ dependencies {
     // PostgreSQL JDBC Driver
     implementation("org.postgresql:postgresql:42.7.1")
 
-    // Apache OpenNLP for natural language processing
-    implementation("org.apache.opennlp:opennlp-tools:2.3.0")
+    // Tuples
+    implementation("org.javatuples:javatuples:1.2")
 
     // Logging
     implementation("org.slf4j:slf4j-api:2.0.11")
