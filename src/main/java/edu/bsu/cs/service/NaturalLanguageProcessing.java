@@ -36,6 +36,11 @@ class NaturalLanguageProcessing {
         return Math.log(trainingData.size()/totalTerms);
     }
 
+    public static List<Pair<Double,String>> sortWords(List<Pair<Double, String>> inputList){
+        
+        return inputList;
+    }
+
     public static void main(String[] args) {
         //Corpus will be an array list of every message in the database
         List<String> corpus = new ArrayList<>();
