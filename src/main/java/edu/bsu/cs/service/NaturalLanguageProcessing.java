@@ -37,7 +37,8 @@ class NaturalLanguageProcessing {
     }
 
     public static List<Pair<Double,String>> sortWords(List<Pair<Double, String>> inputList){
-        
+
+        Collections.sort(inputList, Collections.reverseOrder());
         return inputList;
     }
 
@@ -64,6 +65,7 @@ class NaturalLanguageProcessing {
                 finalList.add(new Pair<Double, String>((wordIDF * wordTF),word));
             }
         }
+        sortWords(finalList);
         System.out.println(finalList);
         //TODO sort tokens by tf-idf value
     }
