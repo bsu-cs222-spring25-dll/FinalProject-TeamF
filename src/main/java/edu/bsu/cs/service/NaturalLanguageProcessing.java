@@ -37,6 +37,7 @@ class NaturalLanguageProcessing {
     }
 
     public static void main(String[] args) {
+        //Corpus will be an array list of every message in the database
         List<String> corpus = new ArrayList<>();
         corpus.add("This is a test message");
         corpus.add("I hope this works!");
@@ -49,6 +50,8 @@ class NaturalLanguageProcessing {
 
         List<Pair<Double, String>> finalList = new ArrayList<>();
 
+        //in implimentation, all messages sent in a group will be added to the same "tokenized message"
+        //then we won't get the output of every message ever sent and instead get the output of just that group
         for(List<String> tokenizedMessage : tokenizedCorpus){
             for(String word : tokenizedMessage){
                 double wordIDF = inverseDocumentFrequency(tokenizedCorpus,word);
@@ -57,6 +60,7 @@ class NaturalLanguageProcessing {
             }
         }
         System.out.println(finalList);
+        //TODO sort tokens by tf-idf value
     }
 
 }
