@@ -37,9 +37,19 @@ class NaturalLanguageProcessing {
     }
 
     public static List<Pair<Double,String>> sortWords(List<Pair<Double, String>> inputList){
-
         Collections.sort(inputList, Collections.reverseOrder());
         return inputList;
+    }
+
+    public static List<Pair<Double,String>> extractKeywords(List<List<String>> trainingData, List<String> tokenizedMessages){
+        List<Pair<Double, String>> finalList = new ArrayList<>();
+        for(String word : tokenizedMessages){
+            double wordInverseDocumentFrequency = inverseDocumentFrequency(trainingData,word);
+            double wordTermFrequency = termFrequency(tokenizedMessages,word);
+            finalList.add(new Pair<Double, String>((wordInverseDocumentFrequency * wordTermFrequency),word));
+        }
+        sortWords(finalList);
+        return finalList;
     }
 
     public static void main(String[] args) {
@@ -56,7 +66,7 @@ class NaturalLanguageProcessing {
 
         List<Pair<Double, String>> finalList = new ArrayList<>();
 
-        //in implimentation, all messages sent in a group will be added to the same "tokenized message"
+        //in implementation, all messages sent in a group will be added to the same "tokenized message"
         //then we won't get the output of every message ever sent and instead get the output of just that group
         for(List<String> tokenizedMessage : tokenizedCorpus){
             for(String word : tokenizedMessage){
@@ -67,7 +77,6 @@ class NaturalLanguageProcessing {
         }
         sortWords(finalList);
         System.out.println(finalList);
-        //TODO sort tokens by tf-idf value
     }
 
 }
