@@ -61,7 +61,7 @@ public class GroupService {
 
     public List<Group> findPublicGroups() {
         if (groupDAO == null) {
-            return new ArrayList<>(); // Return empty list instead of null pointer exception
+            return new ArrayList<>();
         }
         return groupDAO.findPublicGroups();
     }
