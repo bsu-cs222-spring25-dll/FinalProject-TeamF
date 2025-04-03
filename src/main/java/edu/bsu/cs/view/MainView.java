@@ -1,18 +1,15 @@
 package edu.bsu.cs.view;
 
-
 import edu.bsu.cs.controller.GroupController;
 import edu.bsu.cs.controller.LoginViewController;
 import edu.bsu.cs.controller.MessageController;
 import edu.bsu.cs.model.Group;
-import edu.bsu.cs.model.Message;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
 import edu.bsu.cs.service.InterestService;
 import edu.bsu.cs.service.MessageService;
 import edu.bsu.cs.service.UserService;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
@@ -165,43 +162,19 @@ public class MainView {
     }
 
     private void showCreateGroupForm() {
-        Label titleLabel = new Label("Create a New Group");
-        titleLabel.setStyle("-fx-font-size: 24px;");
-
-        TextField groupNameField = new TextField();
-        groupNameField.setPromptText("Group Name");
-
-        TextArea groupDescriptionField = new TextArea();
-        groupDescriptionField.setPromptText("Group Description");
-        groupDescriptionField.setPrefHeight(100);
-
-        Button createGroupButton = new Button("Create Group");
-
-        createGroupButton.setOnAction(e -> {
-            String groupName = groupNameField.getText();
-            String groupDescription = groupDescriptionField.getText();
-
-            if (groupName.isEmpty() || groupDescription.isEmpty()) {
-                System.err.println("Error: Please fill in both the group name and description.");
-            } else {
-                groupController.createGroup(groupName, groupDescription, currentUser, true);  // Assuming the group is public
-                System.err.println("Success: Group created successfully!");
-                showGroupList();
-            }
-        });
-
-        VBox formLayout = new VBox(10, titleLabel, groupNameField, groupDescriptionField, createGroupButton);
-        formLayout.setAlignment(javafx.geometry.Pos.CENTER);
-        formLayout.setPadding(new Insets(20));
-
-        root.setCenter(formLayout);
+        // Placeholder - Create a simple "Coming Soon" view
+        Label label = new Label("Create Group - Coming Soon");
+        label.setStyle("-fx-font-size: 24px;");
+        VBox placeholder = new VBox(label);
+        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
+        placeholder.setPadding(new Insets(20));
+        root.setCenter(placeholder);
     }
 
     private void showMessages() {
         MessageView messageView = new MessageView(currentUser, messageController, groupService);
         root.setCenter(messageView.getRoot());
     }
-
 
     private void showProfile() {
         // Placeholder - Create a simple "Coming Soon" view
@@ -212,5 +185,4 @@ public class MainView {
         placeholder.setPadding(new Insets(20));
         root.setCenter(placeholder);
     }
-
 }

@@ -26,8 +26,8 @@ public class MyGroupsView {
     private final User currentUser;
     private final GroupController controller;
     private final BorderPane root;
-    private final ListView<Group> groupListView; // Define the ListView
-    private List<Group> groups; // List of groups the user is part of
+    private final ListView<Group> groupListView;
+    private List<Group> groups;
 
     public MyGroupsView(User currentUser, GroupController controller) {
         this.currentUser = currentUser;
@@ -54,15 +54,8 @@ public class MyGroupsView {
         groupListView.setCellFactory(param -> new GroupListCell());
         VBox.setVgrow(groupListView, Priority.ALWAYS);
 
-        Label infoLabel = new Label("Double-click on a group to view details or leave the group.");
-        infoLabel.setStyle("-fx-font-style: italic;");
-        HBox infoBox = new HBox(infoLabel);
-        infoBox.setPadding(new Insets(5, 10, 5, 10));
-        infoBox.setStyle("-fx-background-color: #f8f9fa;");
-
         root.setTop(topBox);
         root.setCenter(groupListView);
-        root.setBottom(infoBox);
         root.setPadding(new Insets(0));
     }
 
@@ -73,13 +66,13 @@ public class MyGroupsView {
         groupListView.setItems(observableGroups);
     }
 
-
     private class GroupListCell extends ListCell<Group> {
         private final VBox content;
         private final Label nameLabel;
         private final Label descriptionLabel;
         private final Label membersLabel;
         private final Button leaveButton;
+        private final Button messageButton;
 
         public GroupListCell() {
             nameLabel = new Label();
@@ -94,7 +87,10 @@ public class MyGroupsView {
             leaveButton = new Button("Leave Group");
             leaveButton.setOnAction(e -> handleLeaveGroup(getItem()));
 
-            HBox buttonBox = new HBox(10, leaveButton);
+            messageButton = new Button("Messages");
+            messageButton.setOnAction(e -> handleMessageButton(getItem()));
+
+            HBox buttonBox = new HBox(10, leaveButton, messageButton);
             buttonBox.setPadding(new Insets(5, 0, 0, 0));
 
             content = new VBox(5, nameLabel, descriptionLabel, membersLabel, buttonBox);
@@ -116,6 +112,9 @@ public class MyGroupsView {
                 boolean isMember = group.getMembers().contains(currentUser);
                 leaveButton.setDisable(!isMember);
                 leaveButton.setText(isMember ? "Leave Group" : "Not a member");
+
+                // Enable/disable message button based on group membership
+                messageButton.setDisable(!isMember);
 
                 setGraphic(content);
             }
@@ -142,6 +141,12 @@ public class MyGroupsView {
                 alert.setContentText("Could not leave the group. Please try again later.");
                 alert.showAndWait();
             }
+        }
+
+        private void handleMessageButton(Group group) {
+            // Create an anonymous inner class that provides access to the group
+            // The idea is to use the existing method in MainView that shows messages
+           // ((MainView) root.getScene().getWindow().getUserData()).showGroupMessages(group);
         }
     }
 }
