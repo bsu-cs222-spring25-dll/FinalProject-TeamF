@@ -5,6 +5,7 @@ import edu.bsu.cs.service.GroupService;
 import edu.bsu.cs.service.InterestService;
 import edu.bsu.cs.service.MessageService;
 import edu.bsu.cs.service.UserService;
+import edu.bsu.cs.view.InterestSelectionView;
 import edu.bsu.cs.view.MainView;
 import edu.bsu.cs.view.RegistrationView;
 import javafx.scene.Scene;
@@ -45,17 +46,46 @@ public class LoginViewController {
     }
 
     public void showMainView(Stage stage, User user) {
-        MainView mainView = new MainView(user, userService, groupService, interestService, messageService);
-        Scene scene = new Scene(mainView.getRoot(), 1024, 768);
+        // Check if user has any interests
+        if (user.getInterests().isEmpty()) {
+            // If no interests are set, show the interest selection view first
+            showInterestSelectionView(stage, user);
+        } else {
+            // User already has interests, proceed directly to main view
+            MainView mainView = new MainView(user, userService, groupService, interestService, messageService);
+            Scene scene = new Scene(mainView.getRoot(), 1024, 768);
+
+            // Apply CSS
+            try {
+                scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
+            } catch (Exception e) {
+                System.err.println("CSS not found: " + e.getMessage());
+            }
+
+            stage.setScene(scene);
+            stage.setTitle("GroupSync - Welcome " + user.getUsername());
+        }
+    }
+
+    /**
+     * Shows the interest selection view for a user.
+     *
+     * @param stage The current stage
+     * @param user The user selecting interests
+     */
+    public void showInterestSelectionView(Stage stage, User user) {
+        InterestSelectionView interestView = new InterestSelectionView(
+                user, userService, interestService, groupService, messageService, this);
+        Scene scene = new Scene(interestView.getRoot(), 800, 600);
 
         // Apply CSS
         try {
-            scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/Interest.css").toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }
 
         stage.setScene(scene);
-        stage.setTitle("GroupSync - Welcome " + user.getUsername());
+        stage.setTitle("GroupSync - Select Your Interests");
     }
 }
