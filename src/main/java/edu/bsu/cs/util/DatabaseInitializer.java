@@ -73,46 +73,47 @@ public class DatabaseInitializer {
 
     private void createPredefinedInterests() {
         List<String> interestNames = Arrays.asList(
-                // Tech & Science
+                // Technology & Science
                 "Technology", "Programming", "AI & Machine Learning", "Cybersecurity",
-                "Cryptocurrency", "Gadgets", "Science", "Space Exploration",
+                "Cryptocurrency", "Gadgets", "Science", "Space Exploration", "Astronomy",
+                "Physics", "Biology", "Mathematics", "Coding Challenges",
 
-                // Fitness & Sports
+                // Fitness, Sports & Outdoor Activities
                 "Hiking", "Cycling", "Yoga", "Fitness", "Swimming", "Martial Arts",
                 "Skateboarding", "Running", "Weightlifting", "Rock Climbing",
-                "Tennis", "Basketball", "Soccer", "American Football",
+                "Tennis", "Basketball", "Soccer", "American Football", "Camping",
+                "Backpacking", "Surfing", "Skiing", "Fishing", "Kayaking",
 
-                // Arts & Creativity
-                "Photography", "Painting", "Digital Art", "Graphic Design",
-                "Theater", "Fashion", "Interior Design", "Calligraphy",
-                "Music", "Singing", "Dancing", "DJing", "Writing", "Poetry",
+                // Arts, Fashion & Creativity
+                "Photography", "Painting", "Digital Art", "Graphic Design", "Theater",
+                "Fashion", "Makeup", "Interior Design", "Calligraphy", "Jewelry Design",
+                "Tattoo Art", "DIY Projects", "Crafting",
 
-                // Entertainment & Media
-                "Movies", "TV Shows", "Anime", "K-Pop", "Podcasts", "Stand-up Comedy",
-                "Board Games", "Video Games", "Esports", "Streaming",
+                // Music & Entertainment
+                "Music", "Singing", "Dancing", "DJing", "Movies", "TV Shows",
+                "Anime", "K-Pop", "Podcasts", "Stand-up Comedy", "Board Games",
+                "Video Games", "Esports", "Streaming", "Theater Acting",
 
-                // Lifestyle & Personal Development
-                "Cooking", "Baking", "Gardening", "DIY Projects", "Self-Improvement",
-                "Mindfulness", "Meditation", "Journaling", "Public Speaking",
-                "Finance", "Investing", "Entrepreneurship", "Business Strategy",
-                "Leadership", "Personal Finance", "Marketing",
+                // Personal Development & Social
+                "Cooking", "Baking", "Gardening", "Self-Improvement", "Mindfulness",
+                "Meditation", "Journaling", "Public Speaking", "Finance", "Investing",
+                "Entrepreneurship", "Business Strategy", "Leadership", "Personal Finance",
+                "Marketing", "Networking", "Debating", "Philosophy",
 
-                // Travel & Adventure
-                "Travel", "Backpacking", "Camping", "Road Trips", "Theme Parks",
-                "Cultural Experiences", "Foodie Adventures",
+                // Travel & Culture
+                "Travel", "Road Trips", "Theme Parks", "Cultural Experiences",
+                "Foodie Adventures", "Languages", "History", "Mythology", "World Religions",
 
-                // Social & Community
-                "Volunteering", "Activism", "Charity Work", "Networking",
-                "Debating", "Environmentalism", "Philosophy",
+                // Social & Lifestyle
+                "Volunteering", "Activism", "Charity Work", "Environmentalism",
+                "Pets", "Parenting", "Relationships", "Social Media", "Astrology",
+                "Magic Tricks", "True Crime", "Conspiracy Theories",
 
-                // Special Interests
-                "Pets", "Astrology", "Magic Tricks", "Chess", "Collecting",
-                "Mythology", "True Crime", "Conspiracy Theories",
-
-                // Learning & Academics
-                "History", "Languages", "Psychology", "Philosophy", "Astronomy",
-                "Biology", "Physics", "Mathematics", "Coding Challenges"
+                // Strategy & Intellectual Pursuits
+                "Chess", "Puzzle Solving", "Brain Teasers", "Strategy Games",
+                "Science Fiction", "Psychology", "Mythology", "Space Exploration"
         );
+
 
 
         for (String name : interestNames) {

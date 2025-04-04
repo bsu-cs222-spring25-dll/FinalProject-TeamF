@@ -323,5 +323,7 @@ public class MessageView {
                 return time.format(DATE_FORMATTER) + " " + timeStr;
             }
         }
+
+
     }
 }

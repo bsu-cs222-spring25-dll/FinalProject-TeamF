@@ -115,18 +115,89 @@ public class GroupDAOImpl extends AbstractDAO<Group, UUID> implements GroupDAO {
             transaction = session.beginTransaction();
 
             // Define the predefined groups
+            // Define the predefined groups
             Object[][] groupsData = {
+                    // General Social & Networking Groups
                     {"New to Town", "For people who just moved to a new city and want to make friends",
-                            new String[]{"Travel"}},
-                    {"Tech Enthusiasts", "Discuss the latest in technology and programming",
-                            new String[]{"Technology", "Programming"}},
-                    {"Outdoor Adventures", "Find people to hike, bike, and explore with",
-                            new String[]{"Hiking", "Sports"}},
-                    {"Book Club", "Monthly book discussions and recommendations",
-                            new String[]{"Reading"}},
-                    {"Music Lovers", "Share and discover new music with fellow enthusiasts",
-                            new String[]{"Music"}}
+                            new String[]{"Travel", "Networking", "Cultural Experiences"}},
+
+                    {"Entrepreneurs & Investors", "Discuss business, startups, investing, and leadership",
+                            new String[]{"Entrepreneurship", "Investing", "Personal Finance", "Marketing"}},
+
+                    {"Language & Culture Exchange", "Meet people interested in learning new languages and cultures",
+                            new String[]{"Languages", "Cultural Experiences", "Travel"}},
+
+                    {"Volunteers & Activists", "Make an impact through volunteering and activism",
+                            new String[]{"Volunteering", "Activism", "Environmentalism"}},
+
+                    // Tech & Science Enthusiast Groups
+                    {"Tech Enthusiasts", "Discuss the latest in technology, programming, and AI",
+                            new String[]{"Technology", "Programming", "AI & Machine Learning", "Cybersecurity"}},
+
+                    {"Science & Space Enthusiasts", "Explore astronomy, physics, and scientific discoveries",
+                            new String[]{"Astronomy", "Physics", "Science", "Space Exploration"}},
+
+                    // Fitness, Sports & Outdoor Activities
+                    {"Outdoor Adventures", "Find people to hike, bike, camp, and explore with",
+                            new String[]{"Hiking", "Cycling", "Camping", "Rock Climbing", "Backpacking"}},
+
+                    {"Fitness & Wellness", "Stay active with fitness buddies and wellness tips",
+                            new String[]{"Fitness", "Yoga", "Running", "Weightlifting", "Martial Arts"}},
+
+                    {"Sports Fanatics", "Discuss and play sports like soccer, basketball, and tennis",
+                            new String[]{"Soccer", "Basketball", "Tennis", "American Football"}},
+
+                    // Arts, Fashion & Creativity
+                    {"Creative Minds", "A space for artists, designers, writers, and creators",
+                            new String[]{"Photography", "Painting", "Digital Art", "Graphic Design", "Writing"}},
+
+                    {"Fashion & Beauty", "Trendy fashion discussions, beauty tips, and makeup tutorials",
+                            new String[]{"Fashion", "Makeup", "Jewelry Design", "Tattoo Art"}},
+
+                    {"DIY & Crafting", "A community for crafting, home decor, and DIY projects",
+                            new String[]{"DIY Projects", "Interior Design", "Calligraphy"}},
+
+                    // Entertainment & Hobbies
+                    {"Book Club", "Monthly book discussions, recommendations, and literary debates",
+                            new String[]{"Reading", "Writing", "Poetry", "History"}},
+
+                    {"Movie Buffs", "Discuss the latest movies, TV shows, and film classics",
+                            new String[]{"Movies", "TV Shows", "Theater"}},
+
+                    {"Gamers United", "Connect with gamers for casual play, esports, and streaming",
+                            new String[]{"Video Games", "Esports", "Board Games", "Streaming"}},
+
+                    {"Music Lovers", "Share and discover new music, instruments, and concerts",
+                            new String[]{"Music", "Singing", "DJing"}},
+
+                    // Food & Travel
+                    {"Foodies & Home Chefs", "Discover and share new recipes, restaurants, and baking tips",
+                            new String[]{"Cooking", "Baking", "Foodie Adventures"}},
+
+                    {"Travel & Adventure Seekers", "Plan trips, find travel buddies, and explore new places",
+                            new String[]{"Travel", "Backpacking", "Road Trips", "Theme Parks"}},
+
+                    // Personal Development & Mental Health
+                    {"Mindfulness & Self-Improvement", "Grow personally through mindfulness and self-development",
+                            new String[]{"Mindfulness", "Meditation", "Journaling", "Self-Improvement"}},
+
+                    {"Parenting & Family", "Support and advice for parents raising kids",
+                            new String[]{"Parenting", "Relationships"}},
+
+                    // Social & Special Interest Groups
+                    {"Pet Lovers", "A community for pet owners to share tips and experiences",
+                            new String[]{"Pets"}},
+
+                    {"Astrology & Mysticism", "Discuss horoscopes, tarot, and astrology",
+                            new String[]{"Astrology"}},
+
+                    {"True Crime & Conspiracies", "For those fascinated by crime stories and unsolved mysteries",
+                            new String[]{"True Crime", "Conspiracy Theories"}},
+
+                    {"Chess & Strategy Games", "For lovers of chess, strategy, and board games",
+                            new String[]{"Chess", "Board Games", "Puzzle Solving"}},
             };
+
 
             InterestDAO interestDAO = new InterestDAOImpl();
 

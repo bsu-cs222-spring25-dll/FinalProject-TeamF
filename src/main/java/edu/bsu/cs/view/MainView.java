@@ -156,7 +156,7 @@ public class MainView {
     }
 
     private void showMyGroups() {
-        MyGroupsView myGroupsView = new MyGroupsView(currentUser, groupController);
+        MyGroupsView myGroupsView = new MyGroupsView(currentUser, groupController,messageController);
         root.setCenter(myGroupsView.getRoot());
     }
 
