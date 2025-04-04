@@ -1,82 +1,64 @@
-/* Style for the Interest Selection View */
+/* Interest Selection Styling with Smaller Boxes */
 
+/* Keep current background */
 .root {
-    -fx-background-color: #f5f8fa;
+    -fx-background-color: #e6f2ff; /* Light blue background */
     -fx-font-family: 'Segoe UI', Arial, sans-serif;
 }
 
-.button-primary {
-    -fx-background-color: #4285f4;
-    -fx-text-fill: white;
+/* Keep current text styling */
+.text {
+    -fx-fill: #333333;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-padding: 8 20;
-    -fx-background-radius: 4;
 }
 
-.button-primary:hover {
-    -fx-background-color: #3367d6;
-    -fx-cursor: hand;
+.label {
+    -fx-text-fill: #555555;
+    -fx-font-size: 14px;
+}
+
+/* ONLY adjust the interest box size */
+.interest-box {
+    -fx-background-color: #f0f5fa;
+    -fx-background-radius: 5;
+    -fx-border-color: #d6e4f0;
+    -fx-border-radius: 5;
+    -fx-padding: 5px;
+    -fx-pref-width: 140px;  /* Smaller width */
+    -fx-max-width: 140px;   /* Fixed maximum width */
+    -fx-min-height: 35px;   /* Smaller height */
+}
+
+/* Adjust checkbox size to match */
+.check-box {
+    -fx-text-fill: #333333;
+    -fx-font-size: 12px;   /* Smaller font size */
+}
+.check-box:selected .box {
+    -fx-background-color: #3498db; /* Blue checkbox when selected */
+    -fx-border-color: #3498db;
+}
+
+/* Keep the nice button styling */
+.button-primary {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 6 15;
+    -fx-background-radius: 4;
 }
 
 .button-secondary {
-    -fx-background-color: #f1f3f4;
-    -fx-text-fill: #5f6368;
-    -fx-padding: 8 20;
+    -fx-background-color: #9c27b0;
+    -fx-text-fill: white;
+    -fx-padding: 6 15;
     -fx-background-radius: 4;
 }
 
-.button-secondary:hover {
-    -fx-background-color: #e8eaed;
-    -fx-cursor: hand;
-}
-
-.interest-box {
-    -fx-background-color: white;
-    -fx-background-radius: 8;
-    -fx-border-color: #e0e0e0;
-    -fx-border-radius: 8;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 1);
-    -fx-transition: all 0.2s ease-in-out;
-}
-
-.interest-box:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 2);
-    -fx-border-color: #4285f4;
-}
-
-.interest-box .check-box {
-    -fx-padding: 5;
-}
-
-.interest-box .check-box .box {
-    -fx-background-color: white;
-    -fx-border-color: #9aa0a6;
-    -fx-border-radius: 3;
-}
-
-.interest-box .check-box:selected .box {
-    -fx-background-color: #4285f4;
-    -fx-border-color: #4285f4;
-}
-
-.interest-box .check-box:selected .mark {
-    -fx-background-color: white;
-}
-
-.scroll-pane {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar:vertical {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar:vertical .thumb {
-    -fx-background-color: #dadce0;
-    -fx-background-radius: 5em;
+/* Adjust the flow pane to match the smaller boxes */
+.flow-pane {
+    -fx-hgap: 8;
+    -fx-vgap: 8;
+    -fx-padding: 10;
 }

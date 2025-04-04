@@ -31,7 +31,7 @@ public class GroupController {
     }
 
     // Get recommended groups for a user
-    public List<Group> getRecommendedGroups(User user) {
+    public List<Group> getRecommendedGroups(User user,int limit) {
         return groupService.recommendGroupsForUser(user, 10); // Show top 10 recommendations
     }
 
@@ -48,6 +48,11 @@ public class GroupController {
     // Create a new group
     public Group createGroup(String name, String description, User creator, boolean isPublic) {
         return groupService.createGroup(name, description, creator, isPublic);
+    }
+
+    // Find groups matching user's interests
+    public List<Group> findGroupsByUserInterests(User user, int limit) {
+        return groupService.findGroupsByUserInterests(user, limit);
     }
 
     // Get group by ID

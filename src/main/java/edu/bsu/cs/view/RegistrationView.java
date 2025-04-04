@@ -1,14 +1,11 @@
 package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.LoginViewController;
-import edu.bsu.cs.dao.GroupDAOImpl;
-import edu.bsu.cs.dao.InterestDAOImpl;
-import edu.bsu.cs.dao.MessageDAOImpl;
+import edu.bsu.cs.controller.UserController;
+import edu.bsu.cs.controller.GroupController;
+import edu.bsu.cs.controller.InterestController;
+import edu.bsu.cs.controller.MessageController;
 import edu.bsu.cs.model.User;
-import edu.bsu.cs.service.GroupService;
-import edu.bsu.cs.service.InterestService;
-import edu.bsu.cs.service.MessageService;
-import edu.bsu.cs.service.UserService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -21,7 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class RegistrationView {
-    protected final UserService userService;
+    protected final UserController userController;
     protected final VBox root;
 
     protected TextField usernameField;
@@ -29,21 +26,25 @@ public class RegistrationView {
     protected PasswordField passwordField;
     protected PasswordField confirmPasswordField;
 
-    // Additional service fields for navigation to MainView
-    protected GroupService groupService;
-    protected InterestService interestService;
-    protected MessageService messageService;
+    // Additional controller fields for navigation to MainView
+    protected final GroupController groupController;
+    protected final InterestController interestController;
+    protected final MessageController messageController;
 
-
-    public RegistrationView(UserService userService) {
-        this.userService = userService;
+    public RegistrationView(UserController userController,
+                            GroupController groupController,
+                            InterestController interestController,
+                            MessageController messageController) {
+        this.userController = userController;
+        this.groupController = groupController;
+        this.interestController = interestController;
+        this.messageController = messageController;
         this.root = createRegistrationView();
     }
 
     public VBox getRoot() {
         return root;
     }
-
 
     private VBox createRegistrationView() {
         // Layout for the register
@@ -102,7 +103,6 @@ public class RegistrationView {
         return vbox;
     }
 
-
     protected void handleRegistration() {
         String username = usernameField.getText().trim();
         String email = emailField.getText().trim();
@@ -120,17 +120,14 @@ public class RegistrationView {
             return;
         }
 
-        if (userService == null) {
+        if (userController == null) {
             showAlert("Error", "System configuration error");
             return;
         }
 
         try {
             // Register the user with simple approach
-            User user = userService.registerUser(username, email, password);
-
-            // Force the database to complete the transaction
-            userService.findByUsername(username);
+            User user = userController.register(username, email, password);
 
             // Show success message
             showAlert("Success", "Account created successfully!");
@@ -147,24 +144,13 @@ public class RegistrationView {
         // Get the current stage
         Stage stage = (Stage) root.getScene().getWindow();
 
-        // Create a LoginViewController with all necessary services
-        LoginViewController loginController;
-
-        if (groupService != null && interestService != null && messageService != null) {
-            loginController = new LoginViewController(userService, groupService, interestService, messageService);
-        } else {
-            // Create proper services with DAOs if they're not provided
-            try {
-                GroupService gs = groupService != null ? groupService : new GroupService(new GroupDAOImpl());
-                InterestService is = interestService != null ? interestService : new InterestService(new InterestDAOImpl());
-                MessageService ms = messageService != null ? messageService : new MessageService(new MessageDAOImpl());
-
-                loginController = new LoginViewController(userService, gs, is, ms);
-            } catch (Exception e) {
-                showAlert("Error", "Could not initialize login view: " + e.getMessage());
-                return;
-            }
-        }
+        // Create a LoginViewController with all necessary controllers
+        LoginViewController loginController = new LoginViewController(
+                userController,
+                groupController,
+                interestController,
+                messageController
+        );
 
         // Create login view with controller
         LoginView loginView = new LoginView(loginController);

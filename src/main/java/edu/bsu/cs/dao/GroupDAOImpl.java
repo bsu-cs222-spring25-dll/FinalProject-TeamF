@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GroupDAOImpl extends AbstractDAO<Group, UUID> implements GroupDAO {
 
@@ -161,4 +162,24 @@ public class GroupDAOImpl extends AbstractDAO<Group, UUID> implements GroupDAO {
             }
         }
     }
+
+    public List<Group> findGroupsByUserInterests(User user, int limit) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Basic HQL to find groups matching user's interests
+            String hql = "SELECT DISTINCT g FROM Group g " +
+                    "JOIN g.interests gi " +
+                    "WHERE gi IN :userInterests";
+
+            return session.createQuery(hql, Group.class)
+                    .setParameter("userInterests", user.getInterests())
+                    .setMaxResults(limit)
+                    .getResultList();
+        } catch (Exception e) {
+            // Log the error
+            System.err.println("Error finding groups by interests: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+
 }

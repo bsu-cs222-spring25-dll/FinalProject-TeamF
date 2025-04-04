@@ -2,7 +2,6 @@ package edu.bsu.cs.controller;
 
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.service.InterestService;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,25 +13,23 @@ public class InterestController {
         this.interestService = interestService;
     }
 
+    public List<Interest> getAllInterests() {
+        return interestService.getAllInterests();
+    }
+
+    public Optional<Interest> findById(UUID id) {
+        return interestService.findById(id);
+    }
+
     public Interest createInterest(String name) {
         return interestService.createInterest(name);
     }
 
-    public List<Interest> searchInterests(String searchText) {
-        return interestService.findInterestByNameContaining(searchText);
+    public Interest updateInterest(Interest interest) {
+        return interestService.updateInterest(interest);
     }
 
-
-    public Optional<Interest> getInterestByName(String name) {
-        return interestService.findInterestByName(name);
-    }
-
-
-    public Optional<Interest> getInterestById(UUID id) {
-        return interestService.findById(id);
-    }
-
-    public List<Interest> getAllInterests() {
-        return interestService.getAllInterests();
+    public void deleteInterest(Interest interest) {
+        interestService.deleteInterest(interest);
     }
 }

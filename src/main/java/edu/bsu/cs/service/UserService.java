@@ -43,20 +43,50 @@ public class UserService {
         return userDAO.update(user);
     }
 
-    public boolean addInterest(User user,Interest interest) {
-        if(user.addInterest(interest)) {
-            userDAO.update(user);
-            return true;
-        }
-        return false;
+    public boolean addInterest(User user, Interest interest) {
+        return HibernateSessionManager.executeWithTransaction(session -> {
+            // Get fresh instances of both entities
+            User freshUser = session.get(User.class, user.getId());
+            Interest freshInterest = session.get(Interest.class, interest.getId());
+
+            if (freshUser == null || freshInterest == null) {
+                throw new RuntimeException("Could not find user or interest in database");
+            }
+
+            // Add interest to user
+            boolean added = freshUser.getInterests().add(freshInterest);
+
+            if (added) {
+                // Update in memory user object as well
+                user.getInterests().add(interest);
+                session.update(freshUser);
+            }
+
+            return added;
+        });
     }
 
     public boolean removeInterest(User user, Interest interest) {
-        if (user.removeInterest(interest)) {
-            userDAO.update(user);
-            return true;
-        }
-        return false;
+        return HibernateSessionManager.executeWithTransaction(session -> {
+            // Get fresh instances of both entities
+            User freshUser = session.get(User.class, user.getId());
+            Interest freshInterest = session.get(Interest.class, interest.getId());
+
+            if (freshUser == null || freshInterest == null) {
+                throw new RuntimeException("Could not find user or interest in database");
+            }
+
+            // Remove interest from user
+            boolean removed = freshUser.getInterests().remove(freshInterest);
+
+            if (removed) {
+                // Update in memory user object as well
+                user.getInterests().remove(interest);
+                session.update(freshUser);
+            }
+
+            return removed;
+        });
     }
 
     public Optional<User> findById(UUID id) {

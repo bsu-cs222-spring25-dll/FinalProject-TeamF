@@ -16,4 +16,5 @@ public interface GroupDAO extends GenericDAO<Group, UUID> {
     List<Group> findPublicGroups();
     List<Group> recommendGroupsForUser(User user, Set<Interest> additionalInterests, int limit);
     void createInitialGroups(User systemUser);
+    List<Group> findGroupsByUserInterests(User user, int limit);
 }

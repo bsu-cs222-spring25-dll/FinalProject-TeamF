@@ -1,14 +1,11 @@
 package edu.bsu.cs.view;
 
+import edu.bsu.cs.controller.*;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
-import edu.bsu.cs.service.GroupService;
-import edu.bsu.cs.service.InterestService;
-import edu.bsu.cs.service.MessageService;
-import edu.bsu.cs.service.UserService;
-import edu.bsu.cs.controller.LoginViewController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -19,28 +16,38 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public class InterestSelectionView {
-    private final User currentUser;
-    private final UserService userService;
-    private final InterestService interestService;
-    private final GroupService groupService;
-    private final MessageService messageService;
+    private User currentUser;
+    private final UserController userController;
+    private final InterestController interestController;
+    private final GroupController groupController;
+    private final MessageController messageController;
     private final LoginViewController loginViewController;
     private final VBox root;
 
     private final Map<Interest, CheckBox> interestCheckboxes = new HashMap<>();
 
-    public InterestSelectionView(User user, UserService userService,
-                                 InterestService interestService,
-                                 GroupService groupService,
-                                 MessageService messageService,
+    public InterestSelectionView(User user, UserController userController,
+                                 InterestController interestController,
+                                 GroupController groupController,
+                                 MessageController messageController,
                                  LoginViewController loginViewController) {
         this.currentUser = user;
-        this.userService = userService;
-        this.interestService = interestService;
-        this.groupService = groupService;
-        this.messageService = messageService;
+        this.userController = userController;
+        this.interestController = interestController;
+        this.groupController = groupController;
+        this.messageController = messageController;
         this.loginViewController = loginViewController;
         this.root = createView();
+
+        // After creating the root
+        String cssPath = "/Interest.css";
+        try {
+            root.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
+            System.out.println("Successfully loaded CSS: " + cssPath);
+        } catch (Exception e) {
+            System.err.println("Failed to load CSS " + cssPath + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public VBox getRoot() {
@@ -68,7 +75,10 @@ public class InterestSelectionView {
         buttonBar.setAlignment(Pos.CENTER);
 
         Button skipButton = new Button("Skip for Now");
+        skipButton.getStyleClass().add("button-secondary");
+
         Button continueButton = new Button("Continue");
+        continueButton.getStyleClass().add("button-primary");
 
         buttonBar.getChildren().addAll(skipButton, continueButton);
 
@@ -88,25 +98,43 @@ public class InterestSelectionView {
         interestsPane.setPadding(new Insets(20));
         interestsPane.setPrefWidth(700);
 
-        // Get all available interests
-        List<Interest> availableInterests = interestService.getAllInterests();
+        try {
+            // Get all available interests
+            List<Interest> availableInterests = interestController.getAllInterests();
 
-        // Current user's interests (for pre-selection)
-        Set<Interest> userInterests = currentUser.getInterests();
+            // Current user's interests (for pre-selection)
+            Set<Interest> userInterests = currentUser.getInterests();
 
-        // Create checkboxes for each interest
-        for (Interest interest : availableInterests) {
-            CheckBox checkBox = new CheckBox(interest.getName());
-            checkBox.setSelected(userInterests.contains(interest));
+            // Create checkboxes for each interest
+            for (Interest interest : availableInterests) {
+                CheckBox checkBox = new CheckBox(interest.getName());
+                checkBox.setWrapText(true); // Allow text to wrap
+                checkBox.setSelected(userInterests.contains(interest));
 
-            // Create a styled container for each checkbox
-            VBox interestBox = new VBox(checkBox);
-            interestBox.setPadding(new Insets(10));
-            interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
-            interestBox.setPrefWidth(150);
+                // Create a styled container for each checkbox
+                VBox interestBox = new VBox(checkBox);
+                interestBox.setPadding(new Insets(10));
+                interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
+                interestBox.setPrefWidth(150);
+                interestBox.getStyleClass().add("interest-box");
 
-            interestsPane.getChildren().add(interestBox);
-            interestCheckboxes.put(interest, checkBox);
+                interestsPane.getChildren().add(interestBox);
+                interestCheckboxes.put(interest, checkBox);
+            }
+
+            // If no interests are available yet, show a message
+            if (availableInterests.isEmpty()) {
+                Label noInterestsLabel = new Label("No interests available in the system yet.");
+                noInterestsLabel.setStyle("-fx-font-style: italic;");
+                interestsPane.getChildren().add(noInterestsLabel);
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading interests: " + e.getMessage());
+            e.printStackTrace();
+
+            Label errorLabel = new Label("Error loading interests. Please try again.");
+            errorLabel.setStyle("-fx-font-style: italic; -fx-text-fill: red;");
+            interestsPane.getChildren().add(errorLabel);
         }
 
         // Wrap in ScrollPane for many interests
@@ -119,24 +147,86 @@ public class InterestSelectionView {
     }
 
     private void saveInterestsAndNavigate() {
-        // Save selected interests
-        for (Map.Entry<Interest, CheckBox> entry : interestCheckboxes.entrySet()) {
-            Interest interest = entry.getKey();
-            boolean isSelected = entry.getValue().isSelected();
+        try {
+            boolean atLeastOneSelected = false;
 
-            if (isSelected && !currentUser.getInterests().contains(interest)) {
-                userService.addInterest(currentUser, interest);
-            } else if (!isSelected && currentUser.getInterests().contains(interest)) {
-                userService.removeInterest(currentUser, interest);
+            // Save selected interests one by one
+            for (Map.Entry<Interest, CheckBox> entry : interestCheckboxes.entrySet()) {
+                Interest interest = entry.getKey();
+                boolean isSelected = entry.getValue().isSelected();
+
+                if (isSelected) {
+                    atLeastOneSelected = true;
+                    if (!currentUser.getInterests().contains(interest)) {
+                        boolean success = userController.addInterest(currentUser, interest);
+                        if (!success) {
+                            System.err.println("Failed to add interest: " + interest.getName());
+                        }
+                    }
+                } else if (currentUser.getInterests().contains(interest)) {
+                    boolean success = userController.removeInterest(currentUser, interest);
+                    if (!success) {
+                        System.err.println("Failed to remove interest: " + interest.getName());
+                    }
+                }
             }
-        }
 
-        // Navigate to main view with updated interests
-        navigateToMainView();
+            // Refresh the user to get updated interests
+            Optional<User> refreshedUserOpt = userController.findById(currentUser.getId());
+            if (refreshedUserOpt.isPresent()) {
+                currentUser = refreshedUserOpt.get();
+            }
+
+            // Show a confirmation or warning based on selection
+            if (atLeastOneSelected) {
+                showAlert("Interests Saved", "Your interests have been saved successfully!");
+            } else {
+                showAlert("No Interests Selected", "You haven't selected any interests. " +
+                        "This may limit the groups we can recommend for you.");
+            }
+
+            // Navigate to main view with updated interests
+            navigateToMainView();
+        } catch (Exception e) {
+            System.err.println("Error saving interests: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Error", "Failed to save interests: " + e.getMessage());
+        }
     }
 
     private void navigateToMainView() {
-        Stage stage = (Stage) root.getScene().getWindow();
-        loginViewController.showMainView(stage, currentUser);
+        try {
+            Stage stage = (Stage) root.getScene().getWindow();
+
+            // Get a refreshed user from the database
+            Optional<User> refreshedUserOpt = userController.findById(currentUser.getId());
+            User refreshedUser = refreshedUserOpt.orElse(currentUser);
+
+            MainView mainView = new MainView(refreshedUser, userController, groupController,
+                    interestController, messageController);
+            Scene scene = new Scene(mainView.getRoot(), 1024, 768);
+
+            // Apply CSS
+            try {
+                scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
+            } catch (Exception e) {
+                System.err.println("CSS not found: " + e.getMessage());
+            }
+
+            stage.setScene(scene);
+            stage.setTitle("GroupSync - Main");
+        } catch (Exception e) {
+            System.err.println("Error navigating to main view: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Error", "Failed to navigate to main view: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

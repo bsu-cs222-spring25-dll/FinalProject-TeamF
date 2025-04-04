@@ -5,7 +5,6 @@ import edu.bsu.cs.controller.MessageController;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Message;
 import edu.bsu.cs.model.User;
-import edu.bsu.cs.service.GroupService;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -48,10 +47,12 @@ public class MessageView {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
-    public MessageView(User currentUser, MessageController messageController, GroupService groupService) {
+    public MessageView(User currentUser,
+                       MessageController messageController,
+                       GroupController groupController) {
         this.currentUser = currentUser;
         this.messageController = messageController;
-        this.groupController = new GroupController(groupService);
+        this.groupController = groupController;
 
         this.root = new BorderPane();
         this.groupListView = new ListView<>();
@@ -323,5 +324,4 @@ public class MessageView {
             }
         }
     }
-
 }

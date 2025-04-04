@@ -1,14 +1,7 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.GroupController;
-import edu.bsu.cs.controller.LoginViewController;
-import edu.bsu.cs.controller.MessageController;
-import edu.bsu.cs.model.Group;
+import edu.bsu.cs.controller.*;
 import edu.bsu.cs.model.User;
-import edu.bsu.cs.service.GroupService;
-import edu.bsu.cs.service.InterestService;
-import edu.bsu.cs.service.MessageService;
-import edu.bsu.cs.service.UserService;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,31 +9,30 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.List;
-
 public class MainView {
     private User currentUser;
-    private final UserService userService;
-    private final GroupService groupService;
-    private final InterestService interestService;
-    private final MessageService messageService;
-
-    // Controllers
-    private GroupController groupController;
-    private MessageController messageController;
+    private final UserController userController;
+    private final GroupController groupController;
+    private final InterestController interestController;
+    private final MessageController messageController;
+    private final LoginViewController loginViewController;
 
     private final BorderPane root;
 
     // View components
-    public MainView(User currentUser, UserService userService, GroupService groupService,
-                    InterestService interestService, MessageService messageService) {
+    public MainView(User currentUser,
+                    UserController userController,
+                    GroupController groupController,
+                    InterestController interestController,
+                    MessageController messageController) {
         this.currentUser = currentUser;
-        this.userService = userService;
-        this.groupService = groupService;
-        this.interestService = interestService;
-        this.messageService = messageService;
-        this.groupController = new GroupController(groupService);
-        this.messageController = new MessageController(messageService);
+        this.userController = userController;
+        this.groupController = groupController;
+        this.interestController = interestController;
+        this.messageController = messageController;
+        this.loginViewController = new LoginViewController(
+                userController, groupController, interestController, messageController
+        );
 
         this.root = createMainView();
     }
@@ -50,7 +42,6 @@ public class MainView {
     }
 
     private BorderPane createMainView() {
-
         BorderPane borderPane = new BorderPane();
 
         MenuBar menuBar = createMenuBar();
@@ -79,7 +70,12 @@ public class MainView {
         groupsItem.setOnAction(e -> showGroupList());
         MenuItem profileItem = new MenuItem("My Profile");
         profileItem.setOnAction(e -> showProfile());
-        viewMenu.getItems().addAll(groupsItem, profileItem);
+
+        // Add recommendation menu item
+        MenuItem recommendationsItem = new MenuItem("Recommended Groups");
+        recommendationsItem.setOnAction(e -> showRecommendations());
+
+        viewMenu.getItems().addAll(groupsItem, profileItem, recommendationsItem);
 
         menuBar.getMenus().addAll(fileMenu, viewMenu);
 
@@ -101,6 +97,11 @@ public class MainView {
         myGroupsButton.setMaxWidth(Double.MAX_VALUE);
         myGroupsButton.setOnAction(e -> showMyGroups());
 
+        // Add recommendations button
+        Button recommendationsButton = new Button("Recommended Groups");
+        recommendationsButton.setMaxWidth(Double.MAX_VALUE);
+        recommendationsButton.setOnAction(e -> showRecommendations());
+
         Button createGroupButton = new Button("Create Group");
         createGroupButton.setMaxWidth(Double.MAX_VALUE);
         createGroupButton.setOnAction(e -> showCreateGroupForm());
@@ -118,6 +119,7 @@ public class MainView {
                 new Separator(),
                 groupsButton,
                 myGroupsButton,
+                recommendationsButton,
                 createGroupButton,
                 messagesButton,
                 new Separator(),
@@ -132,10 +134,7 @@ public class MainView {
 
         currentUser = null;
 
-        LoginViewController loginController = new LoginViewController(
-                userService, groupService, interestService, messageService);
-
-        LoginView loginView = new LoginView(loginController);
+        LoginView loginView = new LoginView(loginViewController);
 
         Scene scene = new Scene(loginView.getRoot(), 800, 600);
 
@@ -161,18 +160,20 @@ public class MainView {
         root.setCenter(myGroupsView.getRoot());
     }
 
+    // Add new method for recommendations
+    private void showRecommendations() {
+        GroupRecommendationView recommendationView = new GroupRecommendationView(currentUser, groupController);
+        root.setCenter(recommendationView.getRoot());
+    }
+
     private void showCreateGroupForm() {
-        // Placeholder - Create a simple "Coming Soon" view
-        Label label = new Label("Create Group - Coming Soon");
-        label.setStyle("-fx-font-size: 24px;");
-        VBox placeholder = new VBox(label);
-        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
-        placeholder.setPadding(new Insets(20));
-        root.setCenter(placeholder);
+        // Use the CreateGroupView class instead of creating UI elements here
+        CreateGroupView createGroupView = new CreateGroupView(groupController, currentUser);
+        root.setCenter(createGroupView.getRoot());
     }
 
     private void showMessages() {
-        MessageView messageView = new MessageView(currentUser, messageController, groupService);
+        MessageView messageView = new MessageView(currentUser, messageController, groupController);
         root.setCenter(messageView.getRoot());
     }
 

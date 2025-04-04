@@ -73,9 +73,47 @@ public class DatabaseInitializer {
 
     private void createPredefinedInterests() {
         List<String> interestNames = Arrays.asList(
-                "Technology", "Programming", "Hiking", "Reading",
-                "Music", "Movies", "Sports", "Gaming", "Cooking", "Travel"
+                // Tech & Science
+                "Technology", "Programming", "AI & Machine Learning", "Cybersecurity",
+                "Cryptocurrency", "Gadgets", "Science", "Space Exploration",
+
+                // Fitness & Sports
+                "Hiking", "Cycling", "Yoga", "Fitness", "Swimming", "Martial Arts",
+                "Skateboarding", "Running", "Weightlifting", "Rock Climbing",
+                "Tennis", "Basketball", "Soccer", "American Football",
+
+                // Arts & Creativity
+                "Photography", "Painting", "Digital Art", "Graphic Design",
+                "Theater", "Fashion", "Interior Design", "Calligraphy",
+                "Music", "Singing", "Dancing", "DJing", "Writing", "Poetry",
+
+                // Entertainment & Media
+                "Movies", "TV Shows", "Anime", "K-Pop", "Podcasts", "Stand-up Comedy",
+                "Board Games", "Video Games", "Esports", "Streaming",
+
+                // Lifestyle & Personal Development
+                "Cooking", "Baking", "Gardening", "DIY Projects", "Self-Improvement",
+                "Mindfulness", "Meditation", "Journaling", "Public Speaking",
+                "Finance", "Investing", "Entrepreneurship", "Business Strategy",
+                "Leadership", "Personal Finance", "Marketing",
+
+                // Travel & Adventure
+                "Travel", "Backpacking", "Camping", "Road Trips", "Theme Parks",
+                "Cultural Experiences", "Foodie Adventures",
+
+                // Social & Community
+                "Volunteering", "Activism", "Charity Work", "Networking",
+                "Debating", "Environmentalism", "Philosophy",
+
+                // Special Interests
+                "Pets", "Astrology", "Magic Tricks", "Chess", "Collecting",
+                "Mythology", "True Crime", "Conspiracy Theories",
+
+                // Learning & Academics
+                "History", "Languages", "Psychology", "Philosophy", "Astronomy",
+                "Biology", "Physics", "Mathematics", "Coding Challenges"
         );
+
 
         for (String name : interestNames) {
             if (!interestDAO.findByName(name).isPresent()) {

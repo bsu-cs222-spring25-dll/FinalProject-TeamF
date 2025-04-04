@@ -1,6 +1,6 @@
 package edu.bsu.cs;
 
-import edu.bsu.cs.controller.LoginViewController;
+import edu.bsu.cs.controller.*;
 import edu.bsu.cs.dao.*;
 import edu.bsu.cs.service.*;
 import edu.bsu.cs.util.DatabaseInitializer;
@@ -38,9 +38,18 @@ public class SocialApp extends Application {
         InterestService interestService = new InterestService(interestDAO);
         MessageService messageService = new MessageService(messageDAO);
 
-        // Initialize Controller
+        // Initialize Controllers
+        UserController userController = new UserController(userService);
+        GroupController groupController = new GroupController(groupService);
+        InterestController interestController = new InterestController(interestService);
+        MessageController messageController = new MessageController(messageService);
+
+        // Initialize LoginViewController with controllers
         LoginViewController loginController = new LoginViewController(
-                userService, groupService, interestService, messageService);
+                userController,
+                groupController,
+                interestController,
+                messageController);
 
         // Create and show LoginView with controller
         LoginView loginView = new LoginView(loginController);

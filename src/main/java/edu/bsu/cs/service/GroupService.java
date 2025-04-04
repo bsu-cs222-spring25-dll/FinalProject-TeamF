@@ -70,6 +70,10 @@ public class GroupService {
         return groupDAO.recommendGroupsForUser(user, user.getInterests(), limit);
     }
 
+    public List<Group> findGroupsByUserInterests(User user, int limit) {
+        return groupDAO.findGroupsByUserInterests(user, limit);
+    }
+
     public Optional<Group> findById(UUID id) {
         return groupDAO.findById(id);
     }

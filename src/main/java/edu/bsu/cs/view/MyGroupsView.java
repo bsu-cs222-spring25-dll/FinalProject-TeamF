@@ -144,9 +144,7 @@ public class MyGroupsView {
         }
 
         private void handleMessageButton(Group group) {
-            // Create an anonymous inner class that provides access to the group
-            // The idea is to use the existing method in MainView that shows messages
-           // ((MainView) root.getScene().getWindow().getUserData()).showGroupMessages(group);
+
         }
     }
 }
