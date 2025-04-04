@@ -7,6 +7,7 @@ import edu.bsu.cs.view.RegistrationView;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class LoginViewController {
@@ -40,7 +41,7 @@ public class LoginViewController {
 
         // Apply CSS
         try {
-            scene.getStylesheets().add(getClass().getResource("/register.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/register.css")).toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }
@@ -66,7 +67,7 @@ public class LoginViewController {
 
             // Apply CSS
             try {
-                scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
+                scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/MainView.css")).toExternalForm());
             } catch (Exception e) {
                 System.err.println("CSS not found: " + e.getMessage());
             }
@@ -89,7 +90,7 @@ public class LoginViewController {
 
         // Apply CSS
         try {
-            scene.getStylesheets().add(getClass().getResource("/Interest.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Interest.css")).toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }

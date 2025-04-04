@@ -59,16 +59,13 @@ public class GroupListView {
         groupListView.setCellFactory(param -> new GroupListCell());
         VBox.setVgrow(groupListView, Priority.ALWAYS);
 
-        // Bottom info section
-        Label infoLabel = new Label("Double-click on a group to view details");
-        infoLabel.setStyle("-fx-font-style: italic;");
-        HBox infoBox = new HBox(infoLabel);
-        infoBox.setPadding(new Insets(5, 10, 5, 10));
-        infoBox.setStyle("-fx-background-color: #f8f9fa;");
+        // Remove the double-click handler by disabling selection
+        groupListView.setMouseTransparent(false);
+        groupListView.setFocusTraversable(true);
 
         root.setTop(topBox);
         root.setCenter(groupListView);
-        root.setBottom(infoBox);
+        // Removed the bottom info section that mentioned double-clicking
         root.setPadding(new Insets(0));
     }
 

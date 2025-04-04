@@ -15,11 +15,11 @@ public class MessageController
     }
 
     //send a message
-    public Message sendMessage(User sender, Group group,String content){
+    public void sendMessage(User sender, Group group, String content){
         if(content==null || content.trim().isEmpty()){
             throw new IllegalArgumentException("Message content cannot be empty");
         }
-        return messageService.sendMessage(sender, group, content);
+        messageService.sendMessage(sender, group, content);
     }
 
     //get all messages of a particular group

@@ -52,19 +52,4 @@ public class UserController {
     public boolean removeInterest(User user, Interest interest) {
         return userService.removeInterest(user, interest);
     }
-
-    //get current user
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    //set current user
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
-    }
-
-    //log out the current user
-    public void logout() {
-        this.currentUser = null;
-    }
 }

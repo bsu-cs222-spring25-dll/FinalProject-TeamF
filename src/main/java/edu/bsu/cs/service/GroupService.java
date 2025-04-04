@@ -35,13 +35,22 @@ public class GroupService {
         return false;
     }
 
-    public boolean addInterest(Group group, User interest) {
-        if (group.addMember(interest)) {
+    // In GroupService
+    public boolean addInterest(Group group, Interest interest) {
+        // First check if the interest is already in the group
+        if (group.getInterests().contains(interest)) {
+            // Interest is already in the group, consider this a success
+            return true;
+        }
+
+        // If not already in the group, add it
+        if (group.addInterest(interest)) {
             groupDAO.update(group);
             return true;
         }
         return false;
     }
+
 
     public List<Group> findGroupsByNameContaining(String nameContains) {
         return groupDAO.findByNameContaining(nameContains);

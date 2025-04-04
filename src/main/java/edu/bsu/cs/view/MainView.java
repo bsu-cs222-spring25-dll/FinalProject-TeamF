@@ -9,13 +9,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class MainView {
     private User currentUser;
-    private final UserController userController;
     private final GroupController groupController;
-    private final InterestController interestController;
     private final MessageController messageController;
+    private final InterestController interestController;
     private final LoginViewController loginViewController;
+    private final UserController userController;
 
     private final BorderPane root;
 
@@ -26,10 +28,10 @@ public class MainView {
                     InterestController interestController,
                     MessageController messageController) {
         this.currentUser = currentUser;
-        this.userController = userController;
         this.groupController = groupController;
-        this.interestController = interestController;
         this.messageController = messageController;
+        this.interestController = interestController;
+        this.userController = userController;
         this.loginViewController = new LoginViewController(
                 userController, groupController, interestController, messageController
         );
@@ -60,14 +62,13 @@ public class MainView {
         MenuBar menuBar = new MenuBar();
 
         Menu fileMenu = new Menu("File");
-        MenuItem settingsItem = new MenuItem("Settings");
+
         MenuItem logoutItem = new MenuItem("Logout");
         logoutItem.setOnAction(e -> handleLogout());
-        fileMenu.getItems().addAll(settingsItem, new SeparatorMenuItem(), logoutItem);
+        fileMenu.getItems().addAll(new SeparatorMenuItem(), logoutItem);
 
         Menu viewMenu = new Menu("View");
-        MenuItem groupsItem = new MenuItem("Groups");
-        groupsItem.setOnAction(e -> showGroupList());
+
         MenuItem profileItem = new MenuItem("My Profile");
         profileItem.setOnAction(e -> showProfile());
 
@@ -75,7 +76,7 @@ public class MainView {
         MenuItem recommendationsItem = new MenuItem("Recommended Groups");
         recommendationsItem.setOnAction(e -> showRecommendations());
 
-        viewMenu.getItems().addAll(groupsItem, profileItem, recommendationsItem);
+        viewMenu.getItems().addAll( profileItem, recommendationsItem);
 
         menuBar.getMenus().addAll(fileMenu, viewMenu);
 
@@ -139,7 +140,7 @@ public class MainView {
         Scene scene = new Scene(loginView.getRoot(), 800, 600);
 
         try {
-            scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Login.css")).toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }
@@ -156,19 +157,19 @@ public class MainView {
     }
 
     private void showMyGroups() {
-        MyGroupsView myGroupsView = new MyGroupsView(currentUser, groupController);
+        MyGroupsView myGroupsView = new MyGroupsView(currentUser, groupController,messageController);
         root.setCenter(myGroupsView.getRoot());
     }
 
     // Add new method for recommendations
     private void showRecommendations() {
-        GroupRecommendationView recommendationView = new GroupRecommendationView(currentUser, groupController);
+        GroupRecommendationView recommendationView = new GroupRecommendationView(currentUser, groupController,interestController,userController);
         root.setCenter(recommendationView.getRoot());
     }
 
     private void showCreateGroupForm() {
         // Use the CreateGroupView class instead of creating UI elements here
-        CreateGroupView createGroupView = new CreateGroupView(groupController, currentUser);
+        CreateGroupView createGroupView = new CreateGroupView(groupController, interestController,currentUser);
         root.setCenter(createGroupView.getRoot());
     }
 

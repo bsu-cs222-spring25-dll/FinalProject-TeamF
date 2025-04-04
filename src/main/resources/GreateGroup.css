@@ -1,0 +1,54 @@
+/* Add this to your CSS file */
+
+/* Interest selection area styling */
+.interest-selection-container {
+    -fx-background-color: #e6eef5; /* Light blue background */
+    -fx-border-color: #5995b3; /* Blue border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 15px;
+    -fx-margin: 10px 0;
+}
+
+.interest-selection-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark text for better contrast */
+    -fx-padding: 0 0 10px 0;
+}
+
+.interest-box {
+    -fx-background-color: white;
+    -fx-border-color: #aabbcc;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-margin: 5px;
+}
+
+.check-box {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #5995b3;
+    -fx-border-radius: 3px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #5995b3;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+/* Add interest button styling */
+.add-interest-button {
+    -fx-background-color: #5995b3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 4;
+}

@@ -1,12 +1,10 @@
 package edu.bsu.cs.controller;
 
 import edu.bsu.cs.model.Group;
+import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
-
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 public class GroupController {
     private final GroupService groupService;
@@ -55,13 +53,8 @@ public class GroupController {
         return groupService.findGroupsByUserInterests(user, limit);
     }
 
-    // Get group by ID
-    public Optional<Group> getGroupById(UUID id) {
-        return groupService.findById(id);
-    }
-
     // Add an interest to a group
-    public boolean addInterestToGroup(Group group, User interest) {
+    public boolean addInterestToGroup(Group group, Interest interest) {
         return groupService.addInterest(group, interest);
     }
 }

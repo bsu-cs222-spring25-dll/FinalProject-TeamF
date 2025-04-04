@@ -1,6 +1,7 @@
 package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.GroupController;
+import edu.bsu.cs.controller.MessageController;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.User;
 import javafx.collections.FXCollections;
@@ -24,14 +25,16 @@ import java.util.List;
 
 public class MyGroupsView {
     private final User currentUser;
-    private final GroupController controller;
+    private final GroupController groupController;
     private final BorderPane root;
     private final ListView<Group> groupListView;
+    private final MessageController messageController;
     private List<Group> groups;
 
-    public MyGroupsView(User currentUser, GroupController controller) {
+    public MyGroupsView(User currentUser, GroupController groupController, MessageController messageController) {
         this.currentUser = currentUser;
-        this.controller = controller;
+        this.groupController = groupController;
+        this.messageController = messageController;
         this.root = new BorderPane();
         this.groupListView = new ListView<>();
         this.groups = new ArrayList<>();
@@ -60,7 +63,7 @@ public class MyGroupsView {
     }
 
     public void loadMyGroups() {
-        groups = controller.getUserGroups(currentUser);
+        groups = groupController.getUserGroups(currentUser);
 
         ObservableList<Group> observableGroups = FXCollections.observableArrayList(groups);
         groupListView.setItems(observableGroups);
@@ -88,8 +91,8 @@ public class MyGroupsView {
             leaveButton.setOnAction(e -> handleLeaveGroup(getItem()));
 
             messageButton = new Button("Messages");
-            messageButton.setOnAction(e -> handleMessageButton(getItem()));
-
+            messageButton.setOnAction(e -> handleMessageButton());
+            //messageButton.setOnAction(e -> handleMessageButton(getItem()));
             HBox buttonBox = new HBox(10, leaveButton, messageButton);
             buttonBox.setPadding(new Insets(5, 0, 0, 0));
 
@@ -121,7 +124,7 @@ public class MyGroupsView {
         }
 
         private void handleLeaveGroup(Group group) {
-            boolean success = controller.leaveGroup(group, currentUser);
+            boolean success = groupController.leaveGroup(group, currentUser);
 
             if (success) {
                 leaveButton.setDisable(true);
@@ -143,8 +146,15 @@ public class MyGroupsView {
             }
         }
 
-        private void handleMessageButton(Group group) {
+        private void handleMessageButton() {
+            // Create a MessageView for this group
+            MessageView messageView = new MessageView(currentUser, messageController, groupController);
 
+            // Get the main view's root pane (BorderPane)
+            BorderPane mainViewRoot = (BorderPane) getRoot().getScene().getRoot();
+
+            // Set the MessageView as the center content
+            mainViewRoot.setCenter(messageView.getRoot());
         }
     }
 }
