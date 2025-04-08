@@ -79,10 +79,6 @@ public class User {
         return interests;
     }
 
-    public void setInterests(Set<Interest> interests) {
-        this.interests = interests;
-    }
-
     public boolean addInterest(Interest interest) {
         return interests.add(interest);
     }

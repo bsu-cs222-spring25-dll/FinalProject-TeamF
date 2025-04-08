@@ -27,9 +27,6 @@ public class GroupController {
         return groupService.findGroupsByNameContaining(query);
     }
 
-    public List<Group> getRecommendedGroups(User user, int limit) {
-        return groupService.recommendGroupsForUser(user, limit);
-    }
 
     public boolean joinGroup(Group group, User user) {
         return groupService.joinGroup(group, user);

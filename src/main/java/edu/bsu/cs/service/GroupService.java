@@ -52,10 +52,6 @@ public class GroupService {
         return groupDAO.findByNameContaining(nameContains);
     }
 
-    public List<Group> findGroupsByCreator(User creator) {
-        return groupDAO.findByCreator(creator);
-    }
-
     public List<Group> findGroupsByMember(User member) {
         return groupDAO.findByMember(member);
     }
@@ -71,15 +67,8 @@ public class GroupService {
         return groupDAO.findPublicGroups();
     }
 
-    public List<Group> recommendGroupsForUser(User user, int limit) {
-        return groupDAO.recommendGroupsForUser(user, user.getInterests(), limit);
-    }
-
     public List<Group> findGroupsByUserInterests(User user, int limit) {
         return groupDAO.findGroupsByUserInterests(user, limit);
     }
 
-    public Optional<Group> findById(UUID id) {
-        return groupDAO.findById(id);
-    }
 }

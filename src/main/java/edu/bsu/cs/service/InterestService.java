@@ -13,17 +13,6 @@ public class InterestService {
         this.interestDAO = interestDAO;
     }
 
-    public List<Interest> findInterestByNameContaining(String nameContains) {
-        return interestDAO.findByNameContaining(nameContains);
-    }
-
-    public Optional<Interest> findInterestByName(String name) {
-        return interestDAO.findByName(name);
-    }
-
-    public Optional<Interest> findById(UUID id) {
-        return interestDAO.findById(id);
-    }
 
     public List<Interest> getAllInterests() {
         return interestDAO.findAll();

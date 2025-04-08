@@ -80,12 +80,4 @@ public class UserService {
     public Optional<User> findById(UUID id) {
         return userDAO.findById(id);
     }
-
-    public Optional<User> findByUsername(String username) {
-        return userDAO.findByUsername(username);
-    }
-
-    public List<User> findByNameContaining(String nameContains) {
-        return userDAO.findByNameContaining(nameContains);
-    }
 }

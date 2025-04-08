@@ -31,9 +31,6 @@ public class DatabaseInitializer {
 
         User systemUser = createSystemUser();
         createTestUser("beyonce", "beyonce@gmail.com", "b123");
-        createTestUser("nicki", "nicki@gmail.com", "n123");
-        createTestUser("gracie", "gracie@gmail.com", "g123");
-        createTestUser("zayn", "zayn@gmail.com", "z123");
 
         createPredefinedInterests();
 

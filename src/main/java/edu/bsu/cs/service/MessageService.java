@@ -27,8 +27,5 @@ public class MessageService {
         return messageDAO.findByGroup(group);
     }
 
-    public List<Message> getUserMessages(User user) {
-        return messageDAO.findBySender(user);
-    }
 }
 
