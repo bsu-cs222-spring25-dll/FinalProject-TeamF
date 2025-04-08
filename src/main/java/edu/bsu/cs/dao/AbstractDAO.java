@@ -18,7 +18,8 @@ public abstract class AbstractDAO<T, ID extends Serializable> implements Generic
 
     @SuppressWarnings("unchecked")
     public AbstractDAO() {
-        this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
+        this.entityClass = (Class<T>) ((ParameterizedType) getClass()
+                .getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
 
@@ -31,9 +32,7 @@ public abstract class AbstractDAO<T, ID extends Serializable> implements Generic
             transaction.commit();
             return entity;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             logger.error("Error saving entity", e);
             throw new RuntimeException("Error saving entity", e);
         }
@@ -48,9 +47,7 @@ public abstract class AbstractDAO<T, ID extends Serializable> implements Generic
             transaction.commit();
             return updatedEntity;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             logger.error("Error updating entity", e);
             throw new RuntimeException("Error updating entity", e);
         }
@@ -85,9 +82,7 @@ public abstract class AbstractDAO<T, ID extends Serializable> implements Generic
             session.delete(entity);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             logger.error("Error deleting entity", e);
             throw new RuntimeException("Error deleting entity", e);
         }
@@ -99,16 +94,12 @@ public abstract class AbstractDAO<T, ID extends Serializable> implements Generic
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             T entity = session.get(entityClass, id);
-            if (entity == null) {
-                return false;
-            }
+            if (entity == null) return false;
             session.delete(entity);
             transaction.commit();
             return true;
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             logger.error("Error deleting entity by ID", e);
             throw new RuntimeException("Error deleting entity by ID", e);
         }

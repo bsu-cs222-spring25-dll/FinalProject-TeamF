@@ -20,13 +20,10 @@ import javafx.stage.Stage;
 public class RegistrationView {
     protected final UserController userController;
     protected final VBox root;
-
     protected TextField usernameField;
     protected TextField emailField;
     protected PasswordField passwordField;
     protected PasswordField confirmPasswordField;
-
-    // Additional controller fields for navigation to MainView
     protected final GroupController groupController;
     protected final InterestController interestController;
     protected final MessageController messageController;
@@ -47,7 +44,6 @@ public class RegistrationView {
     }
 
     private VBox createRegistrationView() {
-        // Layout for the register
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
@@ -91,10 +87,7 @@ public class RegistrationView {
         grid.add(registerButton, 0, 5);
         grid.add(backButton, 1, 5);
 
-        // Registration button action
         registerButton.setOnAction(event -> handleRegistration());
-
-        // Back button action
         backButton.setOnAction(event -> navigateToLogin());
 
         VBox vbox = new VBox(grid);
@@ -109,7 +102,6 @@ public class RegistrationView {
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
 
-        // Validate inputs
         if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             showAlert("Error", "All fields are required");
             return;
@@ -126,36 +118,24 @@ public class RegistrationView {
         }
 
         try {
-            // Register the user with simple approach
             User user = userController.register(username, email, password);
-
-            // Show success message
             showAlert("Success", "Account created successfully!");
-
-            // Return to login screen
             navigateToLogin();
-
         } catch (IllegalArgumentException e) {
             showAlert("Error", e.getMessage());
         }
     }
 
     protected void navigateToLogin() {
-        // Get the current stage
         Stage stage = (Stage) root.getScene().getWindow();
-
-        // Create a LoginViewController with all necessary controllers
         LoginViewController loginController = new LoginViewController(
                 userController,
                 groupController,
                 interestController,
                 messageController
         );
-
-        // Create login view with controller
         LoginView loginView = new LoginView(loginController);
 
-        // Create a scene with styling
         Scene scene = new Scene(loginView.getRoot(), 800, 600);
         try {
             scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());

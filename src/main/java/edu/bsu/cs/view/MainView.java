@@ -21,7 +21,6 @@ public class MainView {
 
     private final BorderPane root;
 
-    // View components
     public MainView(User currentUser,
                     UserController userController,
                     GroupController groupController,
@@ -72,11 +71,10 @@ public class MainView {
         MenuItem profileItem = new MenuItem("My Profile");
         profileItem.setOnAction(e -> showProfile());
 
-        // Add recommendation menu item
         MenuItem recommendationsItem = new MenuItem("Recommended Groups");
         recommendationsItem.setOnAction(e -> showRecommendations());
 
-        viewMenu.getItems().addAll( profileItem, recommendationsItem);
+        viewMenu.getItems().addAll(profileItem, recommendationsItem);
 
         menuBar.getMenus().addAll(fileMenu, viewMenu);
 
@@ -90,30 +88,12 @@ public class MainView {
 
         Label welcomeLabel = new Label("Welcome, " + currentUser.getUsername() + "!");
 
-        Button groupsButton = new Button("All Groups");
-        groupsButton.setMaxWidth(Double.MAX_VALUE);
-        groupsButton.setOnAction(e -> showGroupList());
-
-        Button myGroupsButton = new Button("My Groups");
-        myGroupsButton.setMaxWidth(Double.MAX_VALUE);
-        myGroupsButton.setOnAction(e -> showMyGroups());
-
-        // Add recommendations button
-        Button recommendationsButton = new Button("Recommended Groups");
-        recommendationsButton.setMaxWidth(Double.MAX_VALUE);
-        recommendationsButton.setOnAction(e -> showRecommendations());
-
-        Button createGroupButton = new Button("Create Group");
-        createGroupButton.setMaxWidth(Double.MAX_VALUE);
-        createGroupButton.setOnAction(e -> showCreateGroupForm());
-
-        Button messagesButton = new Button("Messages");
-        messagesButton.setMaxWidth(Double.MAX_VALUE);
-        messagesButton.setOnAction(e -> showMessages());
-
-        Button profileButton = new Button("My Profile");
-        profileButton.setMaxWidth(Double.MAX_VALUE);
-        profileButton.setOnAction(e -> showProfile());
+        Button groupsButton = createSidebarButton("All Groups", e -> showGroupList());
+        Button myGroupsButton = createSidebarButton("My Groups", e -> showMyGroups());
+        Button recommendationsButton = createSidebarButton("Recommended Groups", e -> showRecommendations());
+        Button createGroupButton = createSidebarButton("Create Group", e -> showCreateGroupForm());
+        Button messagesButton = createSidebarButton("Messages", e -> showMessages());
+        Button profileButton = createSidebarButton("My Profile", e -> showProfile());
 
         sidebar.getChildren().addAll(
                 welcomeLabel,
@@ -128,6 +108,13 @@ public class MainView {
         );
 
         return sidebar;
+    }
+
+    private Button createSidebarButton(String text, javafx.event.EventHandler<javafx.event.ActionEvent> eventHandler) {
+        Button button = new Button(text);
+        button.setMaxWidth(Double.MAX_VALUE);
+        button.setOnAction(eventHandler);
+        return button;
     }
 
     private void handleLogout() {
@@ -157,19 +144,17 @@ public class MainView {
     }
 
     private void showMyGroups() {
-        MyGroupsView myGroupsView = new MyGroupsView(currentUser, groupController,messageController);
+        MyGroupsView myGroupsView = new MyGroupsView(currentUser, groupController, messageController);
         root.setCenter(myGroupsView.getRoot());
     }
 
-    // Add new method for recommendations
     private void showRecommendations() {
-        GroupRecommendationView recommendationView = new GroupRecommendationView(currentUser, groupController,interestController,userController);
+        GroupRecommendationView recommendationView = new GroupRecommendationView(currentUser, groupController, interestController, userController);
         root.setCenter(recommendationView.getRoot());
     }
 
     private void showCreateGroupForm() {
-        // Use the CreateGroupView class instead of creating UI elements here
-        CreateGroupView createGroupView = new CreateGroupView(groupController, interestController,currentUser);
+        CreateGroupView createGroupView = new CreateGroupView(groupController, interestController, currentUser);
         root.setCenter(createGroupView.getRoot());
     }
 
@@ -179,7 +164,6 @@ public class MainView {
     }
 
     private void showProfile() {
-        // Placeholder - Create a simple "Coming Soon" view
         Label label = new Label("User Profile - Coming Soon");
         label.setStyle("-fx-font-size: 24px;");
         VBox placeholder = new VBox(label);

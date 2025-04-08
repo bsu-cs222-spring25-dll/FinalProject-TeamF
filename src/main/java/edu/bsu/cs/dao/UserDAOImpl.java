@@ -15,7 +15,6 @@ public class UserDAOImpl extends AbstractDAO<User, UUID> implements UserDAO {
     @Override
     public Optional<User> findByUsername(String username) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Use a clear session to ensure fresh data
             session.clear();
 
             String hql = "FROM User u WHERE u.username = :username";
@@ -31,7 +30,6 @@ public class UserDAOImpl extends AbstractDAO<User, UUID> implements UserDAO {
     @Override
     public Optional<User> findByEmail(String email) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Use a clear session to ensure fresh data
             session.clear();
 
             String hql = "FROM User u WHERE u.email = :email";
@@ -47,7 +45,6 @@ public class UserDAOImpl extends AbstractDAO<User, UUID> implements UserDAO {
     @Override
     public List<User> findByNameContaining(String nameContains) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // Use a clear session to ensure fresh data
             session.clear();
 
             String hql = "FROM User u WHERE lower(u.username) LIKE lower(:namePattern)";
@@ -66,7 +63,7 @@ public class UserDAOImpl extends AbstractDAO<User, UUID> implements UserDAO {
             transaction = session.beginTransaction();
             session.save(entity);
             transaction.commit();
-            session.clear(); // Clear the session cache to ensure fresh data on next query
+            session.clear();
             return entity;
         } catch (Exception e) {
             if (transaction != null) {
@@ -83,7 +80,7 @@ public class UserDAOImpl extends AbstractDAO<User, UUID> implements UserDAO {
             transaction = session.beginTransaction();
             User updatedEntity = (User) session.merge(entity);
             transaction.commit();
-            session.clear(); // Clear the session cache to ensure fresh data on next query
+            session.clear();
             return updatedEntity;
         } catch (Exception e) {
             if (transaction != null) {

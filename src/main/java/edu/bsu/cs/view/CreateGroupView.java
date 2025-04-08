@@ -19,14 +19,12 @@ public class CreateGroupView {
     private final User currentUser;
     private final List<Interest> selectedInterests = new ArrayList<>();
 
-    // Constructor
     public CreateGroupView(GroupController groupController, InterestController interestController, User currentUser) {
         this.groupController = groupController;
         this.interestController = interestController;
         this.currentUser = currentUser;
     }
 
-    // Returns the root node for the Create Group View
     public VBox getRoot() {
         Label titleLabel = new Label("Create a New Group");
         titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -38,11 +36,9 @@ public class CreateGroupView {
         groupDescriptionField.setPromptText("Group Description");
         groupDescriptionField.setPrefRowCount(4);
 
-        // Interest selection section
         Label interestsLabel = new Label("Select Group Interests");
         interestsLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        // Create interest selection area
         VBox interestSelectionArea = createInterestSelectionArea();
 
         Button createGroupButton = new Button("Create Group");
@@ -57,7 +53,6 @@ public class CreateGroupView {
             }
         });
 
-        // Create a VBox layout and add components
         VBox formLayout = new VBox(10, titleLabel,
                 groupNameField,
                 groupDescriptionField,
@@ -71,19 +66,15 @@ public class CreateGroupView {
     }
 
     private VBox createInterestSelectionArea() {
-        // Get all available interests using your controller
         List<Interest> availableInterests = interestController.getAllInterests();
 
-        // Create a flow pane to hold interest checkboxes
         FlowPane interestsPane = new FlowPane(10, 10);
         interestsPane.setPadding(new Insets(10));
         interestsPane.setPrefWidth(600);
 
-        // Create checkboxes for each interest
         for (Interest interest : availableInterests) {
             CheckBox checkBox = new CheckBox(interest.getName());
 
-            // Add event handler for selection
             checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal) {
                     selectedInterests.add(interest);
@@ -92,7 +83,6 @@ public class CreateGroupView {
                 }
             });
 
-            // Create a styled container for each checkbox
             VBox interestBox = new VBox(checkBox);
             interestBox.setPadding(new Insets(8));
             interestBox.setStyle("-fx-background-color:  #a0a0a0; -fx-background-radius: 5;");
@@ -101,7 +91,6 @@ public class CreateGroupView {
             interestsPane.getChildren().add(interestBox);
         }
 
-        // Wrap in ScrollPane for many interests
         ScrollPane scrollPane = new ScrollPane(interestsPane);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(200);
@@ -117,7 +106,6 @@ public class CreateGroupView {
         Group group = groupController.createGroup(name, description, currentUser, isPublic);
 
         if (group != null) {
-            // Add selected interests to the group
             boolean allSuccess = true;
 
             for (Interest interest : selectedInterests) {

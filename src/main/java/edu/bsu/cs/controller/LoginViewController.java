@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class LoginViewController {
+
     private final UserController userController;
     private final GroupController groupController;
     private final InterestController interestController;
@@ -37,44 +38,32 @@ public class LoginViewController {
                 interestController,
                 messageController
         );
-        Scene scene = new Scene(registrationView.getRoot(), 800, 600);
 
-        // Apply CSS
-        try {
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/register.css")).toExternalForm());
-        } catch (Exception e) {
-            System.err.println("CSS not found: " + e.getMessage());
-        }
+        Scene scene = new Scene(registrationView.getRoot(), 800, 600);
+        applyStylesheet(scene, "/register.css");
 
         stage.setScene(scene);
     }
 
     public void showMainView(Stage stage, User user) {
-        // Check if user has any interests
         if (user.getInterests().isEmpty()) {
-            // If no interests are set, show the interest selection view first
             showInterestSelectionView(stage, user);
-        } else {
-            // User already has interests, proceed directly to main view
-            MainView mainView = new MainView(
-                    user,
-                    userController,
-                    groupController,
-                    interestController,
-                    messageController
-            );
-            Scene scene = new Scene(mainView.getRoot(), 1024, 768);
-
-            // Apply CSS
-            try {
-                scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/MainView.css")).toExternalForm());
-            } catch (Exception e) {
-                System.err.println("CSS not found: " + e.getMessage());
-            }
-
-            stage.setScene(scene);
-            stage.setTitle("GroupSync - Welcome " + user.getUsername());
+            return;
         }
+
+        MainView mainView = new MainView(
+                user,
+                userController,
+                groupController,
+                interestController,
+                messageController
+        );
+
+        Scene scene = new Scene(mainView.getRoot(), 1024, 768);
+        applyStylesheet(scene, "/MainView.css");
+
+        stage.setScene(scene);
+        stage.setTitle("GroupSync - Welcome " + user.getUsername());
     }
 
     public void showInterestSelectionView(Stage stage, User user) {
@@ -86,16 +75,21 @@ public class LoginViewController {
                 messageController,
                 this
         );
-        Scene scene = new Scene(interestView.getRoot(), 800, 600);
 
-        // Apply CSS
-        try {
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Interest.css")).toExternalForm());
-        } catch (Exception e) {
-            System.err.println("CSS not found: " + e.getMessage());
-        }
+        Scene scene = new Scene(interestView.getRoot(), 800, 600);
+        applyStylesheet(scene, "/Interest.css");
 
         stage.setScene(scene);
         stage.setTitle("GroupSync - Select Your Interests");
+    }
+
+    private void applyStylesheet(Scene scene, String stylesheetPath) {
+        try {
+            scene.getStylesheets().add(
+                    Objects.requireNonNull(getClass().getResource(stylesheetPath)).toExternalForm()
+            );
+        } catch (Exception e) {
+            System.err.println("Stylesheet not found: " + stylesheetPath + " | " + e.getMessage());
+        }
     }
 }

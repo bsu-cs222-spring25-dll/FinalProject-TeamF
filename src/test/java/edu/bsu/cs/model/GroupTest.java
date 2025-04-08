@@ -2,10 +2,12 @@ package edu.bsu.cs.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Set;
+
 public class GroupTest {
+
     private Group group;
     private User creator;
     private User member1;
@@ -27,27 +29,27 @@ public class GroupTest {
     @Test
     void testGroupCreation() {
         assertNotNull(group.getId(), "Group ID should not be null");
-        assertEquals("Test Group", group.getName(), "Group name should match");
-        assertEquals("A group for testing", group.getDescription(), "Group description should match");
-        assertEquals(creator, group.getCreator(), "Creator should be set correctly");
+        assertEquals("Test Group", group.getName(), "Group name should be 'Test Group'");
+        assertEquals("A group for testing", group.getDescription(), "Group description should be 'A group for testing'");
+        assertEquals(creator, group.getCreator(), "Creator should be correctly set");
         assertTrue(group.isPublic(), "Group should be public");
-        assertTrue(group.getMembers().contains(creator), "Creator should be a member");
+        assertTrue(group.getMembers().contains(creator), "Creator should be a member of the group");
     }
 
     @Test
     void testAddMember() {
-        assertTrue(group.addMember(member1), "Member1 should be added successfully");
+        assertTrue(group.addMember(member1), "Member1 should be successfully added");
         assertTrue(group.getMembers().contains(member1), "Group should contain Member1");
 
-        assertTrue(group.addMember(member2), "Member2 should be added successfully");
+        assertTrue(group.addMember(member2), "Member2 should be successfully added");
         assertTrue(group.getMembers().contains(member2), "Group should contain Member2");
     }
 
     @Test
     void testRemoveMember() {
         group.addMember(member1);
-        assertTrue(group.removeMember(member1), "Member1 should be removed successfully");
-        assertFalse(group.getMembers().contains(member1), "Group should no longer contain Member1");
+        assertTrue(group.removeMember(member1), "Member1 should be successfully removed");
+        assertFalse(group.getMembers().contains(member1), "Group should no longer contain Member1 after removal");
     }
 
     @Test
@@ -57,17 +59,23 @@ public class GroupTest {
 
     @Test
     void testAddInterest() {
-        assertTrue(group.addInterest(interest1), "Interest1 should be added successfully");
+        assertTrue(group.addInterest(interest1), "Interest1 should be successfully added to the group");
         assertTrue(group.getInterests().contains(interest1), "Group should contain Interest1");
 
-        assertTrue(group.addInterest(interest2), "Interest2 should be added successfully");
+        assertTrue(group.addInterest(interest2), "Interest2 should be successfully added to the group");
         assertTrue(group.getInterests().contains(interest2), "Group should contain Interest2");
     }
 
     @Test
     void testRemoveInterest() {
         group.addInterest(interest1);
-        assertTrue(group.removeInterest(interest1), "Interest1 should be removed successfully");
-        assertFalse(group.getInterests().contains(interest1), "Group should no longer contain Interest1");
+        assertTrue(group.removeInterest(interest1), "Interest1 should be successfully removed from the group");
+        assertFalse(group.getInterests().contains(interest1), "Group should no longer contain Interest1 after removal");
+    }
+
+    @Test
+    void testAddMemberFailsIfAlreadyInGroup() {
+        group.addMember(member1);
+        assertFalse(group.addMember(member1), "Adding the same member twice should return false");
     }
 }

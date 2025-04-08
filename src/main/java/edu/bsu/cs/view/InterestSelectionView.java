@@ -39,7 +39,6 @@ public class InterestSelectionView {
         this.loginViewController = loginViewController;
         this.root = createView();
 
-        // After creating the root
         String cssPath = "/Interest.css";
         try {
             root.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
@@ -59,18 +58,14 @@ public class InterestSelectionView {
         mainContainer.setPadding(new Insets(30));
         mainContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Title
         Text title = new Text("Select Your Interests");
         title.setFont(Font.font("Tahoma", FontWeight.BOLD, 24));
 
-        // Description
         Text description = new Text("Choose interests to help us recommend groups for you");
         description.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
-        // Create interest selection area
         ScrollPane interestScrollPane = createInterestSelectionArea();
 
-        // Buttons
         HBox buttonBar = new HBox(15);
         buttonBar.setAlignment(Pos.CENTER);
 
@@ -82,10 +77,8 @@ public class InterestSelectionView {
 
         buttonBar.getChildren().addAll(skipButton, continueButton);
 
-        // Add components to main container
         mainContainer.getChildren().addAll(title, description, interestScrollPane, buttonBar);
 
-        // Set up button actions
         skipButton.setOnAction(e -> navigateToMainView());
         continueButton.setOnAction(e -> saveInterestsAndNavigate());
 
@@ -93,25 +86,20 @@ public class InterestSelectionView {
     }
 
     private ScrollPane createInterestSelectionArea() {
-        // Create a flow pane to hold interest checkboxes
         FlowPane interestsPane = new FlowPane(15, 15);
         interestsPane.setPadding(new Insets(20));
         interestsPane.setPrefWidth(700);
 
         try {
-            // Get all available interests
             List<Interest> availableInterests = interestController.getAllInterests();
 
-            // Current user's interests (for pre-selection)
             Set<Interest> userInterests = currentUser.getInterests();
 
-            // Create checkboxes for each interest
             for (Interest interest : availableInterests) {
                 CheckBox checkBox = new CheckBox(interest.getName());
-                checkBox.setWrapText(true); // Allow text to wrap
+                checkBox.setWrapText(true);
                 checkBox.setSelected(userInterests.contains(interest));
 
-                // Create a styled container for each checkbox
                 VBox interestBox = new VBox(checkBox);
                 interestBox.setPadding(new Insets(10));
                 interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
@@ -122,7 +110,6 @@ public class InterestSelectionView {
                 interestCheckboxes.put(interest, checkBox);
             }
 
-            // If no interests are available yet, show a message
             if (availableInterests.isEmpty()) {
                 Label noInterestsLabel = new Label("No interests available in the system yet.");
                 noInterestsLabel.setStyle("-fx-font-style: italic;");
@@ -137,7 +124,6 @@ public class InterestSelectionView {
             interestsPane.getChildren().add(errorLabel);
         }
 
-        // Wrap in ScrollPane for many interests
         ScrollPane scrollPane = new ScrollPane(interestsPane);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(400);
@@ -150,7 +136,6 @@ public class InterestSelectionView {
         try {
             boolean atLeastOneSelected = false;
 
-            // Save selected interests one by one
             for (Map.Entry<Interest, CheckBox> entry : interestCheckboxes.entrySet()) {
                 Interest interest = entry.getKey();
                 boolean isSelected = entry.getValue().isSelected();
@@ -171,13 +156,11 @@ public class InterestSelectionView {
                 }
             }
 
-            // Refresh the user to get updated interests
             Optional<User> refreshedUserOpt = userController.findById(currentUser.getId());
             if (refreshedUserOpt.isPresent()) {
                 currentUser = refreshedUserOpt.get();
             }
 
-            // Show a confirmation or warning based on selection
             if (atLeastOneSelected) {
                 showAlert("Interests Saved", "Your interests have been saved successfully!");
             } else {
@@ -185,7 +168,6 @@ public class InterestSelectionView {
                         "This may limit the groups we can recommend for you.");
             }
 
-            // Navigate to main view with updated interests
             navigateToMainView();
         } catch (Exception e) {
             System.err.println("Error saving interests: " + e.getMessage());
@@ -198,7 +180,6 @@ public class InterestSelectionView {
         try {
             Stage stage = (Stage) root.getScene().getWindow();
 
-            // Get a refreshed user from the database
             Optional<User> refreshedUserOpt = userController.findById(currentUser.getId());
             User refreshedUser = refreshedUserOpt.orElse(currentUser);
 
@@ -206,7 +187,6 @@ public class InterestSelectionView {
                     interestController, messageController);
             Scene scene = new Scene(mainView.getRoot(), 1024, 768);
 
-            // Apply CSS
             try {
                 scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
             } catch (Exception e) {

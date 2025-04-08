@@ -53,33 +53,68 @@ public class Group {
         this.description = description;
         this.creator = creator;
         this.isPublic = isPublic;
-        this.members.add(creator); // Creator is automatically a member
+        this.members.add(creator);
     }
 
     public Group(String testGroup, String aGroupForTesting, boolean b) {
     }
 
     // Getters and setters
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public UUID getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getName() {
+        return name;
+    }
 
-    public User getCreator() { return creator; }
-    public void setCreator(User creator) { this.creator = creator; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public boolean isPublic() { return isPublic; }
-    public void setIsPublic(boolean isPublic) { this.isPublic = isPublic; }
+    public String getDescription() {
+        return description;
+    }
 
-    public Set<User> getMembers() { return members; }
-    public void setMembers(Set<User> members) { this.members = members; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public Set<Interest> getInterests() { return interests; }
-    public void setInterests(Set<Interest> interests) { this.interests = interests; }
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public Set<User> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<User> members) {
+        this.members = members;
+    }
+
+    public Set<Interest> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<Interest> interests) {
+        this.interests = interests;
+    }
 
     public boolean addMember(User user) {
         return members.add(user);

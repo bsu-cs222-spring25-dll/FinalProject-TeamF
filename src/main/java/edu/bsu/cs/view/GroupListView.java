@@ -35,7 +35,6 @@ public class GroupListView {
     }
 
     private void createUI() {
-        // Top section with title and search
         Label titleLabel = new Label("All Groups");
         titleLabel.setFont(Font.font("System", FontWeight.BOLD, 18));
 
@@ -50,22 +49,16 @@ public class GroupListView {
         searchBox.setAlignment(Pos.CENTER_RIGHT);
 
         HBox topBox = new HBox(10);
-        topBox.getChildren().addAll(titleLabel, new Pane(), searchBox); // Pane as spacer
-        HBox.setHgrow(topBox.getChildren().get(1), Priority.ALWAYS); // Make spacer grow
+        topBox.getChildren().addAll(titleLabel, new Pane(), searchBox);
+        HBox.setHgrow(topBox.getChildren().get(1), Priority.ALWAYS);
         topBox.setPadding(new Insets(10));
         topBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Center with list of groups
         groupListView.setCellFactory(param -> new GroupListCell());
         VBox.setVgrow(groupListView, Priority.ALWAYS);
 
-        // Remove the double-click handler by disabling selection
-        groupListView.setMouseTransparent(false);
-        groupListView.setFocusTraversable(true);
-
         root.setTop(topBox);
         root.setCenter(groupListView);
-        // Removed the bottom info section that mentioned double-clicking
         root.setPadding(new Insets(0));
     }
 
@@ -77,7 +70,7 @@ public class GroupListView {
 
     private void searchGroups(String query) {
         if (query == null || query.trim().isEmpty()) {
-            loadGroups(); // If search is empty, show all groups
+            loadGroups();
             return;
         }
 
@@ -86,7 +79,6 @@ public class GroupListView {
         groupListView.setItems(observableResults);
     }
 
-    // Custom cell to display group information
     private class GroupListCell extends ListCell<Group> {
         private final VBox content;
         private final Label nameLabel;
@@ -126,7 +118,6 @@ public class GroupListView {
                 descriptionLabel.setText(group.getDescription());
                 membersLabel.setText("Members: " + group.getMembers().size());
 
-                // Disable join button if user is already a member
                 boolean isMember = group.getMembers().contains(currentUser);
                 joinButton.setDisable(isMember);
                 joinButton.setText(isMember ? "Already Joined" : "Join Group");
@@ -142,14 +133,12 @@ public class GroupListView {
                 joinButton.setDisable(true);
                 joinButton.setText("Already Joined");
 
-                // Show success message
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
                 alert.setContentText("You have successfully joined " + group.getName());
                 alert.showAndWait();
             } else {
-                // Show error message
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);

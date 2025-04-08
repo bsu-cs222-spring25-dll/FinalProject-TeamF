@@ -28,7 +28,6 @@ public class GroupRecommendationView {
     private VBox recommendationsSection;
     private FlowPane interestTags;
 
-    // Number of recommendations to show
     private static final int RECOMMENDATION_LIMIT = 5;
 
     public GroupRecommendationView(User currentUser, GroupController groupController,
@@ -49,26 +48,20 @@ public class GroupRecommendationView {
         mainContainer.getStyleClass().add("main-container");
         mainContainer.setPadding(new Insets(15));
 
-        // Header with bold font
         Text header = new Text("Recommended Groups");
         header.setFont(Font.font("System", FontWeight.BOLD, 18));
         header.getStyleClass().add("recommendation-title");
 
-        // Your Interests section
         VBox interestsSection = createInterestsSection();
 
-        // Explanation text
         Label explanation = new Label("Based on your interests, you might like these groups:");
         explanation.getStyleClass().add("recommendation-explanation");
 
-        // Recommendations
         this.recommendationsSection = new VBox(15);
         recommendationsSection.getStyleClass().add("recommendations-section");
 
-        // Initial population of recommendations
         refreshRecommendations();
 
-        // Add all components
         mainContainer.getChildren().addAll(
                 header,
                 interestsSection,
@@ -77,7 +70,6 @@ public class GroupRecommendationView {
                 recommendationsSection
         );
 
-        // Wrap in ScrollPane for many recommendations
         ScrollPane scrollPane = new ScrollPane(mainContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("scroll-pane");
@@ -100,9 +92,7 @@ public class GroupRecommendationView {
         HBox interestControls = new HBox(10);
         interestControls.setAlignment(Pos.CENTER_LEFT);
 
-        // Interest dropdown for adding new interests
         ComboBox<Interest> interestComboBox = new ComboBox<>();
-        // Set a cell factory to display only the interest name
         interestComboBox.setCellFactory(lv -> new ListCell<Interest>() {
             @Override
             protected void updateItem(Interest item, boolean empty) {
@@ -110,7 +100,7 @@ public class GroupRecommendationView {
                 setText(empty || item == null ? "" : item.getName());
             }
         });
-        // Also set a String converter to display only the interest name in the main field
+
         interestComboBox.setConverter(new StringConverter<Interest>() {
             @Override
             public String toString(Interest interest) {
@@ -119,11 +109,10 @@ public class GroupRecommendationView {
 
             @Override
             public Interest fromString(String string) {
-                return null; // Not needed for this use case
+                return null;
             }
         });
 
-        // Get available interests that the user doesn't already have
         List<Interest> availableInterests = interestController.getAllInterests();
         availableInterests.removeAll(currentUser.getInterests());
         interestComboBox.getItems().addAll(availableInterests);
@@ -133,17 +122,10 @@ public class GroupRecommendationView {
         addInterestButton.setOnAction(e -> {
             Interest selectedInterest = interestComboBox.getValue();
             if (selectedInterest != null) {
-                // Add interest to user and save the change
                 boolean added = userController.addInterest(currentUser, selectedInterest);
-
                 if (added) {
-                    // Update the UI immediately
                     refreshInterestsDisplay(interestTags);
-
-                    // Update the recommendations to reflect the new interest
                     refreshRecommendations();
-
-                    // Update combobox options by removing the added interest
                     interestComboBox.getItems().remove(selectedInterest);
                     interestComboBox.setValue(null);
                 }
@@ -152,11 +134,9 @@ public class GroupRecommendationView {
 
         interestControls.getChildren().addAll(interestComboBox, addInterestButton);
 
-        // Interest tags display
         this.interestTags = new FlowPane(10, 10);
         interestTags.setPadding(new Insets(5));
 
-        // Add interest tags with remove option
         refreshInterestsDisplay(interestTags);
 
         section.getChildren().addAll(title, interestTags, interestControls);
@@ -196,10 +176,8 @@ public class GroupRecommendationView {
 
     private void refreshRecommendations() {
         if (recommendationsSection != null) {
-            // Clear existing recommendations
             recommendationsSection.getChildren().clear();
 
-            // Get the user's interests
             Set<Interest> userInterests = currentUser.getInterests();
 
             if (userInterests.isEmpty()) {
@@ -207,7 +185,6 @@ public class GroupRecommendationView {
                 noInterests.setStyle("-fx-font-style: italic;");
                 recommendationsSection.getChildren().add(noInterests);
             } else {
-                // Get recommended groups based on user's interests
                 List<Group> recommendedGroups = groupController.findGroupsByUserInterests(currentUser, RECOMMENDATION_LIMIT);
 
                 if (recommendedGroups.isEmpty()) {
@@ -219,7 +196,6 @@ public class GroupRecommendationView {
                         VBox groupCard = createGroupCard(group);
                         recommendationsSection.getChildren().add(groupCard);
 
-                        // Add separator between cards except for the last one
                         if (recommendedGroups.indexOf(group) < recommendedGroups.size() - 1) {
                             recommendationsSection.getChildren().add(new Separator());
                         }
@@ -234,19 +210,15 @@ public class GroupRecommendationView {
         card.getStyleClass().add("group-card");
         card.setPadding(new Insets(10));
 
-        // Group name
         Text groupName = new Text(group.getName());
         groupName.setFont(Font.font("System", FontWeight.BOLD, 14));
 
-        // Description
         Label description = new Label(group.getDescription());
         description.setWrapText(true);
 
-        // Creator
         Label creator = new Label("Created by: " + group.getCreator().getUsername());
         creator.setStyle("-fx-font-style: italic;");
 
-        // Matching interests count and names
         Set<Interest> matchingInterests = group.getInterests().stream()
                 .filter(i -> currentUser.getInterests().contains(i))
                 .collect(Collectors.toSet());
@@ -261,7 +233,6 @@ public class GroupRecommendationView {
                 (matchCount > 0 ? ": " + interestNames : ""));
         matchLabel.setWrapText(true);
 
-        // Join button only
         HBox buttonBar = new HBox(10);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
 
@@ -270,14 +241,12 @@ public class GroupRecommendationView {
 
         buttonBar.getChildren().add(joinButton);
 
-        // Check if user is already a member
         boolean isMember = group.getMembers().contains(currentUser);
         if (isMember) {
             joinButton.setText("Joined");
             joinButton.setDisable(true);
         }
 
-        // Join button event handler
         joinButton.setOnAction(e -> {
             boolean success = groupController.joinGroup(group, currentUser);
             if (success) {
@@ -289,7 +258,6 @@ public class GroupRecommendationView {
             }
         });
 
-        // Add all components to card
         card.getChildren().addAll(groupName, description, creator, matchLabel, buttonBar);
 
         return card;

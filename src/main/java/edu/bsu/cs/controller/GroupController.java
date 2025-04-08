@@ -4,56 +4,49 @@ import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
+
 import java.util.List;
 
 public class GroupController {
+
     private final GroupService groupService;
 
     public GroupController(GroupService groupService) {
         this.groupService = groupService;
     }
 
-    // Get the groups that the user is a part of
     public List<Group> getUserGroups(User user) {
-        return groupService.findGroupsByMember(user);  // Fetch groups for the user
+        return groupService.findGroupsByMember(user);
     }
 
-    // Get all public groups
     public List<Group> getAllGroups() {
         return groupService.findPublicGroups();
     }
 
-    // Search groups by name
     public List<Group> searchGroups(String query) {
         return groupService.findGroupsByNameContaining(query);
     }
 
-    // Get recommended groups for a user
-    public List<Group> getRecommendedGroups(User user,int limit) {
-        return groupService.recommendGroupsForUser(user, 10); // Show top 10 recommendations
+    public List<Group> getRecommendedGroups(User user, int limit) {
+        return groupService.recommendGroupsForUser(user, limit);
     }
 
-    // Join a group
     public boolean joinGroup(Group group, User user) {
         return groupService.joinGroup(group, user);
     }
 
-    // Leave a group
     public boolean leaveGroup(Group group, User user) {
         return groupService.leaveGroup(group, user);
     }
 
-    // Create a new group
     public Group createGroup(String name, String description, User creator, boolean isPublic) {
         return groupService.createGroup(name, description, creator, isPublic);
     }
 
-    // Find groups matching user's interests
     public List<Group> findGroupsByUserInterests(User user, int limit) {
         return groupService.findGroupsByUserInterests(user, limit);
     }
 
-    // Add an interest to a group
     public boolean addInterestToGroup(Group group, Interest interest) {
         return groupService.addInterest(group, interest);
     }

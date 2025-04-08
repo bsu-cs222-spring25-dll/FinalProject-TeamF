@@ -63,10 +63,7 @@ public class LoginView {
         grid.add(loginButton, 0, 3);
         grid.add(registerButton, 1, 3);
 
-        // login button
         loginButton.setOnAction(event -> handleLogin(usernameField.getText(), passwordField.getText()));
-
-        // register button
         registerButton.setOnAction(event -> {
             Stage stage = (Stage) registerButton.getScene().getWindow();
             controller.showRegistrationView(stage);
@@ -82,7 +79,6 @@ public class LoginView {
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setTitle("GroupSync");
 
-        // Important: Apply CSS before setting the scene
         try {
             scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
         } catch (Exception e) {
@@ -104,8 +100,6 @@ public class LoginView {
         if (userOpt.isPresent()) {
             User user = userOpt.get();
             showAlert("Success", "Welcome, " + user.getUsername() + "!");
-
-            // Navigate to main app view
             Stage stage = (Stage) root.getScene().getWindow();
             controller.showMainView(stage, user);
         } else {

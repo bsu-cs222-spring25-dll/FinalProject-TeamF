@@ -2,8 +2,6 @@ package edu.bsu.cs.service;
 
 import edu.bsu.cs.dao.InterestDAO;
 import edu.bsu.cs.model.Interest;
-import edu.bsu.cs.util.HibernateSessionManager;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,7 +12,6 @@ public class InterestService {
     public InterestService(InterestDAO interestDAO) {
         this.interestDAO = interestDAO;
     }
-
 
     public List<Interest> findInterestByNameContaining(String nameContains) {
         return interestDAO.findByNameContaining(nameContains);
@@ -31,5 +28,5 @@ public class InterestService {
     public List<Interest> getAllInterests() {
         return interestDAO.findAll();
     }
-
 }
+

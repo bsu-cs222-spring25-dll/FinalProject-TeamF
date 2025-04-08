@@ -29,17 +29,14 @@ public class DatabaseInitializer {
     public void initialize() {
         logger.info("Starting database initialization");
 
-        // Create system user and other test users
         User systemUser = createSystemUser();
         createTestUser("beyonce", "beyonce@gmail.com", "b123");
         createTestUser("nicki", "nicki@gmail.com", "n123");
         createTestUser("gracie", "gracie@gmail.com", "g123");
         createTestUser("zayn", "zayn@gmail.com", "z123");
 
-        // Create predefined interests
         createPredefinedInterests();
 
-        // Create predefined groups
         groupDAO.createInitialGroups(systemUser);
 
         logger.info("Database initialization complete");
@@ -73,48 +70,29 @@ public class DatabaseInitializer {
 
     private void createPredefinedInterests() {
         List<String> interestNames = Arrays.asList(
-                // Technology & Science
                 "Technology", "Programming", "AI & Machine Learning", "Cybersecurity",
                 "Cryptocurrency", "Gadgets", "Science", "Space Exploration", "Astronomy",
                 "Physics", "Biology", "Mathematics", "Coding Challenges",
-
-                // Fitness, Sports & Outdoor Activities
                 "Hiking", "Cycling", "Yoga", "Fitness", "Swimming", "Martial Arts",
                 "Skateboarding", "Running", "Weightlifting", "Rock Climbing",
                 "Tennis", "Basketball", "Soccer", "American Football", "Camping",
                 "Backpacking", "Surfing", "Skiing", "Fishing", "Kayaking",
-
-                // Arts, Fashion & Creativity
                 "Photography", "Painting", "Digital Art", "Graphic Design", "Theater",
                 "Fashion", "Makeup", "Interior Design", "Calligraphy", "Jewelry Design",
-                "Tattoo Art", "DIY Projects", "Crafting",
-
-                // Music & Entertainment
-                "Music", "Singing", "Dancing", "DJing", "Movies", "TV Shows",
-                "Anime", "K-Pop", "Podcasts", "Stand-up Comedy", "Board Games",
-                "Video Games", "Esports", "Streaming", "Theater Acting",
-
-                // Personal Development & Social
+                "Tattoo Art", "DIY Projects", "Crafting", "Music", "Singing", "Dancing",
+                "DJing", "Movies", "TV Shows", "Anime", "K-Pop", "Podcasts", "Stand-up Comedy",
+                "Board Games", "Video Games", "Esports", "Streaming", "Theater Acting",
                 "Cooking", "Baking", "Gardening", "Self-Improvement", "Mindfulness",
                 "Meditation", "Journaling", "Public Speaking", "Finance", "Investing",
                 "Entrepreneurship", "Business Strategy", "Leadership", "Personal Finance",
-                "Marketing", "Networking", "Debating", "Philosophy",
-
-                // Travel & Culture
-                "Travel", "Road Trips", "Theme Parks", "Cultural Experiences",
-                "Foodie Adventures", "Languages", "History", "Mythology", "World Religions",
-
-                // Social & Lifestyle
-                "Volunteering", "Activism", "Charity Work", "Environmentalism",
-                "Pets", "Parenting", "Relationships", "Social Media", "Astrology",
-                "Magic Tricks", "True Crime", "Conspiracy Theories",
-
-                // Strategy & Intellectual Pursuits
-                "Chess", "Puzzle Solving", "Brain Teasers", "Strategy Games",
-                "Science Fiction", "Psychology", "Mythology", "Space Exploration"
+                "Marketing", "Networking", "Debating", "Philosophy", "Travel", "Road Trips",
+                "Theme Parks", "Cultural Experiences", "Foodie Adventures", "Languages",
+                "History", "Mythology", "World Religions", "Volunteering", "Activism",
+                "Charity Work", "Environmentalism", "Pets", "Parenting", "Relationships",
+                "Social Media", "Astrology", "Magic Tricks", "True Crime", "Conspiracy Theories",
+                "Chess", "Puzzle Solving", "Brain Teasers", "Strategy Games", "Science Fiction",
+                "Psychology", "Mythology", "Space Exploration"
         );
-
-
 
         for (String name : interestNames) {
             if (!interestDAO.findByName(name).isPresent()) {

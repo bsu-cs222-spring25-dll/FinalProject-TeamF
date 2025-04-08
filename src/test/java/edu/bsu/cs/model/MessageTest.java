@@ -1,4 +1,3 @@
-// MessageTest.java
 package edu.bsu.cs.model;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,27 +17,24 @@ public class MessageTest {
 
     @BeforeEach
     public void setUp() {
-        // Create test objects
         sender = new User("sender", "sender@example.com", "password");
         User creator = new User("creator", "creator@example.com", "password");
         group = new Group("Test Group", "Test Description", creator, true);
 
         message = new Message(sender, group, "Test message content");
         sameMessage = new Message(sender, group, "Different content");
-        sameMessage.setId(message.getId()); // Make IDs the same for equality testing
+        sameMessage.setId(message.getId());
         differentMessage = new Message(sender, group, "Another message");
     }
 
     @Test
     public void testConstructorSetsValues() {
-        // Test that constructor sets values correctly
         assertEquals(sender, message.getSender());
         assertEquals(group, message.getGroup());
         assertEquals("Test message content", message.getContent());
         assertNotNull(message.getId());
         assertNotNull(message.getSentAt());
 
-        // Sent time should be around now
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime messageSentTime = message.getSentAt();
         assertTrue(Math.abs(messageSentTime.getMinute() - now.getMinute()) <= 1);
@@ -46,7 +42,6 @@ public class MessageTest {
 
     @Test
     public void testSettersAndGetters() {
-        // Test setters and getters
         UUID newId = UUID.randomUUID();
         message.setId(newId);
         assertEquals(newId, message.getId());
@@ -70,28 +65,16 @@ public class MessageTest {
 
     @Test
     public void testEquals() {
-        // Same ID should be equal
         assertEquals(message, sameMessage);
-
-        // Different ID should not be equal
         assertNotEquals(message, differentMessage);
-
-        // Same object should be equal to itself
         assertEquals(message, message);
-
-        // Different object types should not be equal
         assertNotEquals(message, sender);
-
-        // Null should not be equal
         assertNotEquals(message, null);
     }
 
     @Test
     public void testHashCode() {
-        // Same ID should have same hash code
         assertEquals(message.hashCode(), sameMessage.hashCode());
-
-        // Different ID should have different hash code
         assertNotEquals(message.hashCode(), differentMessage.hashCode());
     }
 }

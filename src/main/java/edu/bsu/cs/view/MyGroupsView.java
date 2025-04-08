@@ -92,7 +92,7 @@ public class MyGroupsView {
 
             messageButton = new Button("Messages");
             messageButton.setOnAction(e -> handleMessageButton());
-            //messageButton.setOnAction(e -> handleMessageButton(getItem()));
+
             HBox buttonBox = new HBox(10, leaveButton, messageButton);
             buttonBox.setPadding(new Insets(5, 0, 0, 0));
 
@@ -116,7 +116,6 @@ public class MyGroupsView {
                 leaveButton.setDisable(!isMember);
                 leaveButton.setText(isMember ? "Leave Group" : "Not a member");
 
-                // Enable/disable message button based on group membership
                 messageButton.setDisable(!isMember);
 
                 setGraphic(content);
@@ -147,13 +146,8 @@ public class MyGroupsView {
         }
 
         private void handleMessageButton() {
-            // Create a MessageView for this group
             MessageView messageView = new MessageView(currentUser, messageController, groupController);
-
-            // Get the main view's root pane (BorderPane)
             BorderPane mainViewRoot = (BorderPane) getRoot().getScene().getRoot();
-
-            // Set the MessageView as the center content
             mainViewRoot.setCenter(messageView.getRoot());
         }
     }
