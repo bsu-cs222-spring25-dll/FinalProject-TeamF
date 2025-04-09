@@ -38,30 +38,39 @@ GroupSync is a Java-based desktop application that allows users to connect with 
 2. Build the project:
 3. Run the application:
 
-### Database Setup
+### Accessing the Database
+The application uses an embedded H2 database that initializes automatically on first run. To view or manage the database during development:
 
-The application uses an embedded H2 database which is automatically initialized on first run. No additional database setup is required.
+H2 Console becomes available at http://localhost:8082 when the application is running(in the console)
+Connect using JDBC URL: jdbc:h2:./groupsyncdb
 
-- The H2 Console is available at `http://localhost:8082` during application runtime
-- Default system user: username = `system`, password = `systempassword`
+### Architecture
+GroupSync follows the MVC (Model-View-Controller) architecture:
 
-## Development Notes
+Model: Entity classes representing users, groups, interests, and messages
+View: JavaFX UI components for different screens and features
+Controller: Business logic handling user actions and application flow
+Service Layer: Connection between controllers and data access
+DAO Layer: Database operations with Hibernate ORM
 
-### Suppressed Warnings
+### Project Status
+Completed (Iterations 1 & 2)
 
-- `@SuppressWarnings("ALL")` in Message.java: This suppression is used because the class contains auto-generated code from Hibernate, and we want to avoid warnings about unused fields and methods that might be used by the framework.
+User registration and login with validation
+Database integration and entity relationships
+User profile management
+Group browsing and joining
+In-group messaging
+Interest-based group recommendations
+Group creation with interest tagging
 
-## Project Status
+Upcoming (Iteration 3)
 
-This is the first iteration of the GroupSync application. Currently implemented features:
-- User registration and login and logout
-- Basic database schema for users, interests, groups, and messages
-- Initial user interface for authentication
-- Join groups and search groups
-- Ability to view joined groups
-- In-group messaging system
+Direct messaging between users
+Group content moderation
+Group categorization and organization
+Mobile-responsive design
+Push notifications
 
-Upcoming features:
-- Group creation and management
-- User profile management
-- Interest-based group recommendations
+### Testing
+We've implemented JUnit tests for core functionality with a focus on the "one assert per test" principle to ensure precise test coverage and clear failure diagnosis.

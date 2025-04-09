@@ -22,63 +22,150 @@ public class UserTest {
         interest = new Interest("Programming");
     }
 
+    // Constructor tests
     @Test
-    public void testConstructorSetsValues() {
+    public void constructorShouldSetUsername() {
         assertEquals("testuser", user.getUsername());
-        assertEquals("test@example.com", user.getEmail());
-        assertEquals("password123", user.getPassword());
-        assertNotNull(user.getId());
-        assertNotNull(user.getInterests());
-        assertTrue(user.getInterests().isEmpty());
     }
 
     @Test
-    public void testSettersAndGetters() {
+    public void constructorShouldSetEmail() {
+        assertEquals("test@example.com", user.getEmail());
+    }
+
+    @Test
+    public void constructorShouldSetPassword() {
+        assertEquals("password123", user.getPassword());
+    }
+
+    @Test
+    public void constructorShouldGenerateId() {
+        assertNotNull(user.getId());
+    }
+
+    @Test
+    public void newUserShouldHaveEmptyInterestsSet() {
+        assertTrue(user.getInterests().isEmpty());
+    }
+
+    // Setter/Getter tests
+    @Test
+    public void setIdShouldUpdateId() {
         UUID newId = UUID.randomUUID();
         user.setId(newId);
         assertEquals(newId, user.getId());
+    }
 
+    @Test
+    public void setUsernameShouldUpdateUsername() {
         user.setUsername("newusername");
         assertEquals("newusername", user.getUsername());
+    }
 
+    @Test
+    public void setEmailShouldUpdateEmail() {
         user.setEmail("newemail@example.com");
         assertEquals("newemail@example.com", user.getEmail());
+    }
 
+    @Test
+    public void setPasswordShouldUpdatePassword() {
         user.setPassword("newpassword");
         assertEquals("newpassword", user.getPassword());
     }
 
+    // Interest management tests
     @Test
-    public void testAddInterest() {
+    public void addInterestShouldReturnTrueWhenAddingNewInterest() {
         assertTrue(user.addInterest(interest));
-        assertEquals(1, user.getInterests().size());
-        assertTrue(user.getInterests().contains(interest));
-
-        assertFalse(user.addInterest(interest));
-        assertEquals(1, user.getInterests().size());
     }
 
     @Test
-    public void testRemoveInterest() {
+    public void addInterestShouldAddInterestToCollection() {
+        user.addInterest(interest);
+        assertTrue(user.getInterests().contains(interest));
+    }
+
+    @Test
+    public void addInterestShouldIncreaseSizeOfInterestCollection() {
+        int initialSize = user.getInterests().size();
+        user.addInterest(interest);
+        assertEquals(initialSize + 1, user.getInterests().size());
+    }
+
+    @Test
+    public void addInterestShouldReturnFalseWhenAddingDuplicateInterest() {
+        user.addInterest(interest);
+        assertFalse(user.addInterest(interest));
+    }
+
+    @Test
+    public void addDuplicateInterestShouldNotChangeSizeOfCollection() {
+        user.addInterest(interest);
+        int sizeAfterFirstAdd = user.getInterests().size();
+        user.addInterest(interest);
+        assertEquals(sizeAfterFirstAdd, user.getInterests().size());
+    }
+
+    @Test
+    public void removeInterestShouldReturnTrueWhenRemovingExistingInterest() {
         user.addInterest(interest);
         assertTrue(user.removeInterest(interest));
-        assertEquals(0, user.getInterests().size());
+    }
 
+    @Test
+    public void removeInterestShouldRemoveInterestFromCollection() {
+        user.addInterest(interest);
+        user.removeInterest(interest);
+        assertFalse(user.getInterests().contains(interest));
+    }
+
+    @Test
+    public void removeInterestShouldDecreaseSizeOfInterestCollection() {
+        user.addInterest(interest);
+        int sizeBeforeRemove = user.getInterests().size();
+        user.removeInterest(interest);
+        assertEquals(sizeBeforeRemove - 1, user.getInterests().size());
+    }
+
+    @Test
+    public void removeInterestShouldReturnFalseWhenRemovingNonexistentInterest() {
         assertFalse(user.removeInterest(interest));
     }
 
+    // Equals and hashCode tests
     @Test
-    public void testEquals() {
-        assertEquals(user, sameUser);
-        assertNotEquals(user, differentUser);
+    public void equalsShouldReturnTrueForSameObject() {
         assertEquals(user, user);
-        assertNotEquals(user, interest);
+    }
+
+    @Test
+    public void equalsShouldReturnTrueForObjectsWithSameId() {
+        assertEquals(user, sameUser);
+    }
+
+    @Test
+    public void equalsShouldReturnFalseForObjectsWithDifferentIds() {
+        assertNotEquals(user, differentUser);
+    }
+
+    @Test
+    public void equalsShouldReturnFalseForNull() {
         assertNotEquals(user, null);
     }
 
     @Test
-    public void testHashCode() {
+    public void equalsShouldReturnFalseForDifferentClass() {
+        assertNotEquals(user, interest);
+    }
+
+    @Test
+    public void hashCodeShouldBeEqualForObjectsWithSameId() {
         assertEquals(user.hashCode(), sameUser.hashCode());
+    }
+
+    @Test
+    public void hashCodeShouldBeDifferentForObjectsWithDifferentIds() {
         assertNotEquals(user.hashCode(), differentUser.hashCode());
     }
 }
