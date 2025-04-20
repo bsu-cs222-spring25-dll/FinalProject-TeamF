@@ -3509,3 +3509,9 @@ select distinct g1_0.id,g1_0.creator_id,g1_0.description,g1_0.is_public,g1_0.nam
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at com.mchange.v2.c3p0.stmt.GooGooStatementCache$1StmtAcquireTask.run(GooGooStatementCache.java:547)
 	at com.mchange.v2.async.ThreadPoolAsynchronousRunner$PoolThread.run(ThreadPoolAsynchronousRunner.java:696)
+2025-04-15 10:13:42.821640-04:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]ID"; expected "INSERT"; SQL statement:
+ID [42001-224]
+2025-04-15 10:13:46.437539-04:00 jdbc[8]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]USERS"; expected "UPDATE"; SQL statement:
+USERS [42001-224]

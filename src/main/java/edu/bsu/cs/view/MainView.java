@@ -94,6 +94,8 @@ public class MainView {
         Button createGroupButton = createSidebarButton("Create Group", e -> showCreateGroupForm());
         Button messagesButton = createSidebarButton("Messages", e -> showMessages());
         Button profileButton = createSidebarButton("My Profile", e -> showProfile());
+        Button calendarButton = createSidebarButton("Calendar", e -> showCalendar());
+
 
         sidebar.getChildren().addAll(
                 welcomeLabel,
@@ -103,6 +105,7 @@ public class MainView {
                 recommendationsButton,
                 createGroupButton,
                 messagesButton,
+                calendarButton,
                 new Separator(),
                 profileButton
         );
@@ -171,4 +174,10 @@ public class MainView {
         placeholder.setPadding(new Insets(20));
         root.setCenter(placeholder);
     }
+
+    private void showCalendar() {
+        CalendarView calendarView = new CalendarView();
+        root.setCenter(calendarView.getRoot());
+    }
+
 }

@@ -57,8 +57,14 @@ public class MyGroupsView {
         groupListView.setCellFactory(param -> new GroupListCell());
         VBox.setVgrow(groupListView, Priority.ALWAYS);
 
+        VBox groupListWrapper = new VBox(groupListView);
+        groupListWrapper.setPadding(new Insets(10));
+        groupListWrapper.setSpacing(10);
+
+        CalendarView calendarView = new CalendarView();
         root.setTop(topBox);
-        root.setCenter(groupListView);
+        root.setCenter(groupListWrapper);
+        root.setRight(calendarView.getRoot());  // Add calendar to the right side
         root.setPadding(new Insets(0));
     }
 
