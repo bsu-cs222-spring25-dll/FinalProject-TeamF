@@ -164,11 +164,7 @@ public class MainView {
     }
 
     private void showProfile() {
-        Label label = new Label("User Profile - Coming Soon");
-        label.setStyle("-fx-font-size: 24px;");
-        VBox placeholder = new VBox(label);
-        placeholder.setAlignment(javafx.geometry.Pos.CENTER);
-        placeholder.setPadding(new Insets(20));
-        root.setCenter(placeholder);
+        ProfileView profileView=new ProfileView(userController,currentUser);
+        root.setCenter(profileView.getRoot());
     }
 }
