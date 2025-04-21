@@ -22,6 +22,8 @@ public class InterestSelectionView {
     private final GroupController groupController;
     private final MessageController messageController;
     private final LoginViewController loginViewController;
+    private final EventController eventController;
+    private final EventAttendeeController eventAttendeeController;
     private final VBox root;
 
     private final Map<Interest, CheckBox> interestCheckboxes = new HashMap<>();
@@ -30,13 +32,17 @@ public class InterestSelectionView {
                                  InterestController interestController,
                                  GroupController groupController,
                                  MessageController messageController,
-                                 LoginViewController loginViewController) {
+                                 LoginViewController loginViewController,
+                                 EventController eventController,
+                                 EventAttendeeController eventAttendeeController) {
         this.currentUser = user;
         this.userController = userController;
         this.interestController = interestController;
         this.groupController = groupController;
         this.messageController = messageController;
         this.loginViewController = loginViewController;
+        this.eventController = eventController;
+        this.eventAttendeeController = eventAttendeeController;
         this.root = createView();
 
         String cssPath = "/Interest.css";
@@ -184,7 +190,7 @@ public class InterestSelectionView {
             User refreshedUser = refreshedUserOpt.orElse(currentUser);
 
             MainView mainView = new MainView(refreshedUser, userController, groupController,
-                    interestController, messageController);
+                    interestController, messageController,eventController,eventAttendeeController);
             Scene scene = new Scene(mainView.getRoot(), 1024, 768);
 
             try {

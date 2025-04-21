@@ -1,12 +1,16 @@
 package edu.bsu.cs.view;
 
+import edu.bsu.cs.controller.EventAttendeeController;
 import edu.bsu.cs.controller.EventController;
 import edu.bsu.cs.controller.GroupController;
 import edu.bsu.cs.controller.MessageController;
+import edu.bsu.cs.dao.EventAttendeeDAO;
+import edu.bsu.cs.dao.EventAttendeeDAOImpl;
 import edu.bsu.cs.dao.EventDAO;
 import edu.bsu.cs.dao.EventDAOImpl;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.User;
+import edu.bsu.cs.service.EventAttendeeService;
 import edu.bsu.cs.service.EventService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,7 +74,12 @@ public class MyGroupsView {
         EventService eventService = new EventService(eventDAO);
         EventController eventController = new EventController(eventService);
 
-        CalendarView calendarView = new CalendarView(eventController,groupController, currentUser);
+        // Create EventAttendee components
+        EventAttendeeDAO eventAttendeeDAO = new EventAttendeeDAOImpl();
+        EventAttendeeService eventAttendeeService = new EventAttendeeService(eventAttendeeDAO);
+        EventAttendeeController eventAttendeeController = new EventAttendeeController(eventAttendeeService);
+
+        CalendarView calendarView = new CalendarView(eventController,groupController,eventAttendeeController, currentUser);
         root.setTop(topBox);
         root.setCenter(groupListWrapper);
         root.setRight(calendarView.getRoot());  // Add calendar to the right side

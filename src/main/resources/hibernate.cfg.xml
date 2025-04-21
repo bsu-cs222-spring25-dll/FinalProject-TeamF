@@ -33,5 +33,6 @@
         <mapping class="edu.bsu.cs.model.Interest"/>
         <mapping class="edu.bsu.cs.model.Message"/>
         <mapping class="edu.bsu.cs.model.Event"/>
+        <mapping class="edu.bsu.cs.model.EventAttendee"/>
     </session-factory>
 </hibernate-configuration>

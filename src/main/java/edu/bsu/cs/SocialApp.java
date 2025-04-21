@@ -28,22 +28,30 @@ public class SocialApp extends Application {
         GroupDAO groupDAO = new GroupDAOImpl();
         InterestDAO interestDAO = new InterestDAOImpl();
         MessageDAO messageDAO = new MessageDAOImpl();
+        EventDAO eventDAO = new EventDAOImpl();
+        EventAttendeeDAO eventAttendeeDAO = new EventAttendeeDAOImpl();
 
         UserService userService = new UserService(userDAO);
         GroupService groupService = new GroupService(groupDAO);
         InterestService interestService = new InterestService(interestDAO);
         MessageService messageService = new MessageService(messageDAO);
+        EventService eventService = new EventService(eventDAO);
+        EventAttendeeService eventAttendeeService = new EventAttendeeService(eventAttendeeDAO);
 
         UserController userController = new UserController(userService);
         GroupController groupController = new GroupController(groupService);
         InterestController interestController = new InterestController(interestService);
         MessageController messageController = new MessageController(messageService);
+        EventController eventController = new EventController(eventService);
+        EventAttendeeController eventAttendeeController= new EventAttendeeController(eventAttendeeService);
 
         LoginViewController loginController = new LoginViewController(
                 userController,
                 groupController,
                 interestController,
-                messageController);
+                messageController,
+                eventController,
+                eventAttendeeController);
 
         LoginView loginView = new LoginView(loginController);
         loginView.showLogin(primaryStage);

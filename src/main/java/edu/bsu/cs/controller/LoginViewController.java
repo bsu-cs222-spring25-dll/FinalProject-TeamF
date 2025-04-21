@@ -16,15 +16,21 @@ public class LoginViewController {
     private final GroupController groupController;
     private final InterestController interestController;
     private final MessageController messageController;
+    private final EventController eventController;
+    private final EventAttendeeController eventAttendeeController;
 
     public LoginViewController(UserController userController,
                                GroupController groupController,
                                InterestController interestController,
-                               MessageController messageController) {
+                               MessageController messageController,
+                               EventController eventController,
+                               EventAttendeeController eventAttendeeController) {
         this.userController = userController;
         this.groupController = groupController;
         this.interestController = interestController;
         this.messageController = messageController;
+        this.eventController = eventController;
+        this.eventAttendeeController = eventAttendeeController;
     }
 
     public Optional<User> login(String username, String password) {
@@ -36,7 +42,9 @@ public class LoginViewController {
                 userController,
                 groupController,
                 interestController,
-                messageController
+                messageController,
+                eventController,
+                eventAttendeeController
         );
 
         Scene scene = new Scene(registrationView.getRoot(), 800, 600);
@@ -56,7 +64,9 @@ public class LoginViewController {
                 userController,
                 groupController,
                 interestController,
-                messageController
+                messageController,
+                eventController,
+                eventAttendeeController
         );
 
         Scene scene = new Scene(mainView.getRoot(), 1024, 768);
@@ -73,7 +83,9 @@ public class LoginViewController {
                 interestController,
                 groupController,
                 messageController,
-                this
+                this,
+                eventController,
+                eventAttendeeController
         );
 
         Scene scene = new Scene(interestView.getRoot(), 800, 600);

@@ -1,9 +1,12 @@
 package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.*;
+import edu.bsu.cs.dao.EventAttendeeDAO;
+import edu.bsu.cs.dao.EventAttendeeDAOImpl;
 import edu.bsu.cs.dao.EventDAO;
 import edu.bsu.cs.dao.EventDAOImpl;
 import edu.bsu.cs.model.User;
+import edu.bsu.cs.service.EventAttendeeService;
 import edu.bsu.cs.service.EventService;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -21,6 +24,8 @@ public class MainView {
     private final InterestController interestController;
     private final LoginViewController loginViewController;
     private final UserController userController;
+    private final EventController eventController;
+    private final EventAttendeeController eventAttendeeController;
 
     private final BorderPane root;
 
@@ -28,14 +33,17 @@ public class MainView {
                     UserController userController,
                     GroupController groupController,
                     InterestController interestController,
-                    MessageController messageController) {
+                    MessageController messageController,EventController eventController,EventAttendeeController eventAttendeeContoller) {
         this.currentUser = currentUser;
         this.groupController = groupController;
         this.messageController = messageController;
         this.interestController = interestController;
         this.userController = userController;
+        this.eventController=eventController;
+        this.eventAttendeeController=eventAttendeeContoller;
+
         this.loginViewController = new LoginViewController(
-                userController, groupController, interestController, messageController
+                userController, groupController, interestController, messageController,eventController,eventAttendeeController
         );
 
         this.root = createMainView();
@@ -175,15 +183,7 @@ public class MainView {
     }
 
     private void showCalendar() {
-        // Create the DAO, service, and controller
-        EventDAO eventDAO = new EventDAOImpl();
-        EventService eventService = new EventService(eventDAO);
-        EventController eventController = new EventController(eventService);
-
-        // Create the calendar view with the controller and current user
-        CalendarView calendarView = new CalendarView(eventController,groupController, currentUser);
-
-        // Set the calendar view in the main content area
+        CalendarView calendarView = new CalendarView(eventController,groupController, eventAttendeeController,currentUser);
         root.setCenter(calendarView.getRoot());
     }
 

@@ -1,10 +1,6 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.LoginViewController;
-import edu.bsu.cs.controller.UserController;
-import edu.bsu.cs.controller.GroupController;
-import edu.bsu.cs.controller.InterestController;
-import edu.bsu.cs.controller.MessageController;
+import edu.bsu.cs.controller.*;
 import edu.bsu.cs.model.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,15 +23,21 @@ public class RegistrationView {
     protected final GroupController groupController;
     protected final InterestController interestController;
     protected final MessageController messageController;
+    protected final EventController eventController;
+    protected final EventAttendeeController eventAttendeeController;
 
     public RegistrationView(UserController userController,
                             GroupController groupController,
                             InterestController interestController,
-                            MessageController messageController) {
+                            MessageController messageController,
+                            EventController eventController,
+                            EventAttendeeController eventAttendeeController) {
         this.userController = userController;
         this.groupController = groupController;
         this.interestController = interestController;
         this.messageController = messageController;
+        this.eventController= eventController;
+        this.eventAttendeeController=eventAttendeeController;
         this.root = createRegistrationView();
     }
 
@@ -132,7 +134,9 @@ public class RegistrationView {
                 userController,
                 groupController,
                 interestController,
-                messageController
+                messageController,
+                eventController,
+                eventAttendeeController
         );
         LoginView loginView = new LoginView(loginController);
 
