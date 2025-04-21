@@ -32,18 +32,15 @@ public class ProfileView {
         profileContainer.setPadding(new Insets(30));
         profileContainer.setAlignment(Pos.TOP_CENTER);
 
-        // Profile header
         Text profileHeader = new Text("User Profile");
         profileHeader.setFont(Font.font("Tahoma", FontWeight.BOLD, 24));
 
-        // User information display
         GridPane userInfoGrid = new GridPane();
         userInfoGrid.setHgap(10);
         userInfoGrid.setVgap(15);
         userInfoGrid.setPadding(new Insets(20));
         userInfoGrid.setAlignment(Pos.CENTER);
 
-        // Username (read-only)
         Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField(currentUser.getUsername());
         usernameField.setEditable(false);

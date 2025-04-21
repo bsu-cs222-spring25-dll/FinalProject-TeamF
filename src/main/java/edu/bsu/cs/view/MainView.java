@@ -1,7 +1,10 @@
 package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.*;
+import edu.bsu.cs.dao.EventDAO;
+import edu.bsu.cs.dao.EventDAOImpl;
 import edu.bsu.cs.model.User;
+import edu.bsu.cs.service.EventService;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -172,7 +175,15 @@ public class MainView {
     }
 
     private void showCalendar() {
-        CalendarView calendarView = new CalendarView();
+        // Create the DAO, service, and controller
+        EventDAO eventDAO = new EventDAOImpl();
+        EventService eventService = new EventService(eventDAO);
+        EventController eventController = new EventController(eventService);
+
+        // Create the calendar view with the controller and current user
+        CalendarView calendarView = new CalendarView(eventController,groupController, currentUser);
+
+        // Set the calendar view in the main content area
         root.setCenter(calendarView.getRoot());
     }
 
