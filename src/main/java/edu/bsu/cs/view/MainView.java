@@ -1,13 +1,7 @@
 package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.*;
-import edu.bsu.cs.dao.EventAttendeeDAO;
-import edu.bsu.cs.dao.EventAttendeeDAOImpl;
-import edu.bsu.cs.dao.EventDAO;
-import edu.bsu.cs.dao.EventDAOImpl;
 import edu.bsu.cs.model.User;
-import edu.bsu.cs.service.EventAttendeeService;
-import edu.bsu.cs.service.EventService;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -105,7 +99,7 @@ public class MainView {
         Button createGroupButton = createSidebarButton("Create Group", e -> showCreateGroupForm());
         Button messagesButton = createSidebarButton("Messages", e -> showMessages());
         Button profileButton = createSidebarButton("My Profile", e -> showProfile());
-        Button calendarButton = createSidebarButton("Calendar", e -> showCalendar());
+        Button calendarButton = createSidebarButton("Events", e -> showCalendar());
 
 
         sidebar.getChildren().addAll(

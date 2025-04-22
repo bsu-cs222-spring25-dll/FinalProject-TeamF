@@ -23,15 +23,8 @@ public class EventAttendeeController {
         return eventAttendeeService.getUserResponse(event, user);
     }
 
-    public List<EventAttendee> getEventResponses(Event event) {
-        return eventAttendeeService.getEventResponses(event);
-    }
-
     public List<User> getAttendingUsers(Event event) {
         return eventAttendeeService.getAttendingUsers(event);
     }
 
-    public List<EventAttendee> getUserResponses(User user) {
-        return eventAttendeeService.getUserResponses(user);
-    }
 }

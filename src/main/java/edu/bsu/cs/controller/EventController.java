@@ -17,11 +17,6 @@ public class EventController {
         this.eventService = eventService;
     }
 
-    public Event createEvent(String title, String description, LocalDateTime startTime,
-                             LocalDateTime endTime, Group group) {
-        return eventService.createEvent(title, description, startTime, endTime, group);
-    }
-
     public Event updateEvent(Event event) {
         return eventService.updateEvent(event);
     }
@@ -34,15 +29,8 @@ public class EventController {
         return eventService.findById(id);
     }
 
-    public List<Event> findUpcomingEvents(int limit) {
-        return eventService.findUpcomingEvents(limit);
-    }
-
     public List<Event> findUpcomingEventsForUser(User user, int limit) {
         return eventService.findUpcomingEventsForUser(user, limit);
     }
 
-    public List<Event> findByGroup(Group group) {
-        return eventService.findByGroup(group);
-    }
 }

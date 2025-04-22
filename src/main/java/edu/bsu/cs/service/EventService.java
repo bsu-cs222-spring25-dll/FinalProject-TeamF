@@ -39,15 +39,10 @@ public class EventService {
         return eventDAO.findById(id);
     }
 
-    public List<Event> findUpcomingEvents(int limit) {
-        return eventDAO.findUpcomingEvents(LocalDateTime.now(), limit);
-    }
 
     public List<Event> findUpcomingEventsForUser(User user, int limit) {
         return eventDAO.findUpcomingEventsForUser(user, LocalDateTime.now(), limit);
     }
 
-    public List<Event> findByGroup(Group group) {
-        return eventDAO.findByGroup(group);
-    }
+
 }
