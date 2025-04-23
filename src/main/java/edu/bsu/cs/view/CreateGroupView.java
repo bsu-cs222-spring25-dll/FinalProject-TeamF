@@ -11,7 +11,9 @@ import javafx.scene.layout.*;
 import javafx.geometry.Insets;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CreateGroupView {
     private final GroupController groupController;
@@ -91,19 +93,43 @@ public class CreateGroupView {
             interestsPane.getChildren().add(interestBox);
         }
 
+        // 💡 Custom Interest Input
+        TextField customInterestField = new TextField();
+        customInterestField.setPromptText("Type a new interest...");
+
+        Button addCustomInterestButton = new Button("Add Interest");
+        addCustomInterestButton.setOnAction(e -> {
+            String typedName = customInterestField.getText().trim();
+            if (!typedName.isEmpty()) {
+                Interest customInterest = interestController.findOrCreateInterestByName(typedName);
+                if (!selectedInterests.contains(customInterest)) {
+                    selectedInterests.add(customInterest);
+                    Label interestLabel = new Label(customInterest.getName());
+                    interestLabel.setStyle("-fx-background-color: #cfcfcf; -fx-padding: 5; -fx-background-radius: 4;");
+                    interestsPane.getChildren().add(interestLabel);
+                    customInterestField.clear();
+                }
+            }
+        });
+
+        HBox customInterestInput = new HBox(10, customInterestField, addCustomInterestButton);
+        customInterestInput.setAlignment(Pos.CENTER_LEFT);
+        customInterestInput.setPadding(new Insets(5));
+
         ScrollPane scrollPane = new ScrollPane(interestsPane);
         scrollPane.setFitToWidth(true);
         scrollPane.setPrefHeight(200);
         scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
-        VBox interestSection = new VBox(10, scrollPane);
+        VBox interestSection = new VBox(10, customInterestInput, scrollPane);
         interestSection.setPadding(new Insets(5));
 
         return interestSection;
     }
 
     private void createGroup(String name, String description, boolean isPublic) {
-        Group group = groupController.createGroup(name, description, currentUser, isPublic);
+        Set<Interest> interestSet = new HashSet<>(selectedInterests);
+        Group group = groupController.createGroup(name, description, currentUser, isPublic, interestSet);
 
         if (group != null) {
             boolean allSuccess = true;
@@ -125,7 +151,6 @@ public class CreateGroupView {
             } else {
                 showInfo("Group created, but some interests could not be added.");
             }
-
         } else {
             showError("Error creating the group. Please try again.");
         }

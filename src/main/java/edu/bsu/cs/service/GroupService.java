@@ -14,10 +14,18 @@ public class GroupService {
         this.groupDAO = groupDAO;
     }
 
-    public Group createGroup(String name, String description, User creator, boolean isPublic) {
-        Group group = new Group(name, description, creator, isPublic);
+    public Group createGroup(String name, String description, User creator, boolean isPublic, Set<Interest> interests) {
+        Group group = new Group();
+        group.setName(name);
+        group.setDescription(description);
+        group.setCreator(creator);
+        group.isPublic();
+        group.setMembers(new HashSet<>(List.of(creator)));
+        group.setInterests(interests); // ✅ Assign multiple interests
+
         return groupDAO.save(group);
     }
+
 
     public boolean joinGroup(Group group, User user) {
         if (group.addMember(user)) {

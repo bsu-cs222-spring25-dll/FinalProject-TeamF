@@ -1,16 +1,19 @@
 package edu.bsu.cs.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "interests")
 public class Interest {
+
+    @ManyToMany(mappedBy = "interests")
+    private Set<Group> groups = new HashSet<>();
+
 
     @Id
     private UUID id;
@@ -57,4 +60,5 @@ public class Interest {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

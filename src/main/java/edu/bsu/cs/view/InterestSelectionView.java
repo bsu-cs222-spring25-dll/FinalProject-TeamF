@@ -70,7 +70,7 @@ public class InterestSelectionView {
         Text description = new Text("Choose interests to help us recommend groups for you");
         description.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
 
-        ScrollPane interestScrollPane = createInterestSelectionArea();
+        ScrollPane interestScrollPane = new ScrollPane(createInterestSelectionArea());
 
         HBox buttonBar = new HBox(15);
         buttonBar.setAlignment(Pos.CENTER);
@@ -91,51 +91,64 @@ public class InterestSelectionView {
         return mainContainer;
     }
 
-    private ScrollPane createInterestSelectionArea() {
-        FlowPane interestsPane = new FlowPane(15, 15);
-        interestsPane.setPadding(new Insets(20));
-        interestsPane.setPrefWidth(700);
+    private VBox createInterestSelectionArea() {
+        VBox container = new VBox(10);
+        container.setPadding(new Insets(10));
 
-        try {
-            List<Interest> availableInterests = interestController.getAllInterests();
+        Label interestsLabel = new Label("Select Interests:");
+        interestsLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
-            Set<Interest> userInterests = currentUser.getInterests();
+        FlowPane interestsPane = new FlowPane(10, 10);
+        interestsPane.setPadding(new Insets(10));
+        interestsPane.setPrefWrapLength(300);
+        interestsPane.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5;");
+        interestsPane.setMinHeight(150);
 
-            for (Interest interest : availableInterests) {
-                CheckBox checkBox = new CheckBox(interest.getName());
-                checkBox.setWrapText(true);
-                checkBox.setSelected(userInterests.contains(interest));
-
-                VBox interestBox = new VBox(checkBox);
-                interestBox.setPadding(new Insets(10));
-                interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
-                interestBox.setPrefWidth(150);
-                interestBox.getStyleClass().add("interest-box");
-
-                interestsPane.getChildren().add(interestBox);
-                interestCheckboxes.put(interest, checkBox);
-            }
-
-            if (availableInterests.isEmpty()) {
-                Label noInterestsLabel = new Label("No interests available in the system yet.");
-                noInterestsLabel.setStyle("-fx-font-style: italic;");
-                interestsPane.getChildren().add(noInterestsLabel);
-            }
-        } catch (Exception e) {
-            System.err.println("Error loading interests: " + e.getMessage());
-            e.printStackTrace();
-
-            Label errorLabel = new Label("Error loading interests. Please try again.");
-            errorLabel.setStyle("-fx-font-style: italic; -fx-text-fill: red;");
-            interestsPane.getChildren().add(errorLabel);
+        interestCheckboxes.clear(); // fix for final reassignment
+        List<Interest> interests = interestController.getAllInterests();
+        for (Interest interest : interests) {
+            CheckBox checkBox = new CheckBox(interest.getName());
+            VBox interestBox = new VBox(checkBox);
+            interestBox.setPadding(new Insets(10));
+            interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
+            interestBox.setPrefWidth(150);
+            interestBox.getStyleClass().add("interest-box");
+            interestsPane.getChildren().add(interestBox);
+            interestCheckboxes.put(interest, checkBox);
         }
 
-        ScrollPane scrollPane = new ScrollPane(interestsPane);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPrefHeight(400);
-        scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+        // Custom Interest Input
+        TextField newInterestField = new TextField();
+        newInterestField.setPromptText("Enter a new interest");
 
-        return scrollPane;
+        Button addInterestButton = new Button("Add Interest");
+
+        addInterestButton.setOnAction(e -> {
+            String newInterestName = newInterestField.getText().trim();
+            if (!newInterestName.isEmpty()) {
+                newInterestName = Character.toUpperCase(newInterestName.charAt(0)) + newInterestName.substring(1).toLowerCase();
+                Interest newInterest = interestController.findOrCreateInterestByName(newInterestName);
+                if (!interestCheckboxes.containsKey(newInterest)) {
+                    CheckBox checkBox = new CheckBox(newInterest.getName());
+                    VBox interestBox = new VBox(checkBox);
+                    interestBox.setPadding(new Insets(10));
+                    interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
+                    interestBox.setPrefWidth(150);
+                    interestBox.getStyleClass().add("interest-box");
+                    interestsPane.getChildren().add(interestBox);
+                    interestCheckboxes.put(newInterest, checkBox);
+                    checkBox.setSelected(true);
+                    checkBox.requestFocus(); // optional touch
+                    newInterestField.clear();
+                }
+            }
+        });
+
+        HBox newInterestBox = new HBox(10, newInterestField, addInterestButton);
+        newInterestBox.setAlignment(Pos.CENTER_LEFT);
+
+        container.getChildren().addAll(interestsLabel, interestsPane, newInterestBox);
+        return container;
     }
 
     private void saveInterestsAndNavigate() {
@@ -190,7 +203,7 @@ public class InterestSelectionView {
             User refreshedUser = refreshedUserOpt.orElse(currentUser);
 
             MainView mainView = new MainView(refreshedUser, userController, groupController,
-                    interestController, messageController,eventController,eventAttendeeController);
+                    interestController, messageController, eventController, eventAttendeeController);
             Scene scene = new Scene(mainView.getRoot(), 1024, 768);
 
             try {

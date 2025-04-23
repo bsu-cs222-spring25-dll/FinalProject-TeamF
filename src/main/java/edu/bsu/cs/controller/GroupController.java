@@ -6,6 +6,7 @@ import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.GroupService;
 
 import java.util.List;
+import java.util.Set;
 
 public class GroupController {
 
@@ -36,8 +37,8 @@ public class GroupController {
         return groupService.leaveGroup(group, user);
     }
 
-    public Group createGroup(String name, String description, User creator, boolean isPublic) {
-        return groupService.createGroup(name, description, creator, isPublic);
+    public Group createGroup(String name, String description, User creator, boolean isPublic, Set<Interest> interests) {
+        return groupService.createGroup(name, description, creator, isPublic, interests);
     }
 
     public List<Group> findGroupsByUserInterests(User user, int limit) {
