@@ -1,7 +1,6 @@
 package edu.bsu.cs.util;
 
 import edu.bsu.cs.dao.*;
-import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import org.slf4j.Logger;
@@ -11,26 +10,25 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 public class DatabaseInitializer {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseInitializer.class);
 
     private final UserDAO userDAO;
     private final InterestDAO interestDAO;
     private final GroupDAO groupDAO;
-    private final MessageDAO messageDAO;
 
     public DatabaseInitializer() {
         this.userDAO = new UserDAOImpl();
         this.interestDAO = new InterestDAOImpl();
         this.groupDAO = new GroupDAOImpl();
-        this.messageDAO = new MessageDAOImpl();
     }
 
     public void initialize() {
         logger.info("Starting database initialization");
 
         User systemUser = createSystemUser();
-        createTestUser("beyonce", "beyonce@gmail.com", "b123");
+        createTestUser();
 
         createPredefinedInterests();
 
@@ -52,17 +50,18 @@ public class DatabaseInitializer {
         return userDAO.save(systemUser);
     }
 
-    private User createTestUser(String username, String email, String password) {
-        Optional<User> existingUser = userDAO.findByUsername(username);
+    private void createTestUser() {
+        Optional<User> existingUser = userDAO.findByUsername("beyonce");
 
         if (existingUser.isPresent()) {
-            logger.info("User {} already exists", username);
-            return existingUser.get();
+            logger.info("User {} already exists", "beyonce");
+            existingUser.get();
+            return;
         }
 
-        logger.info("Creating test user: {}", username);
-        User user = new User(username, email, password);
-        return userDAO.save(user);
+        logger.info("Creating test user: {}", "beyonce");
+        User user = new User("beyonce", "beyonce@gmail.com", "b123");
+        userDAO.save(user);
     }
 
     private void createPredefinedInterests() {
