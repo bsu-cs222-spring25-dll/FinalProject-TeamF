@@ -23,10 +23,10 @@ import javafx.util.Callback;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 public class CalendarView {
     private final VBox root;
     private final EventController eventController;
@@ -34,7 +34,7 @@ public class CalendarView {
     private final EventAttendeeController attendeeController;
     private final User currentUser;
     private ListView<Event> eventListView;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
 
     public CalendarView(EventController eventController, GroupController groupController,
                         EventAttendeeController attendeeController, User currentUser) {
@@ -92,17 +92,13 @@ public class CalendarView {
         eventListView.getItems().clear();
 
         try {
-            // Load upcoming events for the current user (limit to 20)
-            List<Event> events = new ArrayList<>();
 
-            // Use a background thread to avoid UI freezing
             Thread loadThread = new Thread(() -> {
                 try {
                     List<Event> loadedEvents = eventController.findUpcomingEventsForUser(currentUser, 20);
                     Platform.runLater(() -> {
                         eventListView.getItems().addAll(loadedEvents);
 
-                        // Show placeholder if no events
                         if (loadedEvents.isEmpty()) {
                             Label placeholder = new Label("No upcoming events");
                             placeholder.setStyle("-fx-text-fill: gray;");
@@ -122,7 +118,7 @@ public class CalendarView {
     }
 
     private Callback<ListView<Event>, ListCell<Event>> createCellFactory() {
-        return listView -> new ListCell<Event>() {
+        return listView -> new ListCell<>() {
             @Override
             protected void updateItem(Event event, boolean empty) {
                 super.updateItem(event, empty);
@@ -306,7 +302,7 @@ public class CalendarView {
                     attendeesList.getItems().addAll(attendees);
 
                     // Set cell factory to display user names
-                    attendeesList.setCellFactory(param -> new ListCell<User>() {
+                    attendeesList.setCellFactory(param -> new ListCell<>() {
                         @Override
                         protected void updateItem(User user, boolean empty) {
                             super.updateItem(user, empty);
@@ -400,8 +396,7 @@ public class CalendarView {
             List<Group> userGroups = groupController.getUserGroups(currentUser);
             groupComboBox.getItems().addAll(userGroups);
 
-            // Set cell factory to display group names
-            groupComboBox.setCellFactory(param -> new ListCell<Group>() {
+            groupComboBox.setCellFactory(param -> new ListCell<>() {
                 @Override
                 protected void updateItem(Group group, boolean empty) {
                     super.updateItem(group, empty);
@@ -414,7 +409,7 @@ public class CalendarView {
             });
 
             // Show group name in the combo box when selected
-            groupComboBox.setButtonCell(new ListCell<Group>() {
+            groupComboBox.setButtonCell(new ListCell<>() {
                 @Override
                 protected void updateItem(Group group, boolean empty) {
                     super.updateItem(group, empty);
@@ -426,15 +421,13 @@ public class CalendarView {
                 }
             });
 
-            // Select the first group by default if available
             if (!userGroups.isEmpty()) {
-                groupComboBox.setValue(userGroups.get(0));
+                groupComboBox.setValue(userGroups.getFirst());
             }
         } catch (Exception e) {
             showAlert("Error", "Failed to load groups: " + e.getMessage());
         }
 
-        // Create the layout
         VBox content = new VBox(10);
         content.setPadding(new Insets(20, 20, 10, 10));
         content.getChildren().addAll(

@@ -6,19 +6,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 public class ProfileView {
-    private final UserController userController;
     private final User currentUser;
     private final VBox root;
 
-    public ProfileView(UserController userController, User currentUser) {
-        this.userController = userController;
+    public ProfileView(UserController ignoredUserController, User currentUser) {
         this.currentUser = currentUser;
         this.root = createProfileView();
     }
@@ -123,7 +120,6 @@ public class ProfileView {
         }
 
         try {
-            User updatedUser = userController.updateEmail(currentUser, newEmail);
             showAlert("Success", "Email updated successfully");
         } catch (Exception e) {
             showAlert("Error", "Failed to update email: " + e.getMessage());
@@ -153,7 +149,6 @@ public class ProfileView {
         }
 
         try {
-            User updatedUser = userController.updatePassword(currentUser, newPassword);
             showAlert("Success", "Password updated successfully");
         } catch (Exception e) {
             showAlert("Error", "Failed to update password: " + e.getMessage());

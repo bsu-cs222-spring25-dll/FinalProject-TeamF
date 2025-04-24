@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import java.sql.SQLException;
 
+@SuppressWarnings("ALL")
 public class SocialApp extends Application {
 
     @Override

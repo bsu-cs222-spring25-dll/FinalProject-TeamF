@@ -49,7 +49,7 @@ public class CreateGroupView {
             String description = groupDescriptionField.getText().trim();
 
             if (!name.isEmpty() && !description.isEmpty()) {
-                createGroup(name, description, true);
+                createGroup(name, description);
             } else {
                 showError("Please fill in all fields.");
             }
@@ -139,12 +139,12 @@ public class CreateGroupView {
         return Character.toUpperCase(input.charAt(0)) + input.substring(1).toLowerCase();
     }
 
-    private void createGroup(String name, String description, boolean isPublic) {
+    private void createGroup(String name, String description) {
         Set<Interest> interestSet = new HashSet<>(selectedInterests);
-        Group group = groupController.createGroup(name, description, currentUser, isPublic, interestSet);
+        Group group = groupController.createGroup(name, description, currentUser, true, interestSet);
 
         if (group != null) {
-            showInfo("Group created successfully!");
+            showInfo();
         } else {
             showError("Error creating the group. Please try again.");
         }
@@ -156,11 +156,11 @@ public class CreateGroupView {
         alert.showAndWait();
     }
 
-    private void showInfo(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+    private void showInfo() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Group created successfully!", ButtonType.OK);
         alert.setTitle("Success");
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText("Group created successfully!");
         alert.showAndWait();
     }
 }

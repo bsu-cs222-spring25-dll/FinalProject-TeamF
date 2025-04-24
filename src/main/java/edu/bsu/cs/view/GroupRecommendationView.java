@@ -93,7 +93,7 @@ public class GroupRecommendationView {
         interestControls.setAlignment(Pos.CENTER_LEFT);
 
         ComboBox<Interest> interestComboBox = new ComboBox<>();
-        interestComboBox.setCellFactory(lv -> new ListCell<Interest>() {
+        interestComboBox.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Interest item, boolean empty) {
                 super.updateItem(item, empty);
@@ -101,7 +101,7 @@ public class GroupRecommendationView {
             }
         });
 
-        interestComboBox.setConverter(new StringConverter<Interest>() {
+        interestComboBox.setConverter(new StringConverter<>() {
             @Override
             public String toString(Interest interest) {
                 return interest == null ? "" : interest.getName();

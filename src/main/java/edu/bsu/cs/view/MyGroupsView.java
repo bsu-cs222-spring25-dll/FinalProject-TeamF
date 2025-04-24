@@ -69,12 +69,10 @@ public class MyGroupsView {
         groupListWrapper.setPadding(new Insets(10));
         groupListWrapper.setSpacing(10);
 
-        // Create the DAO, service, and controller
         EventDAO eventDAO = new EventDAOImpl();
         EventService eventService = new EventService(eventDAO);
         EventController eventController = new EventController(eventService);
 
-        // Create EventAttendee components
         EventAttendeeDAO eventAttendeeDAO = new EventAttendeeDAOImpl();
         EventAttendeeService eventAttendeeService = new EventAttendeeService(eventAttendeeDAO);
         EventAttendeeController eventAttendeeController = new EventAttendeeController(eventAttendeeService);

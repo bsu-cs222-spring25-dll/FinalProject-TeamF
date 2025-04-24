@@ -15,13 +15,13 @@ import javafx.stage.Stage;
 
 import java.util.*;
 
+@SuppressWarnings("ALL")
 public class InterestSelectionView {
     private final User currentUser;
     private final UserController userController;
     private final InterestController interestController;
     private final GroupController groupController;
     private final MessageController messageController;
-    private final LoginViewController loginViewController;
     private final EventController eventController;
     private final EventAttendeeController eventAttendeeController;
     private final VBox root;
@@ -31,7 +31,7 @@ public class InterestSelectionView {
                                  InterestController interestController,
                                  GroupController groupController,
                                  MessageController messageController,
-                                 LoginViewController loginViewController,
+                                 LoginViewController ignoredLoginViewController,
                                  EventController eventController,
                                  EventAttendeeController eventAttendeeController) {
         this.currentUser = user;
@@ -39,23 +39,22 @@ public class InterestSelectionView {
         this.interestController = interestController;
         this.groupController = groupController;
         this.messageController = messageController;
-        this.loginViewController = loginViewController;
         this.eventController = eventController;
         this.eventAttendeeController = eventAttendeeController;
         this.root = createView();
-        loadCSS("/Interest.css");
+        loadCSS();
     }
 
     public VBox getRoot() {
         return root;
     }
 
-    private void loadCSS(String cssPath) {
+    private void loadCSS() {
         try {
-            root.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
-            System.out.println("Successfully loaded CSS: " + cssPath);
+            root.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Interest.css")).toExternalForm());
+            System.out.println("Successfully loaded CSS: " + "/Interest.css");
         } catch (Exception e) {
-            System.err.println("Failed to load CSS " + cssPath + ": " + e.getMessage());
+            System.err.println("Failed to load CSS " + "/Interest.css" + ": " + e.getMessage());
             e.printStackTrace();
         }
     }

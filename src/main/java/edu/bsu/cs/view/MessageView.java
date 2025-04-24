@@ -36,9 +36,6 @@ public class MessageView {
     private final ListView<Message> messagesListView;
     private final TextField messageInput;
 
-    private Timeline refreshTimeline;
-    private LocalDateTime lastRefreshTime;
-
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
@@ -51,7 +48,6 @@ public class MessageView {
         this.userGroupsListView = new ListView<>();
         this.messagesListView = new ListView<>();
         this.messageInput = new TextField();
-        this.lastRefreshTime = LocalDateTime.now();
 
         createUI();
         setupAutoRefresh();
@@ -117,7 +113,7 @@ public class MessageView {
     }
 
     private void setupAutoRefresh() {
-        refreshTimeline = new Timeline(
+        Timeline refreshTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(30), event -> {
                     if (selectedGroup != null) {
                         refreshMessages();
@@ -132,7 +128,7 @@ public class MessageView {
         List<Group> userGroups = groupController.getUserGroups(currentUser);
         ObservableList<Group> groups = FXCollections.observableArrayList(userGroups);
 
-        userGroupsListView.setCellFactory(lv -> new ListCell<Group>() {
+        userGroupsListView.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Group group, boolean empty) {
                 super.updateItem(group, empty);
@@ -171,7 +167,6 @@ public class MessageView {
             messagesListView.scrollTo(messages.size() - 1);
         }
 
-        lastRefreshTime = LocalDateTime.now();
     }
 
     private void sendMessage() {
@@ -190,7 +185,7 @@ public class MessageView {
             refreshMessages();
 
         } catch (Exception e) {
-            showAlert("Error", "Could not send message: " + e.getMessage());
+            showAlert("Could not send message: " + e.getMessage());
         }
     }
 
@@ -204,9 +199,9 @@ public class MessageView {
         messagesListView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
     }
 
-    private void showAlert(String title, String message) {
+    private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+        alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

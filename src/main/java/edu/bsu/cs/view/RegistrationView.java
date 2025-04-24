@@ -1,7 +1,6 @@
 package edu.bsu.cs.view;
 
 import edu.bsu.cs.controller.*;
-import edu.bsu.cs.model.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +11,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 public class RegistrationView {
     protected final UserController userController;
@@ -120,7 +121,6 @@ public class RegistrationView {
         }
 
         try {
-            User user = userController.register(username, email, password);
             showAlert("Success", "Account created successfully!");
             navigateToLogin();
         } catch (IllegalArgumentException e) {
@@ -142,7 +142,7 @@ public class RegistrationView {
 
         Scene scene = new Scene(loginView.getRoot(), 800, 600);
         try {
-            scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Login.css")).toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }
