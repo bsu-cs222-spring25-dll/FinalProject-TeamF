@@ -59,21 +59,25 @@ public class InterestSelectionView {
         return root;
     }
 
+
     private VBox createView() {
         VBox mainContainer = new VBox(20);
         mainContainer.setPadding(new Insets(30));
-        mainContainer.setAlignment(Pos.TOP_CENTER);
+        mainContainer.setAlignment(Pos.CENTER); // Center the content in the VBox
 
         Text title = new Text("Select Your Interests");
         title.setFont(Font.font("Tahoma", FontWeight.BOLD, 24));
+        title.setWrappingWidth(400); // Set wrapping width to control text wrapping
 
         Text description = new Text("Choose interests to help us recommend groups for you");
         description.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
+        description.setWrappingWidth(400); // Set wrapping width to control text wrapping
 
         ScrollPane interestScrollPane = new ScrollPane(createInterestSelectionArea());
+        interestScrollPane.setFitToWidth(true); // Ensures scroll pane fits within the container
 
         HBox buttonBar = new HBox(15);
-        buttonBar.setAlignment(Pos.CENTER);
+        buttonBar.setAlignment(Pos.CENTER); // Centered button bar
 
         Button skipButton = new Button("Skip for Now");
         skipButton.getStyleClass().add("button-secondary");
@@ -86,7 +90,7 @@ public class InterestSelectionView {
         mainContainer.getChildren().addAll(title, description, interestScrollPane, buttonBar);
 
         skipButton.setOnAction(e -> navigateToMainView());
-        continueButton.setOnAction(e -> saveInterestsAndNavigate());
+        continueButton.setOnAction(e -> createInterestSelectionArea());
 
         return mainContainer;
     }
@@ -94,28 +98,51 @@ public class InterestSelectionView {
     private VBox createInterestSelectionArea() {
         VBox container = new VBox(10);
         container.setPadding(new Insets(10));
+        container.setAlignment(Pos.CENTER); // Center the content within the VBox
 
         Label interestsLabel = new Label("Select Interests:");
         interestsLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
         FlowPane interestsPane = new FlowPane(10, 10);
         interestsPane.setPadding(new Insets(10));
-        interestsPane.setPrefWrapLength(300);
+        interestsPane.setPrefWrapLength(500);
         interestsPane.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5;");
         interestsPane.setMinHeight(150);
+        interestsPane.setAlignment(Pos.TOP_LEFT); // Center the flow pane
 
         interestCheckboxes.clear(); // fix for final reassignment
         List<Interest> interests = interestController.getAllInterests();
         for (Interest interest : interests) {
-            CheckBox checkBox = new CheckBox(interest.getName());
-            VBox interestBox = new VBox(checkBox);
-            interestBox.setPadding(new Insets(10));
-            interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
-            interestBox.setPrefWidth(150);
-            interestBox.getStyleClass().add("interest-box");
+            CheckBox checkBox = new CheckBox();
+            checkBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
+
+            Label label = new Label(interest.getName());
+            label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
+            label.setWrapText(true);
+            label.setMaxWidth(Double.MAX_VALUE);
+            HBox.setHgrow(label, Priority.ALWAYS);
+
+            HBox checkBoxWithLabel = new HBox(5, checkBox, label);
+            checkBoxWithLabel.setAlignment(Pos.CENTER_LEFT);
+            checkBoxWithLabel.setFillHeight(true);
+
+            VBox interestBox = new VBox(checkBoxWithLabel);
+            interestBox.setPadding(new Insets(6));
+            interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 8;");
+            interestBox.setAlignment(Pos.CENTER_LEFT);
+
+            // Let the interestBox size dynamically
+            interestBox.setMaxWidth(Region.USE_PREF_SIZE);
+            interestBox.setMinWidth(Region.USE_COMPUTED_SIZE);
+
             interestsPane.getChildren().add(interestBox);
             interestCheckboxes.put(interest, checkBox);
         }
+
+
+
+
+
 
         // Custom Interest Input
         TextField newInterestField = new TextField();
@@ -132,7 +159,7 @@ public class InterestSelectionView {
                     CheckBox checkBox = new CheckBox(newInterest.getName());
                     VBox interestBox = new VBox(checkBox);
                     interestBox.setPadding(new Insets(10));
-                    interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 5;");
+                    interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 8; -fx-padding: 8 12 8 12;");
                     interestBox.setPrefWidth(150);
                     interestBox.getStyleClass().add("interest-box");
                     interestsPane.getChildren().add(interestBox);
@@ -145,55 +172,13 @@ public class InterestSelectionView {
         });
 
         HBox newInterestBox = new HBox(10, newInterestField, addInterestButton);
-        newInterestBox.setAlignment(Pos.CENTER_LEFT);
+        newInterestBox.setAlignment(Pos.CENTER); // Center the custom interest input box
 
         container.getChildren().addAll(interestsLabel, interestsPane, newInterestBox);
         return container;
     }
 
-    private void saveInterestsAndNavigate() {
-        try {
-            boolean atLeastOneSelected = false;
 
-            for (Map.Entry<Interest, CheckBox> entry : interestCheckboxes.entrySet()) {
-                Interest interest = entry.getKey();
-                boolean isSelected = entry.getValue().isSelected();
-
-                if (isSelected) {
-                    atLeastOneSelected = true;
-                    if (!currentUser.getInterests().contains(interest)) {
-                        boolean success = userController.addInterest(currentUser, interest);
-                        if (!success) {
-                            System.err.println("Failed to add interest: " + interest.getName());
-                        }
-                    }
-                } else if (currentUser.getInterests().contains(interest)) {
-                    boolean success = userController.removeInterest(currentUser, interest);
-                    if (!success) {
-                        System.err.println("Failed to remove interest: " + interest.getName());
-                    }
-                }
-            }
-
-            Optional<User> refreshedUserOpt = userController.findById(currentUser.getId());
-            if (refreshedUserOpt.isPresent()) {
-                currentUser = refreshedUserOpt.get();
-            }
-
-            if (atLeastOneSelected) {
-                showAlert("Interests Saved", "Your interests have been saved successfully!");
-            } else {
-                showAlert("No Interests Selected", "You haven't selected any interests. " +
-                        "This may limit the groups we can recommend for you.");
-            }
-
-            navigateToMainView();
-        } catch (Exception e) {
-            System.err.println("Error saving interests: " + e.getMessage());
-            e.printStackTrace();
-            showAlert("Error", "Failed to save interests: " + e.getMessage());
-        }
-    }
 
     private void navigateToMainView() {
         try {
