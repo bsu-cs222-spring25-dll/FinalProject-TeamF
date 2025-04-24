@@ -72,7 +72,6 @@ public class CreateGroupView {
         interestsPane.setPadding(new Insets(10));
         interestsPane.setPrefWidth(600);
 
-        // Clear list to avoid carrying over from previous runs
         selectedInterests.clear();
 
         List<Interest> availableInterests = interestController.getAllInterests();
