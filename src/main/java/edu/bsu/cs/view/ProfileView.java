@@ -43,16 +43,13 @@ public class ProfileView {
         usernameField.setEditable(false);
         usernameField.setPrefWidth(300);
 
-        // Current Email
         Label emailLabel = new Label("Email:");
         TextField emailField = new TextField(currentUser.getEmail());
         emailField.setPrefWidth(300);
 
-        // Update Email Button
         Button updateEmailButton = new Button("Update Email");
         updateEmailButton.setOnAction(e -> handleEmailUpdate(emailField.getText()));
 
-        // Password Update Section
         Label currentPasswordLabel = new Label("Current Password:");
         PasswordField currentPasswordField = new PasswordField();
         currentPasswordField.setPromptText("Enter current password");
@@ -68,14 +65,12 @@ public class ProfileView {
         confirmPasswordField.setPromptText("Confirm new password");
         confirmPasswordField.setPrefWidth(300);
 
-        // Update Password Button
         Button updatePasswordButton = new Button("Update Password");
         updatePasswordButton.setOnAction(e -> handlePasswordUpdate(
                 currentPasswordField.getText(),
                 newPasswordField.getText(),
                 confirmPasswordField.getText()));
 
-        // Add components to grid
         int row = 0;
         userInfoGrid.add(usernameLabel, 0, row);
         userInfoGrid.add(usernameField, 1, row);
@@ -107,7 +102,6 @@ public class ProfileView {
         userInfoGrid.add(new Label(""), 0, row);
         userInfoGrid.add(updatePasswordButton, 1, row);
 
-        // Add everything to the main container
         profileContainer.getChildren().addAll(profileHeader, userInfoGrid);
 
         return profileContainer;
@@ -142,7 +136,6 @@ public class ProfileView {
             return;
         }
 
-        // Verify current password
         if (!currentUser.getPassword().equals(currentPassword)) {
             showAlert("Error", "Current password is incorrect");
             return;
