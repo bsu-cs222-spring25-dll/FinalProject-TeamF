@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class InterestController {
+
     private final InterestService interestService;
 
     public InterestController(InterestService interestService) {
@@ -18,12 +19,7 @@ public class InterestController {
     }
 
     public Interest findOrCreateInterestByName(String name) {
-        // lookup
-        Optional<Interest> existing = interestService.findByNameIgnoreCase(name);
-        // if not found, create & save
-        return existing.orElseGet(() -> {
-            Interest newInterest = new Interest(name);
-            return interestService.save(newInterest);
-        });
+        Optional<Interest> existingInterest = interestService.findByNameIgnoreCase(name);
+        return existingInterest.orElseGet(() -> interestService.save(new Interest(name)));
     }
 }

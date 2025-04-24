@@ -8,6 +8,7 @@ import edu.bsu.cs.model.User;
 import java.util.*;
 
 public class GroupService {
+
     private final GroupDAO groupDAO;
 
     public GroupService(GroupDAO groupDAO) {
@@ -15,17 +16,12 @@ public class GroupService {
     }
 
     public Group createGroup(String name, String description, User creator, boolean isPublic, Set<Interest> interests) {
-        Group group = new Group();
-        group.setName(name);
-        group.setDescription(description);
-        group.setCreator(creator);
-        group.isPublic();
+        Group group = new Group(name, description, creator, isPublic);
         group.setMembers(new HashSet<>(List.of(creator)));
-        group.setInterests(interests); // ✅ Assign multiple interests
+        group.setInterests(interests);
 
         return groupDAO.save(group);
     }
-
 
     public boolean joinGroup(Group group, User user) {
         if (group.addMember(user)) {
@@ -44,12 +40,7 @@ public class GroupService {
     }
 
     public boolean addInterest(Group group, Interest interest) {
-        if (group.getInterests().contains(interest)) {
-            return true;
-        }
-
-        // If not already in the group, add it
-        if (group.addInterest(interest)) {
+        if (!group.getInterests().contains(interest) && group.addInterest(interest)) {
             groupDAO.update(group);
             return true;
         }
@@ -69,14 +60,10 @@ public class GroupService {
     }
 
     public List<Group> findPublicGroups() {
-        if (groupDAO == null) {
-            return new ArrayList<>();
-        }
-        return groupDAO.findPublicGroups();
+        return groupDAO != null ? groupDAO.findPublicGroups() : new ArrayList<>();
     }
 
     public List<Group> findGroupsByUserInterests(User user, int limit) {
         return groupDAO.findGroupsByUserInterests(user, limit);
     }
-
 }

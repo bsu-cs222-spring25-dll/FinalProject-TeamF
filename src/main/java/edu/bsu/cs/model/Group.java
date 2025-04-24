@@ -42,7 +42,6 @@ public class Group {
     @Column(name = "is_public")
     private boolean isPublic;
 
-    // Required by Hibernate
     public Group() {
         this.id = UUID.randomUUID();
     }
@@ -56,10 +55,6 @@ public class Group {
         this.members.add(creator);
     }
 
-    public Group(String testGroup, String aGroupForTesting, boolean b) {
-    }
-
-    // Getters and setters
     public UUID getId() {
         return id;
     }

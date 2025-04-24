@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import java.util.*;
 
 public class InterestSelectionView {
-    private User currentUser;
+    private final User currentUser;
     private final UserController userController;
     private final InterestController interestController;
     private final GroupController groupController;
@@ -25,7 +25,6 @@ public class InterestSelectionView {
     private final EventController eventController;
     private final EventAttendeeController eventAttendeeController;
     private final VBox root;
-
     private final Map<Interest, CheckBox> interestCheckboxes = new HashMap<>();
 
     public InterestSelectionView(User user, UserController userController,
@@ -44,8 +43,14 @@ public class InterestSelectionView {
         this.eventController = eventController;
         this.eventAttendeeController = eventAttendeeController;
         this.root = createView();
+        loadCSS("/Interest.css");
+    }
 
-        String cssPath = "/Interest.css";
+    public VBox getRoot() {
+        return root;
+    }
+
+    private void loadCSS(String cssPath) {
         try {
             root.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
             System.out.println("Successfully loaded CSS: " + cssPath);
@@ -55,35 +60,27 @@ public class InterestSelectionView {
         }
     }
 
-    public VBox getRoot() {
-        return root;
-    }
-
-
     private VBox createView() {
         VBox mainContainer = new VBox(20);
         mainContainer.setPadding(new Insets(30));
-        mainContainer.setAlignment(Pos.CENTER); // Center the content in the VBox
+        mainContainer.setAlignment(Pos.CENTER);
 
         Text title = new Text("Select Your Interests");
         title.setFont(Font.font("Tahoma", FontWeight.BOLD, 24));
-        title.setWrappingWidth(400); // Set wrapping width to control text wrapping
+        title.setWrappingWidth(400);
 
         Text description = new Text("Choose interests to help us recommend groups for you");
         description.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
-        description.setWrappingWidth(400); // Set wrapping width to control text wrapping
+        description.setWrappingWidth(400);
 
         ScrollPane interestScrollPane = new ScrollPane(createInterestSelectionArea());
-        interestScrollPane.setFitToWidth(true); // Ensures scroll pane fits within the container
+        interestScrollPane.setFitToWidth(true);
 
         HBox buttonBar = new HBox(15);
-        buttonBar.setAlignment(Pos.CENTER); // Centered button bar
+        buttonBar.setAlignment(Pos.CENTER);
 
-        Button skipButton = new Button("Skip for Now");
-        skipButton.getStyleClass().add("button-secondary");
-
-        Button continueButton = new Button("Continue");
-        continueButton.getStyleClass().add("button-primary");
+        Button skipButton = createButton("Skip for Now", "button-secondary");
+        Button continueButton = createButton("Continue", "button-primary");
 
         buttonBar.getChildren().addAll(skipButton, continueButton);
 
@@ -95,10 +92,16 @@ public class InterestSelectionView {
         return mainContainer;
     }
 
+    private Button createButton(String text, String styleClass) {
+        Button button = new Button(text);
+        button.getStyleClass().add(styleClass);
+        return button;
+    }
+
     private VBox createInterestSelectionArea() {
         VBox container = new VBox(10);
         container.setPadding(new Insets(10));
-        container.setAlignment(Pos.CENTER); // Center the content within the VBox
+        container.setAlignment(Pos.CENTER);
 
         Label interestsLabel = new Label("Select Interests:");
         interestsLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
@@ -108,82 +111,66 @@ public class InterestSelectionView {
         interestsPane.setPrefWrapLength(500);
         interestsPane.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 5; -fx-border-color: #cccccc; -fx-border-radius: 5;");
         interestsPane.setMinHeight(150);
-        interestsPane.setAlignment(Pos.TOP_LEFT); // Center the flow pane
+        interestsPane.setAlignment(Pos.TOP_LEFT);
 
-        interestCheckboxes.clear(); // fix for final reassignment
+        interestCheckboxes.clear();
         List<Interest> interests = interestController.getAllInterests();
-        for (Interest interest : interests) {
-            CheckBox checkBox = new CheckBox();
-            checkBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
+        interests.forEach(interest -> addInterestToPane(interestsPane, interest));
 
-            Label label = new Label(interest.getName());
-            label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
-            label.setWrapText(true);
-            label.setMaxWidth(Double.MAX_VALUE);
-            HBox.setHgrow(label, Priority.ALWAYS);
-
-            HBox checkBoxWithLabel = new HBox(5, checkBox, label);
-            checkBoxWithLabel.setAlignment(Pos.CENTER_LEFT);
-            checkBoxWithLabel.setFillHeight(true);
-
-            VBox interestBox = new VBox(checkBoxWithLabel);
-            interestBox.setPadding(new Insets(6));
-            interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 8;");
-            interestBox.setAlignment(Pos.CENTER_LEFT);
-
-            // Let the interestBox size dynamically
-            interestBox.setMaxWidth(Region.USE_PREF_SIZE);
-            interestBox.setMinWidth(Region.USE_COMPUTED_SIZE);
-
-            interestsPane.getChildren().add(interestBox);
-            interestCheckboxes.put(interest, checkBox);
-        }
-
-
-
-
-
-
-        // Custom Interest Input
         TextField newInterestField = new TextField();
         newInterestField.setPromptText("Enter a new interest");
 
         Button addInterestButton = new Button("Add Interest");
-
-        addInterestButton.setOnAction(e -> {
-            String newInterestName = newInterestField.getText().trim();
-            if (!newInterestName.isEmpty()) {
-                newInterestName = Character.toUpperCase(newInterestName.charAt(0)) + newInterestName.substring(1).toLowerCase();
-                Interest newInterest = interestController.findOrCreateInterestByName(newInterestName);
-                if (!interestCheckboxes.containsKey(newInterest)) {
-                    CheckBox checkBox = new CheckBox(newInterest.getName());
-                    VBox interestBox = new VBox(checkBox);
-                    interestBox.setPadding(new Insets(10));
-                    interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 8; -fx-padding: 8 12 8 12;");
-                    interestBox.setPrefWidth(150);
-                    interestBox.getStyleClass().add("interest-box");
-                    interestsPane.getChildren().add(interestBox);
-                    interestCheckboxes.put(newInterest, checkBox);
-                    checkBox.setSelected(true);
-                    checkBox.requestFocus(); // optional touch
-                    newInterestField.clear();
-                }
-            }
-        });
+        addInterestButton.setOnAction(e -> addNewInterest(newInterestField, interestsPane));
 
         HBox newInterestBox = new HBox(10, newInterestField, addInterestButton);
-        newInterestBox.setAlignment(Pos.CENTER); // Center the custom interest input box
+        newInterestBox.setAlignment(Pos.CENTER);
 
         container.getChildren().addAll(interestsLabel, interestsPane, newInterestBox);
         return container;
     }
 
+    private void addInterestToPane(FlowPane pane, Interest interest) {
+        CheckBox checkBox = new CheckBox(interest.getName());
+        checkBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
 
+        Label label = new Label(interest.getName());
+        label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
+        label.setWrapText(true);
+        label.setMaxWidth(Double.MAX_VALUE);
+
+        HBox checkBoxWithLabel = new HBox(5, checkBox, label);
+        checkBoxWithLabel.setAlignment(Pos.CENTER_LEFT);
+
+        VBox interestBox = new VBox(checkBoxWithLabel);
+        interestBox.setPadding(new Insets(6));
+        interestBox.setStyle("-fx-background-color: #f0f0f0; -fx-background-radius: 8;");
+        interestBox.setAlignment(Pos.CENTER_LEFT);
+
+        pane.getChildren().add(interestBox);
+        interestCheckboxes.put(interest, checkBox);
+    }
+
+    private void addNewInterest(TextField newInterestField, FlowPane interestsPane) {
+        String newInterestName = newInterestField.getText().trim();
+        if (!newInterestName.isEmpty()) {
+            newInterestName = capitalizeFirstLetter(newInterestName);
+            Interest newInterest = interestController.findOrCreateInterestByName(newInterestName);
+            if (!interestCheckboxes.containsKey(newInterest)) {
+                addInterestToPane(interestsPane, newInterest);
+                interestCheckboxes.put(newInterest, new CheckBox(newInterest.getName()));
+                newInterestField.clear();
+            }
+        }
+    }
+
+    private String capitalizeFirstLetter(String input) {
+        return Character.toUpperCase(input.charAt(0)) + input.substring(1).toLowerCase();
+    }
 
     private void navigateToMainView() {
         try {
             Stage stage = (Stage) root.getScene().getWindow();
-
             Optional<User> refreshedUserOpt = userController.findById(currentUser.getId());
             User refreshedUser = refreshedUserOpt.orElse(currentUser);
 
@@ -191,17 +178,11 @@ public class InterestSelectionView {
                     interestController, messageController, eventController, eventAttendeeController);
             Scene scene = new Scene(mainView.getRoot(), 1024, 768);
 
-            try {
-                scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
-            } catch (Exception e) {
-                System.err.println("CSS not found: " + e.getMessage());
-            }
+            scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());
 
             stage.setScene(scene);
             stage.setTitle("GroupSync - Main");
         } catch (Exception e) {
-            System.err.println("Error navigating to main view: " + e.getMessage());
-            e.printStackTrace();
             showAlert("Error", "Failed to navigate to main view: " + e.getMessage());
         }
     }

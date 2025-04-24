@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class InterestService {
+
     private final InterestDAO interestDAO;
 
     public InterestService(InterestDAO interestDAO) {
@@ -14,16 +15,13 @@ public class InterestService {
     }
 
     public List<Interest> getAllInterests() {
-        // assumes your AbstractDAO or InterestDAO already has a findAll()
         return interestDAO.findAll();
     }
 
-    /** Case‑insensitive lookup, delegates to your DAO.findByName() */
     public Optional<Interest> findByNameIgnoreCase(String name) {
         return interestDAO.findByName(name);
     }
 
-    /** Persists a brand‑new Interest via your AbstractDAO.save() */
     public Interest save(Interest interest) {
         return interestDAO.save(interest);
     }

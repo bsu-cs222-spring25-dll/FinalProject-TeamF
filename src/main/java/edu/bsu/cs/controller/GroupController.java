@@ -28,7 +28,6 @@ public class GroupController {
         return groupService.findGroupsByNameContaining(query);
     }
 
-
     public boolean joinGroup(Group group, User user) {
         return groupService.joinGroup(group, user);
     }
