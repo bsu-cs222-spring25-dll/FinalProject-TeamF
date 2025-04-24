@@ -55,10 +55,6 @@ public class GroupService {
         return groupDAO.findByMember(member);
     }
 
-    public List<Group> findGroupsByInterests(Set<Interest> interests) {
-        return groupDAO.findByAnyInterest(interests);
-    }
-
     public List<Group> findPublicGroups() {
         return groupDAO != null ? groupDAO.findPublicGroups() : new ArrayList<>();
     }

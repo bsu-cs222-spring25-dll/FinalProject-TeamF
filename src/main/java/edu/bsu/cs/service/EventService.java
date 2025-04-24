@@ -2,9 +2,7 @@ package edu.bsu.cs.service;
 
 import edu.bsu.cs.dao.EventDAO;
 import edu.bsu.cs.model.Event;
-import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.User;
-import edu.bsu.cs.util.HibernateSessionManager;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,15 +14,6 @@ public class EventService {
 
     public EventService(EventDAO eventDAO) {
         this.eventDAO = eventDAO;
-    }
-
-    public Event createEvent(String title, String description, LocalDateTime startTime,
-                             LocalDateTime endTime, Group group) {
-        return HibernateSessionManager.executeWithTransaction(session -> {
-            Event event = new Event(title, description, startTime, endTime, group);
-            session.save(event);
-            return event;
-        });
     }
 
     public Event updateEvent(Event event) {

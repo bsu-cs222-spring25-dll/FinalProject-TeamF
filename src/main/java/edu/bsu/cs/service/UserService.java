@@ -4,11 +4,10 @@ import edu.bsu.cs.dao.UserDAO;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.util.HibernateSessionManager;
-
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 public class UserService {
     private final UserDAO userDAO;
 

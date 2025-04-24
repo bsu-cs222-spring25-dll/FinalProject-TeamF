@@ -25,20 +25,8 @@ class NaturalLanguageProcessing {
         return Math.log((double) trainingData.size() / (1 + totalTerms));
     }
 
-    public static List<Pair<Double, String>> sortWords(List<Pair<Double, String>> inputList) {
+    public static void sortWords(List<Pair<Double, String>> inputList) {
         inputList.sort((pair1, pair2) -> Double.compare(pair2.getValue0(), pair1.getValue0()));
-        return inputList;
-    }
-
-    public static List<Pair<Double, String>> extractKeywords(List<List<String>> trainingData, List<String> tokenizedMessages) {
-        List<Pair<Double, String>> finalList = new ArrayList<>();
-        for (String word : tokenizedMessages) {
-            double wordInverseDocumentFrequency = inverseDocumentFrequency(trainingData, word);
-            double wordTermFrequency = termFrequency(tokenizedMessages, word);
-            finalList.add(new Pair<Double, String>((wordInverseDocumentFrequency * wordTermFrequency), word));
-        }
-        sortWords(finalList);
-        return finalList;
     }
 
     public static void main(String[] args) {
@@ -58,7 +46,7 @@ class NaturalLanguageProcessing {
             for (String word : tokenizedMessage) {
                 double wordIDF = inverseDocumentFrequency(tokenizedCorpus, word);
                 double wordTF = termFrequency(tokenizedMessage, word);
-                finalList.add(new Pair<Double, String>((wordIDF * wordTF), word));
+                finalList.add(new Pair<>((wordIDF * wordTF), word));
             }
         }
         sortWords(finalList);
