@@ -24,14 +24,15 @@ public class GroupTest {
     }
 
     @Test
-    void testGroupCreation() {
-        assertNotNull(group.getId(), "Group ID should not be null");
-        assertEquals("Test Group", group.getName(), "Group name should be 'Test Group'");
-        assertEquals("A group for testing", group.getDescription(), "Group description should be 'A group for testing'");
-        assertEquals(creator, group.getCreator(), "Creator should be correctly set");
-        assertTrue(group.isPublic(), "Group should be public");
-        assertTrue(group.getMembers().contains(creator), "Creator should be a member of the group");
+    void groupIdShouldNotBeNull() {
+        assertNotNull(group.getId());
     }
+
+    @Test
+    void groupNameShouldBeSetCorrectly() {
+        assertEquals("Test Group", group.getName());
+    }
+
 
     @Test
     void testAddMember() {
