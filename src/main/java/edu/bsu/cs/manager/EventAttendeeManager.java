@@ -1,4 +1,4 @@
-package edu.bsu.cs.controller;
+package edu.bsu.cs.manager;
 
 import edu.bsu.cs.model.Event;
 import edu.bsu.cs.model.EventAttendee;

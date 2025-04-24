@@ -1,6 +1,7 @@
 package edu.bsu.cs;
 
-import edu.bsu.cs.controller.*;
+import edu.bsu.cs.controller.LoginViewController;
+import edu.bsu.cs.manager.*;
 import edu.bsu.cs.dao.*;
 import edu.bsu.cs.service.*;
 import edu.bsu.cs.util.DatabaseInitializer;

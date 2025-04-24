@@ -1,6 +1,7 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.*;
+import edu.bsu.cs.controller.LoginViewController;
+import edu.bsu.cs.manager.*;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import javafx.geometry.Insets;

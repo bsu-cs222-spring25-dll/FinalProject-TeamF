@@ -1,6 +1,7 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.*;
+import edu.bsu.cs.controller.LoginViewController;
+import edu.bsu.cs.manager.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

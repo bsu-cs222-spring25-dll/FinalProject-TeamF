@@ -1,8 +1,8 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.EventAttendeeManager;
-import edu.bsu.cs.controller.EventManager;
-import edu.bsu.cs.controller.GroupManager;
+import edu.bsu.cs.manager.EventAttendeeManager;
+import edu.bsu.cs.manager.EventManager;
+import edu.bsu.cs.manager.GroupManager;
 import edu.bsu.cs.model.Event;
 import edu.bsu.cs.model.EventAttendee;
 import edu.bsu.cs.model.Group;

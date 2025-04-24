@@ -1,6 +1,6 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.GroupManager;
+import edu.bsu.cs.manager.GroupManager;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.User;
 import javafx.collections.FXCollections;

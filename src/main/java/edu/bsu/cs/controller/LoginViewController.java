@@ -1,5 +1,6 @@
 package edu.bsu.cs.controller;
 
+import edu.bsu.cs.manager.*;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.view.InterestSelectionView;
 import edu.bsu.cs.view.MainView;
@@ -9,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class LoginViewController {
 
@@ -101,7 +103,8 @@ public class LoginViewController {
                     Objects.requireNonNull(getClass().getResource(stylesheetPath)).toExternalForm()
             );
         } catch (Exception e) {
-            System.err.println("Stylesheet not found: " + stylesheetPath + " | " + e.getMessage());
+            final Logger logger = Logger.getLogger(LoginViewController.class.getName());
+            logger.warning("Stylesheet not found: " + stylesheetPath + " | " + e.getMessage());
         }
     }
 }

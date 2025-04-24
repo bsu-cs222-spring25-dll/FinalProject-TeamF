@@ -1,7 +1,7 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.GroupManager;
-import edu.bsu.cs.controller.InterestManager;
+import edu.bsu.cs.manager.GroupManager;
+import edu.bsu.cs.manager.InterestManager;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
