@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 public class MessageTest {
 
     private Message message;

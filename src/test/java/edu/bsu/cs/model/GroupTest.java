@@ -3,9 +3,6 @@ package edu.bsu.cs.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Set;
-
 public class GroupTest {
 
     private Group group;

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
 
+@SuppressWarnings("ALL")
 public class UserTest {
 
     private User user;
