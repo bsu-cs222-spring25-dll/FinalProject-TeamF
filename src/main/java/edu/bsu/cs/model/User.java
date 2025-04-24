@@ -28,7 +28,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id")
     )
-    private final Set<Interest> interests = new HashSet<>();
+    private Set<Interest> interests = new HashSet<>();
 
     // Required by Hibernate
     public User() {

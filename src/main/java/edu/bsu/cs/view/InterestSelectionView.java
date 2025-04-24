@@ -19,29 +19,29 @@ import java.util.*;
 @SuppressWarnings("ALL")
 public class InterestSelectionView {
     private final User currentUser;
-    private final UserManager userController;
-    private final InterestManager interestController;
-    private final GroupManager groupController;
-    private final MessageManager messageController;
-    private final EventManager eventController;
-    private final EventAttendeeManager eventAttendeeController;
+    private final UserManager userManager;
+    private final InterestManager interestManager;
+    private final GroupManager groupManager;
+    private final MessageManager messageManager;
+    private final EventManager eventManager;
+    private final EventAttendeeManager eventAttendeeManager;
     private final VBox root;
     private final Map<Interest, CheckBox> interestCheckboxes = new HashMap<>();
 
-    public InterestSelectionView(User user, UserManager userController,
-                                 InterestManager interestController,
-                                 GroupManager groupController,
-                                 MessageManager messageController,
-                                 LoginViewController ignoredLoginViewController,
-                                 EventManager eventController,
-                                 EventAttendeeManager eventAttendeeController) {
+    public InterestSelectionView(User user, UserManager userManager,
+                                 InterestManager interestManager,
+                                 GroupManager groupManager,
+                                 MessageManager messageManager,
+                                 LoginViewController ignoredLoginViewManager,
+                                 EventManager eventManager,
+                                 EventAttendeeManager eventAttendeeManager) {
         this.currentUser = user;
-        this.userController = userController;
-        this.interestController = interestController;
-        this.groupController = groupController;
-        this.messageController = messageController;
-        this.eventController = eventController;
-        this.eventAttendeeController = eventAttendeeController;
+        this.userManager = userManager;
+        this.interestManager = interestManager;
+        this.groupManager = groupManager;
+        this.messageManager = messageManager;
+        this.eventManager = eventManager;
+        this.eventAttendeeManager = eventAttendeeManager;
         this.root = createView();
         loadCSS();
     }
@@ -97,7 +97,7 @@ public class InterestSelectionView {
                 }
             }
 
-            userController.updateUserInterests(currentUser); // Make sure this method exists!
+            userManager.updateUserInterests(currentUser);
             navigateToMainView();
         });
 
@@ -126,7 +126,7 @@ public class InterestSelectionView {
         interestsPane.setAlignment(Pos.TOP_LEFT);
 
         interestCheckboxes.clear();
-        List<Interest> interests = interestController.getAllInterests();
+        List<Interest> interests = interestManager.getAllInterests();
         interests.forEach(interest -> addInterestToPane(interestsPane, interest));
 
         TextField newInterestField = new TextField();
@@ -168,7 +168,7 @@ public class InterestSelectionView {
             boolean exists = interestCheckboxes.keySet().stream()
                     .anyMatch(i -> i.getName().equalsIgnoreCase(finalName));
             if (!exists) {
-                Interest newInterest = interestController.findOrCreateInterestByName(finalName);
+                Interest newInterest = interestManager.findOrCreateInterestByName(finalName);
                 addInterestToPane(interestsPane, newInterest);
                 newInterestField.clear();
             }
@@ -182,11 +182,11 @@ public class InterestSelectionView {
     private void navigateToMainView() {
         try {
             Stage stage = (Stage) root.getScene().getWindow();
-            Optional<User> refreshedUserOpt = userController.findById(currentUser.getId());
+            Optional<User> refreshedUserOpt = userManager.findById(currentUser.getId());
             User refreshedUser = refreshedUserOpt.orElse(currentUser);
 
-            MainView mainView = new MainView(refreshedUser, userController, groupController,
-                    interestController, messageController, eventController, eventAttendeeController);
+            MainView mainView = new MainView(refreshedUser, userManager, groupManager,
+                    interestManager, messageManager, eventManager, eventAttendeeManager);
             Scene scene = new Scene(mainView.getRoot(), 1024, 768);
 
             scene.getStylesheets().add(getClass().getResource("/MainView.css").toExternalForm());

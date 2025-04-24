@@ -14,32 +14,33 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class RegistrationView {
-    protected final UserManager userController;
+    protected final UserManager userManager;
     protected final VBox root;
     protected TextField usernameField;
     protected TextField emailField;
     protected PasswordField passwordField;
     protected PasswordField confirmPasswordField;
-    protected final GroupManager groupController;
-    protected final InterestManager interestController;
-    protected final MessageManager messageController;
-    protected final EventManager eventController;
-    protected final EventAttendeeManager eventAttendeeController;
+    protected final GroupManager groupManager;
+    protected final InterestManager interestManager;
+    protected final MessageManager messageManager;
+    protected final EventManager eventManager;
+    protected final EventAttendeeManager eventAttendeeManager;
 
-    public RegistrationView(UserManager userController,
-                            GroupManager groupController,
-                            InterestManager interestController,
-                            MessageManager messageController,
-                            EventManager eventController,
-                            EventAttendeeManager eventAttendeeController) {
-        this.userController = userController;
-        this.groupController = groupController;
-        this.interestController = interestController;
-        this.messageController = messageController;
-        this.eventController= eventController;
-        this.eventAttendeeController=eventAttendeeController;
+    public RegistrationView(UserManager userManager,
+                            GroupManager groupManager,
+                            InterestManager interestManager,
+                            MessageManager messageManager,
+                            EventManager eventManager,
+                            EventAttendeeManager eventAttendeeManager) {
+        this.userManager = userManager;
+        this.groupManager = groupManager;
+        this.interestManager = interestManager;
+        this.messageManager = messageManager;
+        this.eventManager = eventManager;
+        this.eventAttendeeManager = eventAttendeeManager;
         this.root = createRegistrationView();
     }
 
@@ -106,8 +107,18 @@ public class RegistrationView {
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
 
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showAlert("Error", "All fields are required");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showAlert("Error", "Invalid email format");
+            return;
+        }
+
+        if (password.length() < 6) {
+            showAlert("Error", "Password must be at least 6 characters");
             return;
         }
 
@@ -116,12 +127,8 @@ public class RegistrationView {
             return;
         }
 
-        if (userController == null) {
-            showAlert("Error", "System configuration error");
-            return;
-        }
-
         try {
+            userManager.register(username, email, password);
             showAlert("Success", "Account created successfully!");
             navigateToLogin();
         } catch (IllegalArgumentException e) {
@@ -132,12 +139,12 @@ public class RegistrationView {
     protected void navigateToLogin() {
         Stage stage = (Stage) root.getScene().getWindow();
         LoginViewController loginController = new LoginViewController(
-                userController,
-                groupController,
-                interestController,
-                messageController,
-                eventController,
-                eventAttendeeController
+                userManager,
+                groupManager,
+                interestManager,
+                messageManager,
+                eventManager,
+                eventAttendeeManager
         );
         LoginView loginView = new LoginView(loginController);
 
@@ -152,10 +159,17 @@ public class RegistrationView {
     }
 
     protected void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert.AlertType alertType = title.equalsIgnoreCase("Error") ?
+                Alert.AlertType.ERROR : Alert.AlertType.INFORMATION;
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private boolean isValidEmail(String email) {
+        String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        return Pattern.matches(regex, email);
     }
 }

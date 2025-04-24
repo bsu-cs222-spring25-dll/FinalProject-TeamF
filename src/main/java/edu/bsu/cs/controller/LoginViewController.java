@@ -20,12 +20,12 @@ public class LoginViewController {
     private final EventManager eventManager;
     private final EventAttendeeManager eventAttendeeManager;
 
-    public LoginViewController (UserManager userManager,
-                            GroupManager groupManager,
-                            InterestManager interestManager,
-                            MessageManager messageManager,
-                            EventManager eventManager,
-                            EventAttendeeManager eventAttendeeManager) {
+    public LoginViewController(UserManager userManager,
+                             GroupManager groupManager,
+                             InterestManager interestManager,
+                             MessageManager messageManager,
+                             EventManager eventManager,
+                             EventAttendeeManager eventAttendeeManager) {
         this.userManager = userManager;
         this.groupManager = groupManager;
         this.interestManager = interestManager;

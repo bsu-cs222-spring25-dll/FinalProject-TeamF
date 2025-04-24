@@ -13,7 +13,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Objects;
 import java.util.Optional;
 
 public class LoginView {
@@ -81,7 +80,7 @@ public class LoginView {
         primaryStage.setTitle("GroupSync");
 
         try {
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/Login.css")).toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/Login.css").toExternalForm());
         } catch (Exception e) {
             System.err.println("CSS not found: " + e.getMessage());
         }
