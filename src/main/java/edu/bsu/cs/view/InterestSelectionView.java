@@ -73,7 +73,8 @@ public class InterestSelectionView {
         description.setFont(Font.font("Tahoma", FontWeight.NORMAL, 14));
         description.setWrappingWidth(400);
 
-        ScrollPane interestScrollPane = new ScrollPane(createInterestSelectionArea());
+        VBox interestSelectionArea = createInterestSelectionArea();
+        ScrollPane interestScrollPane = new ScrollPane(interestSelectionArea);
         interestScrollPane.setFitToWidth(true);
 
         HBox buttonBar = new HBox(15);
@@ -87,7 +88,18 @@ public class InterestSelectionView {
         mainContainer.getChildren().addAll(title, description, interestScrollPane, buttonBar);
 
         skipButton.setOnAction(e -> navigateToMainView());
-        continueButton.setOnAction(e -> createInterestSelectionArea());
+
+        continueButton.setOnAction(e -> {
+            List<Interest> selectedInterests = new ArrayList<>();
+            for (Map.Entry<Interest, CheckBox> entry : interestCheckboxes.entrySet()) {
+                if (entry.getValue().isSelected()) {
+                    selectedInterests.add(entry.getKey());
+                }
+            }
+
+            userController.updateUserInterests(currentUser, selectedInterests); // Make sure this method exists!
+            navigateToMainView();
+        });
 
         return mainContainer;
     }
@@ -134,12 +146,9 @@ public class InterestSelectionView {
         CheckBox checkBox = new CheckBox(interest.getName());
         checkBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
 
-        Label label = new Label(interest.getName());
-        label.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
-        label.setWrapText(true);
-        label.setMaxWidth(Double.MAX_VALUE);
+        checkBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 12));
+        HBox checkBoxWithLabel = new HBox(5, checkBox);
 
-        HBox checkBoxWithLabel = new HBox(5, checkBox, label);
         checkBoxWithLabel.setAlignment(Pos.CENTER_LEFT);
 
         VBox interestBox = new VBox(checkBoxWithLabel);
@@ -154,11 +163,13 @@ public class InterestSelectionView {
     private void addNewInterest(TextField newInterestField, FlowPane interestsPane) {
         String newInterestName = newInterestField.getText().trim();
         if (!newInterestName.isEmpty()) {
-            newInterestName = capitalizeFirstLetter(newInterestName);
-            Interest newInterest = interestController.findOrCreateInterestByName(newInterestName);
-            if (!interestCheckboxes.containsKey(newInterest)) {
+            String finalName = capitalizeFirstLetter(newInterestName);
+
+            boolean exists = interestCheckboxes.keySet().stream()
+                    .anyMatch(i -> i.getName().equalsIgnoreCase(finalName));
+            if (!exists) {
+                Interest newInterest = interestController.findOrCreateInterestByName(finalName);
                 addInterestToPane(interestsPane, newInterest);
-                interestCheckboxes.put(newInterest, new CheckBox(newInterest.getName()));
                 newInterestField.clear();
             }
         }

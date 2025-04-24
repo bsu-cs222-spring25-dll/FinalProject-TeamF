@@ -20,6 +20,12 @@ public class UserController {
         return userService.findById(id);
     }
 
+    public void updateUserInterests(User user, java.util.List<Interest> selectedInterests) {
+        user.getInterests();
+        userService.updateProfile(user);
+    }
+
+
     public Optional<User> login(String username, String password) {
         Optional<User> loggedInUser = userService.login(username, password);
         loggedInUser.ifPresent(user -> this.currentUser = user);

@@ -68,32 +68,22 @@ public class CreateGroupView {
     }
 
     private VBox createInterestSelectionArea() {
-        List<Interest> availableInterests = interestController.getAllInterests();
-
         FlowPane interestsPane = new FlowPane(10, 10);
         interestsPane.setPadding(new Insets(10));
         interestsPane.setPrefWidth(600);
 
+        // Clear list to avoid carrying over from previous runs
+        selectedInterests.clear();
+
+        List<Interest> availableInterests = interestController.getAllInterests();
+
+        Set<String> existingInterestNames = new HashSet<>();
+
         for (Interest interest : availableInterests) {
-            CheckBox checkBox = new CheckBox(interest.getName());
-
-            checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal) {
-                    selectedInterests.add(interest);
-                } else {
-                    selectedInterests.remove(interest);
-                }
-            });
-
-            VBox interestBox = new VBox(checkBox);
-            interestBox.setPadding(new Insets(8));
-            interestBox.setStyle("-fx-background-color:  #a0a0a0; -fx-background-radius: 5;");
-            interestBox.setPrefWidth(120);
-
-            interestsPane.getChildren().add(interestBox);
+            existingInterestNames.add(interest.getName().toLowerCase());
+            addInterestCheckbox(interestsPane, interest);
         }
 
-        // 💡 Custom Interest Input
         TextField customInterestField = new TextField();
         customInterestField.setPromptText("Type a new interest...");
 
@@ -101,12 +91,11 @@ public class CreateGroupView {
         addCustomInterestButton.setOnAction(e -> {
             String typedName = customInterestField.getText().trim();
             if (!typedName.isEmpty()) {
-                Interest customInterest = interestController.findOrCreateInterestByName(typedName);
-                if (!selectedInterests.contains(customInterest)) {
-                    selectedInterests.add(customInterest);
-                    Label interestLabel = new Label(customInterest.getName());
-                    interestLabel.setStyle("-fx-background-color: #cfcfcf; -fx-padding: 5; -fx-background-radius: 4;");
-                    interestsPane.getChildren().add(interestLabel);
+                String normalized = typedName.toLowerCase();
+                if (!existingInterestNames.contains(normalized)) {
+                    Interest customInterest = interestController.findOrCreateInterestByName(capitalize(typedName));
+                    addInterestCheckbox(interestsPane, customInterest);
+                    existingInterestNames.add(normalized);
                     customInterestField.clear();
                 }
             }
@@ -127,34 +116,41 @@ public class CreateGroupView {
         return interestSection;
     }
 
+    private void addInterestCheckbox(FlowPane interestsPane, Interest interest) {
+        CheckBox checkBox = new CheckBox(interest.getName());
+
+        checkBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                selectedInterests.add(interest);
+            } else {
+                selectedInterests.remove(interest);
+            }
+        });
+
+        VBox interestBox = new VBox(checkBox);
+        interestBox.setPadding(new Insets(8));
+        interestBox.setStyle("-fx-background-color: #a0a0a0; -fx-background-radius: 5;");
+        interestBox.setPrefWidth(120);
+
+        interestsPane.getChildren().add(interestBox);
+    }
+
+    private String capitalize(String input) {
+        if (input.isEmpty()) return input;
+        return Character.toUpperCase(input.charAt(0)) + input.substring(1).toLowerCase();
+    }
+
     private void createGroup(String name, String description, boolean isPublic) {
         Set<Interest> interestSet = new HashSet<>(selectedInterests);
         Group group = groupController.createGroup(name, description, currentUser, isPublic, interestSet);
 
         if (group != null) {
-            boolean allSuccess = true;
-
-            for (Interest interest : selectedInterests) {
-                try {
-                    boolean success = groupController.addInterestToGroup(group, interest);
-                    if (!success) {
-                        allSuccess = false;
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error adding interest: " + e.getMessage());
-                    allSuccess = false;
-                }
-            }
-
-            if (allSuccess) {
-                showInfo("Group created successfully with all selected interests!");
-            } else {
-                showInfo("Group created, but some interests could not be added.");
-            }
+            showInfo("Group created successfully!");
         } else {
             showError("Error creating the group. Please try again.");
         }
     }
+
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
