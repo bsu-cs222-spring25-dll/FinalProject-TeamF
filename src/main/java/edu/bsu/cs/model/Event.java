@@ -52,8 +52,10 @@ public class Event {
     public void setDescription(String description) { this.description = description; }
 
     public LocalDateTime getStartTime() { return startTime; }
+    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
 
     public LocalDateTime getEndTime() { return endTime; }
+    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
 
     public Group getGroup() { return group; }
     public void setGroup(Group group) { this.group = group; }

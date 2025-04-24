@@ -25,16 +25,29 @@ public class UserService {
             }
             User user = new User(username, email, password);
             return userDAO.save(user);
+
         });
+
     }
 
     public Optional<User> login(String username, String password) {
-        Optional<User> userOpt = userDAO.findByUsername(username);
-        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
-            return userOpt;
+        Optional<User> userOpt = userDAO.findByUsername(username.trim());
+
+        if (userOpt.isPresent()) {
+            String enteredPassword = password.trim();
+            String storedPassword = userOpt.get().getPassword().trim();
+
+            System.out.println("Entered password: [" + enteredPassword + "]");
+            System.out.println("Stored password:  [" + storedPassword + "]");
+
+            if (storedPassword.equals(enteredPassword)) {
+                return userOpt;
+            }
         }
+
         return Optional.empty();
     }
+
 
     public User updateProfile(User user) {
         return userDAO.update(user);

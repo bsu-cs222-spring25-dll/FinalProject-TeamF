@@ -10,43 +10,42 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 public class LoginViewController {
 
-    private final UserManager userController;
-    private final GroupManager groupController;
-    private final InterestManager interestController;
-    private final MessageManager messageController;
-    private final EventManager eventController;
-    private final EventAttendeeManager eventAttendeeController;
+    private final UserManager userManager;
+    private final GroupManager groupManager;
+    private final InterestManager interestManager;
+    private final MessageManager messageManager;
+    private final EventManager eventManager;
+    private final EventAttendeeManager eventAttendeeManager;
 
-    public LoginViewController(UserManager userController,
-                               GroupManager groupController,
-                               InterestManager interestController,
-                               MessageManager messageController,
-                               EventManager eventController,
-                               EventAttendeeManager eventAttendeeController) {
-        this.userController = userController;
-        this.groupController = groupController;
-        this.interestController = interestController;
-        this.messageController = messageController;
-        this.eventController = eventController;
-        this.eventAttendeeController = eventAttendeeController;
+    public LoginViewController (UserManager userManager,
+                            GroupManager groupManager,
+                            InterestManager interestManager,
+                            MessageManager messageManager,
+                            EventManager eventManager,
+                            EventAttendeeManager eventAttendeeManager) {
+        this.userManager = userManager;
+        this.groupManager = groupManager;
+        this.interestManager = interestManager;
+        this.messageManager = messageManager;
+        this.eventManager = eventManager;
+        this.eventAttendeeManager = eventAttendeeManager;
     }
 
     public Optional<User> login(String username, String password) {
-        return userController.login(username, password);
+        return userManager.login(username, password);
     }
 
     public void showRegistrationView(Stage stage) {
         RegistrationView registrationView = new RegistrationView(
-                userController,
-                groupController,
-                interestController,
-                messageController,
-                eventController,
-                eventAttendeeController
+                userManager,
+                groupManager,
+                interestManager,
+                messageManager,
+                eventManager,
+                eventAttendeeManager
         );
 
         Scene scene = new Scene(registrationView.getRoot(), 800, 600);
@@ -63,12 +62,12 @@ public class LoginViewController {
 
         MainView mainView = new MainView(
                 user,
-                userController,
-                groupController,
-                interestController,
-                messageController,
-                eventController,
-                eventAttendeeController
+                userManager,
+                groupManager,
+                interestManager,
+                messageManager,
+                eventManager,
+                eventAttendeeManager
         );
 
         Scene scene = new Scene(mainView.getRoot(), 1024, 768);
@@ -81,13 +80,13 @@ public class LoginViewController {
     public void showInterestSelectionView(Stage stage, User user) {
         InterestSelectionView interestView = new InterestSelectionView(
                 user,
-                userController,
-                interestController,
-                groupController,
-                messageController,
+                userManager,
+                interestManager,
+                groupManager,
+                messageManager,
                 this,
-                eventController,
-                eventAttendeeController
+                eventManager,
+                eventAttendeeManager
         );
 
         Scene scene = new Scene(interestView.getRoot(), 800, 600);
@@ -103,8 +102,7 @@ public class LoginViewController {
                     Objects.requireNonNull(getClass().getResource(stylesheetPath)).toExternalForm()
             );
         } catch (Exception e) {
-            final Logger logger = Logger.getLogger(LoginViewController.class.getName());
-            logger.warning("Stylesheet not found: " + stylesheetPath + " | " + e.getMessage());
+            System.err.println("Stylesheet not found: " + stylesheetPath + " | " + e.getMessage());
         }
     }
 }
