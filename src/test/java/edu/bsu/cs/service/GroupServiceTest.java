@@ -24,7 +24,7 @@ class GroupServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         testUser = new User("testUser", "test@example.com", "password123");
-        testGroup = new Group("Test Group", "A group for testing", true);
+        testGroup = new Group("Test Group", "A group for testing", testUser, true);
         testGroup.setMembers(new HashSet<>());
     }
 
