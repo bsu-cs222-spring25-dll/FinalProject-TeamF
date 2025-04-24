@@ -83,16 +83,8 @@ public class Group {
         return creator;
     }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
-
     public boolean isPublic() {
         return isPublic;
-    }
-
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
     }
 
     public Set<User> getMembers() {

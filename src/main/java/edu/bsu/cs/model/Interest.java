@@ -12,7 +12,7 @@ import java.util.UUID;
 public class Interest {
 
     @ManyToMany(mappedBy = "interests")
-    private Set<Group> groups = new HashSet<>();
+    private final Set<Group> groups;
 
 
     @Id
@@ -24,14 +24,15 @@ public class Interest {
     // Required by Hibernate
     public Interest() {
         this.id = UUID.randomUUID();
+        groups = new HashSet<>();
     }
 
     public Interest(String name) {
         this.id = UUID.randomUUID();
         this.name = name;
+        groups = new HashSet<>();
     }
 
-    // Getters and setters
     public UUID getId() {
         return id;
     }

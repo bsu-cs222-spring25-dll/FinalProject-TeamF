@@ -1,7 +1,7 @@
 package edu.bsu.cs.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -30,21 +30,11 @@ public class EventAttendee {
     @Column(nullable = false)
     private AttendanceStatus status;
 
-    @Column(name = "responded_at", nullable = false)
-    private LocalDateTime respondedAt;
-
-    // Required by Hibernate
-    public EventAttendee() {
-        this.id = UUID.randomUUID();
-        this.respondedAt = LocalDateTime.now();
-    }
-
     public EventAttendee(Event event, User user, AttendanceStatus status) {
         this.id = UUID.randomUUID();
         this.event = event;
         this.user = user;
         this.status = status;
-        this.respondedAt = LocalDateTime.now();
     }
 
     // Getters and setters
@@ -60,11 +50,7 @@ public class EventAttendee {
     public AttendanceStatus getStatus() { return status; }
     public void setStatus(AttendanceStatus status) {
         this.status = status;
-        this.respondedAt = LocalDateTime.now();
     }
-
-    public LocalDateTime getRespondedAt() { return respondedAt; }
-    public void setRespondedAt(LocalDateTime respondedAt) { this.respondedAt = respondedAt; }
 
     @Override
     public boolean equals(Object o) {

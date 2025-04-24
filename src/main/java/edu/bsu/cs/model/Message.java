@@ -26,12 +26,6 @@ public class Message {
     @Column(name = "sent_at", nullable = false)
     private LocalDateTime sentAt;
 
-    // Required by Hibernate
-    public Message() {
-        this.id = UUID.randomUUID();
-        this.sentAt = LocalDateTime.now();
-    }
-
     public Message(User sender, Group group, String content) {
         this.id = UUID.randomUUID();
         this.sender = sender;
@@ -40,7 +34,6 @@ public class Message {
         this.sentAt = LocalDateTime.now();
     }
 
-    // Getters and setters
     public UUID getId() {
         return id;
     }
