@@ -10,7 +10,6 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private User currentUser;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -20,37 +19,24 @@ public class UserController {
         return userService.findById(id);
     }
 
-    public void updateUserInterests(User user, java.util.List<Interest> selectedInterests) {
-        user.getInterests();
+    public void updateUserInterests(User user) {
         userService.updateProfile(user);
     }
 
 
     public Optional<User> login(String username, String password) {
         Optional<User> loggedInUser = userService.login(username, password);
-        loggedInUser.ifPresent(user -> this.currentUser = user);
+        loggedInUser.ifPresent(user -> {
+        });
         return loggedInUser;
-    }
-
-    public User register(String username, String email, String password) {
-        return userService.registerUser(username, email, password);
-    }
-
-    public User updateEmail(User user, String newEmail) {
-        user.setEmail(newEmail);
-        return userService.updateProfile(user);
-    }
-
-    public User updatePassword(User user, String newPassword) {
-        user.setPassword(newPassword);
-        return userService.updateProfile(user);
     }
 
     public boolean addInterest(User user, Interest interest) {
         return userService.addInterest(user, interest);
     }
 
-    public boolean removeInterest(User user, Interest interest) {
-        return userService.removeInterest(user, interest);
+    public void removeInterest(User user, Interest interest) {
+        userService.removeInterest(user, interest);
     }
+
 }

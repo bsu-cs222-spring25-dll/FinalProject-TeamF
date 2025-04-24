@@ -96,7 +96,7 @@ public class InterestSelectionView {
                 }
             }
 
-            userController.updateUserInterests(currentUser, selectedInterests); // Make sure this method exists!
+            userController.updateUserInterests(currentUser); // Make sure this method exists!
             navigateToMainView();
         });
 

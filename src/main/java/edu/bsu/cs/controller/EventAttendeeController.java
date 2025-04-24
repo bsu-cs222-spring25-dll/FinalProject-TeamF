@@ -15,8 +15,8 @@ public class EventAttendeeController {
         this.eventAttendeeService = eventAttendeeService;
     }
 
-    public EventAttendee respondToEvent(Event event, User user, EventAttendee.AttendanceStatus status) {
-        return eventAttendeeService.respondToEvent(event, user, status);
+    public void respondToEvent(Event event, User user, EventAttendee.AttendanceStatus status) {
+        eventAttendeeService.respondToEvent(event, user, status);
     }
 
     public Optional<EventAttendee> getUserResponse(Event event, User user) {

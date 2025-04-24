@@ -44,7 +44,4 @@ public class GroupController {
         return groupService.findGroupsByUserInterests(user, limit);
     }
 
-    public boolean addInterestToGroup(Group group, Interest interest) {
-        return groupService.addInterest(group, interest);
-    }
 }
