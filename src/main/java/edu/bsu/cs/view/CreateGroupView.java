@@ -1,7 +1,7 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.GroupController;
-import edu.bsu.cs.controller.InterestController;
+import edu.bsu.cs.controller.GroupManager;
+import edu.bsu.cs.controller.InterestManager;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Set;
 
 public class CreateGroupView {
-    private final GroupController groupController;
-    private final InterestController interestController;
+    private final GroupManager groupController;
+    private final InterestManager interestController;
     private final User currentUser;
     private final List<Interest> selectedInterests = new ArrayList<>();
 
-    public CreateGroupView(GroupController groupController, InterestController interestController, User currentUser) {
+    public CreateGroupView(GroupManager groupController, InterestManager interestController, User currentUser) {
         this.groupController = groupController;
         this.interestController = interestController;
         this.currentUser = currentUser;

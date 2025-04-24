@@ -8,10 +8,10 @@ import edu.bsu.cs.service.EventAttendeeService;
 import java.util.List;
 import java.util.Optional;
 
-public class EventAttendeeController {
+public class EventAttendeeManager {
     private final EventAttendeeService eventAttendeeService;
 
-    public EventAttendeeController(EventAttendeeService eventAttendeeService) {
+    public EventAttendeeManager(EventAttendeeService eventAttendeeService) {
         this.eventAttendeeService = eventAttendeeService;
     }
 

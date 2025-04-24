@@ -1,6 +1,6 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.GroupController;
+import edu.bsu.cs.controller.GroupManager;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.User;
 import javafx.collections.FXCollections;
@@ -16,11 +16,11 @@ import java.util.List;
 
 public class GroupListView {
     private final User currentUser;
-    private final GroupController controller;
+    private final GroupManager controller;
     private final BorderPane root;
     private final ListView<Group> groupListView;
 
-    public GroupListView(User currentUser, GroupController controller) {
+    public GroupListView(User currentUser, GroupManager controller) {
         this.currentUser = currentUser;
         this.controller = controller;
         this.root = new BorderPane();

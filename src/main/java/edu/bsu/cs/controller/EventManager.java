@@ -5,10 +5,10 @@ import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.EventService;
 import java.util.List;
 
-public class EventController {
+public class EventManager {
     private final EventService eventService;
 
-    public EventController(EventService eventService) {
+    public EventManager(EventService eventService) {
         this.eventService = eventService;
     }
 

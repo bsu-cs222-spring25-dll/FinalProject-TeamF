@@ -18,22 +18,22 @@ import java.util.*;
 @SuppressWarnings("ALL")
 public class InterestSelectionView {
     private final User currentUser;
-    private final UserController userController;
-    private final InterestController interestController;
-    private final GroupController groupController;
-    private final MessageController messageController;
-    private final EventController eventController;
-    private final EventAttendeeController eventAttendeeController;
+    private final UserManager userController;
+    private final InterestManager interestController;
+    private final GroupManager groupController;
+    private final MessageManager messageController;
+    private final EventManager eventController;
+    private final EventAttendeeManager eventAttendeeController;
     private final VBox root;
     private final Map<Interest, CheckBox> interestCheckboxes = new HashMap<>();
 
-    public InterestSelectionView(User user, UserController userController,
-                                 InterestController interestController,
-                                 GroupController groupController,
-                                 MessageController messageController,
+    public InterestSelectionView(User user, UserManager userController,
+                                 InterestManager interestController,
+                                 GroupManager groupController,
+                                 MessageManager messageController,
                                  LoginViewController ignoredLoginViewController,
-                                 EventController eventController,
-                                 EventAttendeeController eventAttendeeController) {
+                                 EventManager eventController,
+                                 EventAttendeeManager eventAttendeeController) {
         this.currentUser = user;
         this.userController = userController;
         this.interestController = interestController;

@@ -1,8 +1,8 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.GroupController;
-import edu.bsu.cs.controller.InterestController;
-import edu.bsu.cs.controller.UserController;
+import edu.bsu.cs.controller.GroupManager;
+import edu.bsu.cs.controller.InterestManager;
+import edu.bsu.cs.controller.UserManager;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
@@ -21,17 +21,17 @@ import java.util.stream.Collectors;
 
 public class GroupRecommendationView {
     private final User currentUser;
-    private final GroupController groupController;
-    private final InterestController interestController;
-    private final UserController userController;
+    private final GroupManager groupController;
+    private final InterestManager interestController;
+    private final UserManager userController;
     private final VBox root;
     private VBox recommendationsSection;
     private FlowPane interestTags;
 
     private static final int RECOMMENDATION_LIMIT = 5;
 
-    public GroupRecommendationView(User currentUser, GroupController groupController,
-                                   InterestController interestController, UserController userController) {
+    public GroupRecommendationView(User currentUser, GroupManager groupController,
+                                   InterestManager interestController, UserManager userController) {
         this.currentUser = currentUser;
         this.groupController = groupController;
         this.interestController = interestController;

@@ -8,11 +8,11 @@ import edu.bsu.cs.service.GroupService;
 import java.util.List;
 import java.util.Set;
 
-public class GroupController {
+public class GroupManager {
 
     private final GroupService groupService;
 
-    public GroupController(GroupService groupService) {
+    public GroupManager(GroupService groupService) {
         this.groupService = groupService;
     }
 

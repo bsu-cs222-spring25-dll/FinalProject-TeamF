@@ -12,19 +12,19 @@ import java.util.Optional;
 
 public class LoginViewController {
 
-    private final UserController userController;
-    private final GroupController groupController;
-    private final InterestController interestController;
-    private final MessageController messageController;
-    private final EventController eventController;
-    private final EventAttendeeController eventAttendeeController;
+    private final UserManager userController;
+    private final GroupManager groupController;
+    private final InterestManager interestController;
+    private final MessageManager messageController;
+    private final EventManager eventController;
+    private final EventAttendeeManager eventAttendeeController;
 
-    public LoginViewController(UserController userController,
-                               GroupController groupController,
-                               InterestController interestController,
-                               MessageController messageController,
-                               EventController eventController,
-                               EventAttendeeController eventAttendeeController) {
+    public LoginViewController(UserManager userController,
+                               GroupManager groupController,
+                               InterestManager interestController,
+                               MessageManager messageController,
+                               EventManager eventController,
+                               EventAttendeeManager eventAttendeeController) {
         this.userController = userController;
         this.groupController = groupController;
         this.interestController = interestController;

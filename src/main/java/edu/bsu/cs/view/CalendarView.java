@@ -1,8 +1,8 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.EventAttendeeController;
-import edu.bsu.cs.controller.EventController;
-import edu.bsu.cs.controller.GroupController;
+import edu.bsu.cs.controller.EventAttendeeManager;
+import edu.bsu.cs.controller.EventManager;
+import edu.bsu.cs.controller.GroupManager;
 import edu.bsu.cs.model.Event;
 import edu.bsu.cs.model.EventAttendee;
 import edu.bsu.cs.model.Group;
@@ -29,15 +29,15 @@ import java.util.Optional;
 @SuppressWarnings("ALL")
 public class CalendarView {
     private final VBox root;
-    private final EventController eventController;
-    private final GroupController groupController;
-    private final EventAttendeeController attendeeController;
+    private final EventManager eventController;
+    private final GroupManager groupController;
+    private final EventAttendeeManager attendeeController;
     private final User currentUser;
     private ListView<Event> eventListView;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
 
-    public CalendarView(EventController eventController, GroupController groupController,
-                        EventAttendeeController attendeeController, User currentUser) {
+    public CalendarView(EventManager eventController, GroupManager groupController,
+                        EventAttendeeManager attendeeController, User currentUser) {
         this.eventController = eventController;
         this.groupController = groupController;
         this.attendeeController = attendeeController;

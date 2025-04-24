@@ -39,12 +39,12 @@ public class SocialApp extends Application {
         EventService eventService = new EventService(eventDAO);
         EventAttendeeService eventAttendeeService = new EventAttendeeService(eventAttendeeDAO);
 
-        UserController userController = new UserController(userService);
-        GroupController groupController = new GroupController(groupService);
-        InterestController interestController = new InterestController(interestService);
-        MessageController messageController = new MessageController(messageService);
-        EventController eventController = new EventController(eventService);
-        EventAttendeeController eventAttendeeController= new EventAttendeeController(eventAttendeeService);
+        UserManager userController = new UserManager(userService);
+        GroupManager groupController = new GroupManager(groupService);
+        InterestManager interestController = new InterestManager(interestService);
+        MessageManager messageController = new MessageManager(messageService);
+        EventManager eventController = new EventManager(eventService);
+        EventAttendeeManager eventAttendeeController= new EventAttendeeManager(eventAttendeeService);
 
         LoginViewController loginController = new LoginViewController(
                 userController,

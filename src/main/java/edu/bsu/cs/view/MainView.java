@@ -13,21 +13,21 @@ import java.util.Objects;
 
 public class MainView {
     private User currentUser;
-    private final GroupController groupController;
-    private final MessageController messageController;
-    private final InterestController interestController;
+    private final GroupManager groupController;
+    private final MessageManager messageController;
+    private final InterestManager interestController;
     private final LoginViewController loginViewController;
-    private final UserController userController;
-    private final EventController eventController;
-    private final EventAttendeeController eventAttendeeController;
+    private final UserManager userController;
+    private final EventManager eventController;
+    private final EventAttendeeManager eventAttendeeController;
 
     private final BorderPane root;
 
     public MainView(User currentUser,
-                    UserController userController,
-                    GroupController groupController,
-                    InterestController interestController,
-                    MessageController messageController,EventController eventController,EventAttendeeController eventAttendeeContoller) {
+                    UserManager userController,
+                    GroupManager groupController,
+                    InterestManager interestController,
+                    MessageManager messageController, EventManager eventController, EventAttendeeManager eventAttendeeContoller) {
         this.currentUser = currentUser;
         this.groupController = groupController;
         this.messageController = messageController;

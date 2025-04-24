@@ -1,9 +1,9 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.EventAttendeeController;
-import edu.bsu.cs.controller.EventController;
-import edu.bsu.cs.controller.GroupController;
-import edu.bsu.cs.controller.MessageController;
+import edu.bsu.cs.controller.EventAttendeeManager;
+import edu.bsu.cs.controller.EventManager;
+import edu.bsu.cs.controller.GroupManager;
+import edu.bsu.cs.controller.MessageManager;
 import edu.bsu.cs.dao.EventAttendeeDAO;
 import edu.bsu.cs.dao.EventAttendeeDAOImpl;
 import edu.bsu.cs.dao.EventDAO;
@@ -33,13 +33,13 @@ import java.util.List;
 
 public class MyGroupsView {
     private final User currentUser;
-    private final GroupController groupController;
+    private final GroupManager groupController;
     private final BorderPane root;
     private final ListView<Group> groupListView;
-    private final MessageController messageController;
+    private final MessageManager messageController;
     private List<Group> groups;
 
-    public MyGroupsView(User currentUser, GroupController groupController, MessageController messageController) {
+    public MyGroupsView(User currentUser, GroupManager groupController, MessageManager messageController) {
         this.currentUser = currentUser;
         this.groupController = groupController;
         this.messageController = messageController;
@@ -71,11 +71,11 @@ public class MyGroupsView {
 
         EventDAO eventDAO = new EventDAOImpl();
         EventService eventService = new EventService(eventDAO);
-        EventController eventController = new EventController(eventService);
+        EventManager eventController = new EventManager(eventService);
 
         EventAttendeeDAO eventAttendeeDAO = new EventAttendeeDAOImpl();
         EventAttendeeService eventAttendeeService = new EventAttendeeService(eventAttendeeDAO);
-        EventAttendeeController eventAttendeeController = new EventAttendeeController(eventAttendeeService);
+        EventAttendeeManager eventAttendeeController = new EventAttendeeManager(eventAttendeeService);
 
         CalendarView calendarView = new CalendarView(eventController,groupController,eventAttendeeController, currentUser);
         root.setTop(topBox);

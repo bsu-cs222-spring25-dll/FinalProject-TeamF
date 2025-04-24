@@ -15,24 +15,24 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class RegistrationView {
-    protected final UserController userController;
+    protected final UserManager userController;
     protected final VBox root;
     protected TextField usernameField;
     protected TextField emailField;
     protected PasswordField passwordField;
     protected PasswordField confirmPasswordField;
-    protected final GroupController groupController;
-    protected final InterestController interestController;
-    protected final MessageController messageController;
-    protected final EventController eventController;
-    protected final EventAttendeeController eventAttendeeController;
+    protected final GroupManager groupController;
+    protected final InterestManager interestController;
+    protected final MessageManager messageController;
+    protected final EventManager eventController;
+    protected final EventAttendeeManager eventAttendeeController;
 
-    public RegistrationView(UserController userController,
-                            GroupController groupController,
-                            InterestController interestController,
-                            MessageController messageController,
-                            EventController eventController,
-                            EventAttendeeController eventAttendeeController) {
+    public RegistrationView(UserManager userController,
+                            GroupManager groupController,
+                            InterestManager interestController,
+                            MessageManager messageController,
+                            EventManager eventController,
+                            EventAttendeeManager eventAttendeeController) {
         this.userController = userController;
         this.groupController = groupController;
         this.interestController = interestController;

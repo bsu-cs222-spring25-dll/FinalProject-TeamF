@@ -7,11 +7,11 @@ import edu.bsu.cs.service.MessageService;
 
 import java.util.List;
 
-public class MessageController {
+public class MessageManager {
 
     private final MessageService messageService;
 
-    public MessageController(MessageService messageService) {
+    public MessageManager(MessageService messageService) {
         this.messageService = messageService;
     }
 

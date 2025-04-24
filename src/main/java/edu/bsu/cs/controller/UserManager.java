@@ -7,11 +7,11 @@ import edu.bsu.cs.service.UserService;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserController {
+public class UserManager {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserManager(UserService userService) {
         this.userService = userService;
     }
 

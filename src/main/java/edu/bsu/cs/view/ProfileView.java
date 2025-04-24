@@ -1,6 +1,6 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.UserController;
+import edu.bsu.cs.controller.UserManager;
 import edu.bsu.cs.model.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,7 +15,7 @@ public class ProfileView {
     private final User currentUser;
     private final VBox root;
 
-    public ProfileView(UserController ignoredUserController, User currentUser) {
+    public ProfileView(UserManager ignoredUserController, User currentUser) {
         this.currentUser = currentUser;
         this.root = createProfileView();
     }

@@ -6,11 +6,11 @@ import edu.bsu.cs.service.InterestService;
 import java.util.List;
 import java.util.Optional;
 
-public class InterestController {
+public class InterestManager {
 
     private final InterestService interestService;
 
-    public InterestController(InterestService interestService) {
+    public InterestManager(InterestService interestService) {
         this.interestService = interestService;
     }
 

@@ -1,7 +1,7 @@
 package edu.bsu.cs.view;
 
-import edu.bsu.cs.controller.GroupController;
-import edu.bsu.cs.controller.MessageController;
+import edu.bsu.cs.controller.GroupManager;
+import edu.bsu.cs.controller.MessageManager;
 import edu.bsu.cs.model.Group;
 import edu.bsu.cs.model.Message;
 import edu.bsu.cs.model.User;
@@ -27,8 +27,8 @@ import java.util.List;
 
 public class MessageView {
     private final User currentUser;
-    private final MessageController messageController;
-    private final GroupController groupController;
+    private final MessageManager messageController;
+    private final GroupManager groupController;
 
     private Group selectedGroup;
     private final BorderPane root;
@@ -39,7 +39,7 @@ public class MessageView {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
-    public MessageView(User currentUser, MessageController messageController, GroupController groupController) {
+    public MessageView(User currentUser, MessageManager messageController, GroupManager groupController) {
         this.currentUser = currentUser;
         this.messageController = messageController;
         this.groupController = groupController;
