@@ -1,14 +1,15 @@
 package edu.bsu.cs.manager;
 
+
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class UserManager {
-
     private final UserService userService;
     private User currentUser;
 
@@ -20,11 +21,9 @@ public class UserManager {
         return userService.findById(id);
     }
 
-    public void updateUserInterests(User user) {
-        user.getInterests();
-        userService.updateProfile(user);
+    public void updateUserInterests(User user, List<Interest> interests) {
+        userService.setUserInterests(user, interests);
     }
-
 
     public Optional<User> login(String username, String password) {
         Optional<User> loggedInUser = userService.login(username, password);

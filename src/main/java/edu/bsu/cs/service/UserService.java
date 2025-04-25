@@ -52,7 +52,6 @@ public class UserService {
 
             boolean added = freshUser.getInterests().add(freshInterest);
             if (added) {
-                user.getInterests().add(interest);
                 session.update(freshUser);
             }
             return added;
@@ -70,10 +69,22 @@ public class UserService {
 
             boolean removed = freshUser.getInterests().remove(freshInterest);
             if (removed) {
-                user.getInterests().remove(interest);
                 session.update(freshUser);
             }
             return removed;
+        });
+    }
+
+    public void setUserInterests(User user, List<Interest> interests) {
+        HibernateSessionManager.executeWithTransaction(session -> {
+            User managedUser = session.get(User.class, user.getId());
+            managedUser.getInterests().clear();
+            for (Interest interest : interests) {
+                Interest managedInterest = session.get(Interest.class, interest.getId());
+                managedUser.getInterests().add(managedInterest);
+            }
+            session.update(managedUser);
+            return null;
         });
     }
 

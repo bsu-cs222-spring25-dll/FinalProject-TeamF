@@ -97,9 +97,10 @@ public class InterestSelectionView {
                 }
             }
 
-            userManager.updateUserInterests(currentUser);
+            userManager.updateUserInterests(currentUser, selectedInterests);
             navigateToMainView();
         });
+
 
         return mainContainer;
     }
