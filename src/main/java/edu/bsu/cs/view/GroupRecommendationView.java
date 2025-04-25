@@ -16,7 +16,9 @@ import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class GroupRecommendationView {
@@ -113,21 +115,29 @@ public class GroupRecommendationView {
             }
         });
 
-        List<Interest> availableInterests = interestController.getAllInterests();
-        availableInterests.removeAll(currentUser.getInterests());
-        interestComboBox.getItems().addAll(availableInterests);
-        interestComboBox.setPromptText("Select an interest to add");
+        // Get fresh list of available interests each time
+        refreshInterestsComboBox(interestComboBox);
 
         Button addInterestButton = new Button("Add Interest");
         addInterestButton.setOnAction(e -> {
             Interest selectedInterest = interestComboBox.getValue();
             if (selectedInterest != null) {
-                boolean added = userController.addInterest(currentUser, selectedInterest);
-                if (added) {
-                    refreshInterestsDisplay(interestTags);
-                    refreshRecommendations();
-                    interestComboBox.getItems().remove(selectedInterest);
-                    interestComboBox.setValue(null);
+                try {
+                    boolean added = userController.addInterest(currentUser, selectedInterest);
+                    if (added) {
+                        // Refresh the user object with the latest data from the database
+                        refreshUserObject();
+
+                        // Refresh the UI elements
+                        refreshInterestsDisplay(interestTags);
+                        refreshRecommendations();
+                        refreshInterestsComboBox(interestComboBox);
+                    } else {
+                        showAlert("Info", "Interest is already in your profile.");
+                    }
+                } catch (Exception ex) {
+                    showAlert("Error", "Failed to add interest: " + ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         });
@@ -143,8 +153,34 @@ public class GroupRecommendationView {
         return section;
     }
 
+    private void refreshInterestsComboBox(ComboBox<Interest> interestComboBox) {
+        interestComboBox.getItems().clear();
+        List<Interest> availableInterests = interestController.getAllInterests();
+        availableInterests.removeAll(currentUser.getInterests());
+        interestComboBox.getItems().addAll(availableInterests);
+        interestComboBox.setValue(null);
+    }
+
+    // Method to refresh the user object from the database
+    private void refreshUserObject() {
+        try {
+            Optional<User> refreshedUser = userController.findById(currentUser.getId());
+            if (refreshedUser.isPresent()) {
+                // Update the current user's interests from the database
+                currentUser.getInterests().clear();
+                currentUser.getInterests().addAll(refreshedUser.get().getInterests());
+            }
+        } catch (Exception e) {
+            showAlert("Error", "Failed to refresh user data: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     private void refreshInterestsDisplay(FlowPane interestTags) {
         interestTags.getChildren().clear();
+
+        // Make sure we're working with the most up-to-date user data
+        refreshUserObject();
 
         Set<Interest> userInterests = currentUser.getInterests();
         if (userInterests.isEmpty()) {
@@ -163,9 +199,22 @@ public class GroupRecommendationView {
                 Button removeBtn = new Button("✕");
                 removeBtn.setStyle("-fx-font-size: 8pt; -fx-padding: 2 4; -fx-background-radius: 4;");
                 removeBtn.setOnAction(e -> {
-                    userController.removeInterest(currentUser, interest);
-                    refreshInterestsDisplay(interestTags);
-                    refreshRecommendations();
+                    try {
+                        boolean removed = userController.removeInterest(currentUser, interest);
+                        if (removed) {
+                            // Refresh user object after removal
+                            refreshUserObject();
+
+                            // Update UI
+                            refreshInterestsDisplay(interestTags);
+                            refreshRecommendations();
+                        } else {
+                            showAlert("Warning", "Could not remove interest. Please try again.");
+                        }
+                    } catch (Exception ex) {
+                        showAlert("Error", "Failed to remove interest: " + ex.getMessage());
+                        ex.printStackTrace();
+                    }
                 });
 
                 tagBox.getChildren().addAll(tag, removeBtn);
@@ -178,6 +227,9 @@ public class GroupRecommendationView {
         if (recommendationsSection != null) {
             recommendationsSection.getChildren().clear();
 
+            // Make sure we have the latest user data
+            refreshUserObject();
+
             Set<Interest> userInterests = currentUser.getInterests();
 
             if (userInterests.isEmpty()) {
@@ -185,21 +237,28 @@ public class GroupRecommendationView {
                 noInterests.setStyle("-fx-font-style: italic;");
                 recommendationsSection.getChildren().add(noInterests);
             } else {
-                List<Group> recommendedGroups = groupController.findGroupsByUserInterests(currentUser, RECOMMENDATION_LIMIT);
+                try {
+                    List<Group> recommendedGroups = groupController.findGroupsByUserInterests(currentUser, RECOMMENDATION_LIMIT);
 
-                if (recommendedGroups.isEmpty()) {
-                    Label noRecommendations = new Label("No groups found matching your interests.");
-                    noRecommendations.setStyle("-fx-font-style: italic;");
-                    recommendationsSection.getChildren().add(noRecommendations);
-                } else {
-                    for (Group group : recommendedGroups) {
-                        VBox groupCard = createGroupCard(group);
-                        recommendationsSection.getChildren().add(groupCard);
+                    if (recommendedGroups.isEmpty()) {
+                        Label noRecommendations = new Label("No groups found matching your interests.");
+                        noRecommendations.setStyle("-fx-font-style: italic;");
+                        recommendationsSection.getChildren().add(noRecommendations);
+                    } else {
+                        for (Group group : recommendedGroups) {
+                            VBox groupCard = createGroupCard(group);
+                            recommendationsSection.getChildren().add(groupCard);
 
-                        if (recommendedGroups.indexOf(group) < recommendedGroups.size() - 1) {
-                            recommendationsSection.getChildren().add(new Separator());
+                            if (recommendedGroups.indexOf(group) < recommendedGroups.size() - 1) {
+                                recommendationsSection.getChildren().add(new Separator());
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    Label errorLabel = new Label("Error loading recommendations: " + e.getMessage());
+                    errorLabel.setStyle("-fx-text-fill: red;");
+                    recommendationsSection.getChildren().add(errorLabel);
+                    e.printStackTrace();
                 }
             }
         }

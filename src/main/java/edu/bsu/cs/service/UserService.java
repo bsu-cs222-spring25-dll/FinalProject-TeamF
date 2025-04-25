@@ -4,6 +4,10 @@ import edu.bsu.cs.dao.UserDAO;
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.util.HibernateSessionManager;
+import edu.bsu.cs.util.HibernateUtil;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,50 +46,93 @@ public class UserService {
     }
 
     public boolean addInterest(User user, Interest interest) {
-        return HibernateSessionManager.executeWithTransaction(session -> {
-            User freshUser = session.get(User.class, user.getId());
-            Interest freshInterest = session.get(Interest.class, interest.getId());
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
-            if (freshUser == null || freshInterest == null) {
-                throw new RuntimeException("Could not find user or interest in database");
+            User managedUser = session.get(User.class, user.getId());
+            Interest managedInterest = session.get(Interest.class, interest.getId());
+
+            if (managedUser == null || managedInterest == null) {
+                return false;
             }
 
-            boolean added = freshUser.getInterests().add(freshInterest);
+            boolean added = managedUser.addInterest(managedInterest);
+
             if (added) {
-                session.update(freshUser);
+                session.update(managedUser);
+                // Update the passed-in user object to reflect changes
+                user.getInterests().clear();
+                user.getInterests().addAll(managedUser.getInterests());
             }
+
+            transaction.commit();
             return added;
-        });
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean removeInterest(User user, Interest interest) {
-        return HibernateSessionManager.executeWithTransaction(session -> {
-            User freshUser = session.get(User.class, user.getId());
-            Interest freshInterest = session.get(Interest.class, interest.getId());
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
-            if (freshUser == null || freshInterest == null) {
-                throw new RuntimeException("Could not find user or interest in database");
+            User managedUser = session.get(User.class, user.getId());
+            Interest managedInterest = session.get(Interest.class, interest.getId());
+
+            if (managedUser == null || managedInterest == null) {
+                return false;
             }
 
-            boolean removed = freshUser.getInterests().remove(freshInterest);
+            boolean removed = managedUser.removeInterest(managedInterest);
+
             if (removed) {
-                session.update(freshUser);
+                session.update(managedUser);
+                user.getInterests().clear();
+                user.getInterests().addAll(managedUser.getInterests());
             }
+
+            transaction.commit();
             return removed;
-        });
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void setUserInterests(User user, List<Interest> interests) {
-        HibernateSessionManager.executeWithTransaction(session -> {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
             User managedUser = session.get(User.class, user.getId());
             managedUser.getInterests().clear();
+
             for (Interest interest : interests) {
                 Interest managedInterest = session.get(Interest.class, interest.getId());
                 managedUser.getInterests().add(managedInterest);
             }
+
             session.update(managedUser);
-            return null;
-        });
+
+            user.getInterests().clear();
+            user.getInterests().addAll(managedUser.getInterests());
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
     }
 
     public Optional<User> findById(UUID id) {

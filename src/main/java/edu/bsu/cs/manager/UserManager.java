@@ -1,6 +1,5 @@
 package edu.bsu.cs.manager;
 
-
 import edu.bsu.cs.model.Interest;
 import edu.bsu.cs.model.User;
 import edu.bsu.cs.service.UserService;
@@ -23,6 +22,15 @@ public class UserManager {
 
     public void updateUserInterests(User user, List<Interest> interests) {
         userService.setUserInterests(user, interests);
+        refreshUser(user);
+    }
+
+    private void refreshUser(User user) {
+        Optional<User> refreshedUser = userService.findById(user.getId());
+        if (refreshedUser.isPresent()) {
+            user.getInterests().clear();
+            user.getInterests().addAll(refreshedUser.get().getInterests());
+        }
     }
 
     public Optional<User> login(String username, String password) {
@@ -46,10 +54,18 @@ public class UserManager {
     }
 
     public boolean addInterest(User user, Interest interest) {
-        return userService.addInterest(user, interest);
+        boolean result = userService.addInterest(user, interest);
+        if (result) {
+            refreshUser(user);
+        }
+        return result;
     }
 
     public boolean removeInterest(User user, Interest interest) {
-        return userService.removeInterest(user, interest);
+        boolean result = userService.removeInterest(user, interest);
+        if (result) {
+            refreshUser(user);
+        }
+        return result;
     }
 }
