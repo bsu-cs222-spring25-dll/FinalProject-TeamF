@@ -27,8 +27,8 @@ import java.util.List;
 
 public class MessageView {
     private final User currentUser;
-    private final MessageManager messageController;
-    private final GroupManager groupController;
+    private final MessageManager messageManager;
+    private final GroupManager groupManager;
 
     private Group selectedGroup;
     private final BorderPane root;
@@ -36,18 +36,22 @@ public class MessageView {
     private final ListView<Message> messagesListView;
     private final TextField messageInput;
 
+    private Timeline refreshTimeline;
+    private LocalDateTime lastRefreshTime;
+
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
-    public MessageView(User currentUser, MessageManager messageController, GroupManager groupController) {
+    public MessageView(User currentUser, MessageManager messageManager, GroupManager groupManager) {
         this.currentUser = currentUser;
-        this.messageController = messageController;
-        this.groupController = groupController;
+        this.messageManager = messageManager;
+        this.groupManager = groupManager;
 
         this.root = new BorderPane();
         this.userGroupsListView = new ListView<>();
         this.messagesListView = new ListView<>();
         this.messageInput = new TextField();
+        this.lastRefreshTime = LocalDateTime.now();
 
         createUI();
         setupAutoRefresh();
@@ -113,7 +117,7 @@ public class MessageView {
     }
 
     private void setupAutoRefresh() {
-        Timeline refreshTimeline = new Timeline(
+        refreshTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(30), event -> {
                     if (selectedGroup != null) {
                         refreshMessages();
@@ -125,10 +129,10 @@ public class MessageView {
     }
 
     private void loadUserGroups() {
-        List<Group> userGroups = groupController.getUserGroups(currentUser);
+        List<Group> userGroups = groupManager.getUserGroups(currentUser);
         ObservableList<Group> groups = FXCollections.observableArrayList(userGroups);
 
-        userGroupsListView.setCellFactory(lv -> new ListCell<>() {
+        userGroupsListView.setCellFactory(lv -> new ListCell<Group>() {
             @Override
             protected void updateItem(Group group, boolean empty) {
                 super.updateItem(group, empty);
@@ -157,7 +161,7 @@ public class MessageView {
             return;
         }
 
-        List<Message> messages = messageController.getGroupMessages(selectedGroup);
+        List<Message> messages = messageManager.getGroupMessages(selectedGroup);
         messages.sort(Comparator.comparing(Message::getSentAt));
 
         ObservableList<Message> observableMessages = FXCollections.observableArrayList(messages);
@@ -167,6 +171,7 @@ public class MessageView {
             messagesListView.scrollTo(messages.size() - 1);
         }
 
+        lastRefreshTime = LocalDateTime.now();
     }
 
     private void sendMessage() {
@@ -180,12 +185,12 @@ public class MessageView {
         }
 
         try {
-            messageController.sendMessage(currentUser, selectedGroup, content);
+            messageManager.sendMessage(currentUser, selectedGroup, content);
             messageInput.clear();
             refreshMessages();
 
         } catch (Exception e) {
-            showAlert("Could not send message: " + e.getMessage());
+            showAlert("Error", "Could not send message: " + e.getMessage());
         }
     }
 
@@ -199,9 +204,9 @@ public class MessageView {
         messagesListView.setItems(FXCollections.observableArrayList(new ArrayList<>()));
     }
 
-    private void showAlert(String message) {
+    private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Error");
+        alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

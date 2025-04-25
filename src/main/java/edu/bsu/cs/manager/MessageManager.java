@@ -26,4 +26,3 @@ public class MessageManager {
         return messageService.getGroupMessages(group);
     }
 }
-
