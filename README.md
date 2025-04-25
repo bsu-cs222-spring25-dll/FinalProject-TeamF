@@ -49,28 +49,39 @@ GroupSync follows the MVC (Model-View-Controller) architecture:
 
 Model: Entity classes representing users, groups, interests, and messages
 View: JavaFX UI components for different screens and features
-Controller: Business logic handling user actions and application flow
+Controller/Manager: Business logic handling user actions and application flow
 Service Layer: Connection between controllers and data access
 DAO Layer: Database operations with Hibernate ORM
 
 ### Project Status
-Completed (Iterations 1 & 2)
+Completed (Iterations 1 , 2, 3)
 
 User registration and login with validation
+
 Database integration and entity relationships
+
 User profile management
+
 Group browsing and joining
+
 In-group messaging
+
 Interest-based group recommendations
+
 Group creation with interest tagging
 
-Upcoming (Iteration 3)
+Event creation  (note: when creating events, the event time must be set at least one minute in the future for successful creation)
 
-Direct messaging between users
-Group content moderation
-Group categorization and organization
-Mobile-responsive design
-Push notifications
+RSVP functionality for events with attending, maybe, and decline options
+
+Improved UI with consistent styling
+
+Enhanced interest management
+
+Bug fixes and performance improvements
 
 ### Testing
 We've implemented JUnit tests for core functionality with a focus on the "one assert per test" principle to ensure precise test coverage and clear failure diagnosis.
+
+### Contributors
+This project was developed as part of a collaborative software engineering course. Special thanks to all team members for their contributions.
